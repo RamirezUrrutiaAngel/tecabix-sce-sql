@@ -499,12 +499,12 @@ CREATE TABLE tecabix_sce.persona_moral(
 CONSTRAINT pk_persona_moral_id_persona_moral PRIMARY KEY (id_persona_moral)
 );
 COMMENT ON TABLE tecabix_sce.persona_moral IS 'EMPRESAS O PERSONA CON ACTIVIDAD EMPRESARIAL';
-COMMENT ON COLUMN tecabix_sce.persona_moral.id_persona_moral IS '';
-COMMENT ON COLUMN tecabix_sce.persona_moral.id_persona IS '';
-COMMENT ON COLUMN tecabix_sce.persona_moral.razon_social IS '';
-COMMENT ON COLUMN tecabix_sce.persona_moral.rfc IS '';
-COMMENT ON COLUMN tecabix_sce.persona_moral.fundada IS '';
-COMMENT ON COLUMN tecabix_sce.persona_moral.id_direccion IS '';
+COMMENT ON COLUMN tecabix_sce.persona_moral.id_persona_moral IS 'IDENTIFICADOR ÚNICO DE LA EMPRESA.';
+COMMENT ON COLUMN tecabix_sce.persona_moral.id_persona IS 'LLAVE FORANEA DE LA PERSONA';
+COMMENT ON COLUMN tecabix_sce.persona_moral.razon_social IS 'RAZON SOCIAL';
+COMMENT ON COLUMN tecabix_sce.persona_moral.rfc IS 'REGISTRO FEDERAL DE CONTRIBUYENTES';
+COMMENT ON COLUMN tecabix_sce.persona_moral.fundada IS 'FECHA DE CREACION';
+COMMENT ON COLUMN tecabix_sce.persona_moral.id_direccion IS 'LLAVE FORANEA DE UBICACION';
 COMMENT ON COLUMN tecabix_sce.persona_moral.id_usuario_modificado IS 'ULTIMO USUARIO QUE MODIFICO EL REGISTRO';
 COMMENT ON COLUMN tecabix_sce.persona_moral.fecha_modificado IS 'ULTIMA FECHA QUE SE MODIFICO EL REGISTRO';
 COMMENT ON COLUMN tecabix_sce.persona_moral.id_estatus IS 'STATUS DEL REGISTRO, CATALOGO_TIPO = ESTATUS';
