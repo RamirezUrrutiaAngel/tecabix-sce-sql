@@ -36,9 +36,9 @@ CREATE TABLE tecabix_sce_historial.catalogo_tipo_historial(
 	descripcion character varying(150) NOT NULL,
 CONSTRAINT pk_catalogo_tipo_historial_id_catalogo_tipo_historial PRIMARY KEY (id_catalogo_tipo_historial)
 );
-COMMENT ON TABLE tecabix_sce_historial.catalogo_tipo_historial IS 'HISTORIAL DEL TIPO DE CATALOGO';
-COMMENT ON COLUMN tecabix_sce_historial.catalogo_tipo_historial.id_catalogo_tipo_historial IS 'IDENTIFICADOR UNICO DEL HISTORIAL DEL TIPO DEL CATALOGO';
-COMMENT ON COLUMN tecabix_sce_historial.catalogo_tipo_historial.id_catalogo_tipo IS 'IDENTIFICADOR UNICO DEL TIPO DEL CATALOGO';
+COMMENT ON TABLE tecabix_sce_historial.catalogo_tipo_historial IS 'HISTORIAL Del tipo de CATALOGO';
+COMMENT ON COLUMN tecabix_sce_historial.catalogo_tipo_historial.id_catalogo_tipo_historial IS 'IDENTIFICADOR UNICO DEL HISTORIAL Del tipo deL CATALOGO';
+COMMENT ON COLUMN tecabix_sce_historial.catalogo_tipo_historial.id_catalogo_tipo IS 'IDENTIFICADOR UNICO Del tipo deL CATALOGO';
 COMMENT ON COLUMN tecabix_sce_historial.catalogo_tipo_historial.fecha IS 'FECHA EN QUE SE REALIZO LA ACCION';
 COMMENT ON COLUMN tecabix_sce_historial.catalogo_tipo_historial.id_accion IS 'TIPO DE ACCION QUE SE REALIZO, CATALOGO_TIPO = CRUD';
 COMMENT ON COLUMN tecabix_sce_historial.catalogo_tipo_historial.id_usuario_modificado IS 'USUARIO QUE REALIZO LA ACCION';
@@ -713,7 +713,7 @@ BEGIN
     SELECT id_catalogo INTO var_insert FROM tecabix_sce.catalogo WHERE nombre = 'CREAR' AND id_catalogo_tipo IN (SELECT id_catalogo_tipo FROM tecabix_sce.catalogo_tipo WHERE nombre = 'CRUD');
     
     INSERT INTO tecabix_sce_historial.catalogo_tipo_historial (id_catalogo_tipo, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_catalogo_tipo,var_insert, NEW.id_usuario_modificado, 'SÉ CREO UN NUEVO REGISTRO '|| NEW.nombre);
+        VALUES(NEW.id_catalogo_tipo,var_insert, NEW.id_usuario_modificado, 'Se creo un nuevo registro '|| NEW.nombre);
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
@@ -731,19 +731,19 @@ BEGIN
     
     IF OLD.nombre != NEW.nombre THEN
         INSERT INTO tecabix_sce_historial.catalogo_tipo_historial (id_catalogo_tipo, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_catalogo_tipo,var_update, NEW.id_usuario_modificado, 'SÉ ACTUALIZO EL NOMBRE DE '|| OLD.nombre || ' A ' || NEW.nombre);
+        VALUES(NEW.id_catalogo_tipo,var_update, NEW.id_usuario_modificado, 'Se actualizo el nombre de '|| OLD.nombre || ' a ' || NEW.nombre);
     END IF;
 
     IF OLD.id_estatus != NEW.id_estatus THEN
         SELECT nombre INTO id_aux_1 FROM tecabix_sce.catalogo WHERE id_catalogo = OLD.id_estatus;
         SELECT nombre INTO id_aux_2 FROM tecabix_sce.catalogo WHERE id_catalogo = NEW.id_estatus;
         INSERT INTO tecabix_sce_historial.catalogo_tipo_historial (id_catalogo_tipo, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_catalogo_tipo,var_update, NEW.id_usuario_modificado, 'SÉ ACTUALIZO EL ESTATUS DE '|| id_aux_1 || ' A ' || id_aux_2);
+        VALUES(NEW.id_catalogo_tipo,var_update, NEW.id_usuario_modificado, 'Se actualizo el estatus de '|| id_aux_1 || ' a ' || id_aux_2);
     END IF;
 
     IF OLD.descripcion != NEW.descripcion THEN
         INSERT INTO tecabix_sce_historial.catalogo_tipo_historial (id_catalogo_tipo, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_catalogo_tipo,var_update, NEW.id_usuario_modificado, 'SÉ ACTUALIZO LA DESCRIPCION');
+        VALUES(NEW.id_catalogo_tipo,var_update, NEW.id_usuario_modificado, 'Se actualizo la descripción');
     END IF;
 
     RETURN NEW;
@@ -763,7 +763,7 @@ BEGIN
     SELECT id_catalogo INTO var_delete FROM tecabix_sce.catalogo WHERE nombre = 'ELIMINAR' AND id_catalogo_tipo IN (SELECT id_catalogo_tipo FROM tecabix_sce.catalogo_tipo WHERE nombre = 'CRUD');
     
     INSERT INTO tecabix_sce_historial.catalogo_tipo_historial (id_catalogo_tipo, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(OLD.id_catalogo_tipo,var_delete, OLD.id_usuario_modificado, 'SÉ ELIMINO EL REGISTRO '|| OLD.nombre);
+        VALUES(OLD.id_catalogo_tipo,var_delete, OLD.id_usuario_modificado, 'Se elimino el registro '|| OLD.nombre);
 
     RETURN OLD;
 END;
@@ -787,7 +787,7 @@ BEGIN
     SELECT id_catalogo INTO var_insert FROM tecabix_sce.catalogo WHERE nombre = 'CREAR' AND id_catalogo IN (SELECT id_catalogo_tipo FROM tecabix_sce.catalogo_tipo WHERE nombre = 'CRUD');
     
     INSERT INTO tecabix_sce_historial.catalogo_historial (id_catalogo, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_catalogo,var_insert, NEW.id_usuario_modificado, 'SÉ CREO UN NUEVO REGISTRO '|| NEW.nombre);
+        VALUES(NEW.id_catalogo,var_insert, NEW.id_usuario_modificado, 'Se creo un nuevo registro '|| NEW.nombre);
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
@@ -805,19 +805,19 @@ BEGIN
     
     IF OLD.nombre != NEW.nombre THEN
         INSERT INTO tecabix_sce_historial.catalogo_historial (id_catalogo, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_catalogo,var_update, NEW.id_usuario_modificado, 'SÉ ACTUALIZO EL NOMBRE DE '|| OLD.nombre || ' A ' || NEW.nombre);
+        VALUES(NEW.id_catalogo,var_update, NEW.id_usuario_modificado, 'Se actualizo el nombre de '|| OLD.nombre || ' a ' || NEW.nombre);
     END IF;
 
     IF OLD.id_estatus != NEW.id_estatus THEN
         SELECT nombre INTO id_aux_1 FROM tecabix_sce.catalogo WHERE id_catalogo = OLD.id_estatus;
         SELECT nombre INTO id_aux_2 FROM tecabix_sce.catalogo WHERE id_catalogo = NEW.id_estatus;
         INSERT INTO tecabix_sce_historial.catalogo_historial (id_catalogo, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_catalogo,var_update, NEW.id_usuario_modificado, 'SÉ ACTUALIZO EL ESTATUS DE '|| id_aux_1 || ' A ' || id_aux_2);
+        VALUES(NEW.id_catalogo,var_update, NEW.id_usuario_modificado, 'Se actualizo el estatus de '|| id_aux_1 || ' a ' || id_aux_2);
     END IF;
 
     IF OLD.descripcion != NEW.descripcion THEN
         INSERT INTO tecabix_sce_historial.catalogo_historial (id_catalogo, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_catalogo,var_update, NEW.id_usuario_modificado, 'SÉ ACTUALIZO LA DESCRIPCION');
+        VALUES(NEW.id_catalogo,var_update, NEW.id_usuario_modificado, 'Se actualizo la descripción');
     END IF;
 
     RETURN NEW;
@@ -837,7 +837,7 @@ BEGIN
     SELECT id_catalogo INTO var_delete FROM tecabix_sce.catalogo WHERE nombre = 'ELIMINAR' AND id_catalogo IN (SELECT id_catalogo_tipo FROM tecabix_sce.catalogo_tipo WHERE nombre = 'CRUD');
     
     INSERT INTO tecabix_sce_historial.catalogo_historial (id_catalogo, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(OLD.id_catalogo,var_delete, OLD.id_usuario_modificado, 'SÉ ELIMINO EL REGISTRO '|| OLD.nombre);
+        VALUES(OLD.id_catalogo,var_delete, OLD.id_usuario_modificado, 'Se elimino el registro '|| OLD.nombre);
 
     RETURN OLD;
 END;
@@ -876,7 +876,7 @@ BEGIN
     SELECT id_catalogo INTO var_insert FROM tecabix_sce.catalogo WHERE nombre = 'CREAR' AND id_catalogo_tipo IN (SELECT id_catalogo_tipo FROM tecabix_sce.catalogo_tipo WHERE nombre = 'CRUD');
     
     INSERT INTO tecabix_sce_historial.authority_historial (id_authority, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_authority,var_insert, NEW.id_usuario_modificado, 'SÉ CREO UN NUEVO REGISTRO '|| NEW.nombre );
+        VALUES(NEW.id_authority,var_insert, NEW.id_usuario_modificado, 'Se creo un nuevo registro '|| NEW.nombre );
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
@@ -899,19 +899,19 @@ BEGIN
     
     IF OLD.nombre != NEW.nombre THEN
         INSERT INTO tecabix_sce_historial.authority_historial (id_authority, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_authority,var_update, NEW.id_usuario_modificado, 'SÉ ACTUALIZO EL NOMBRE DE '|| OLD.nombre || ' A ' || NEW.nombre);
+        VALUES(NEW.id_authority,var_update, NEW.id_usuario_modificado, 'Se actualizo el nombre de '|| OLD.nombre || ' a ' || NEW.nombre);
     END IF;
 
     IF OLD.id_estatus != NEW.id_estatus THEN
         SELECT nombre INTO id_aux_1 FROM tecabix_sce.catalogo WHERE id_catalogo = OLD.id_estatus;
         SELECT nombre INTO id_aux_2 FROM tecabix_sce.catalogo WHERE id_catalogo = NEW.id_estatus;
         INSERT INTO tecabix_sce_historial.authority_historial (id_authority, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_authority,var_update, NEW.id_usuario_modificado, 'SÉ ACTUALIZO EL ESTATUS DE '|| id_aux_1 || ' A ' || id_aux_2);
+        VALUES(NEW.id_authority,var_update, NEW.id_usuario_modificado, 'Se actualizo el estatus de '|| id_aux_1 || ' a ' || id_aux_2);
     END IF;
 
     IF OLD.descripcion != NEW.descripcion THEN
         INSERT INTO tecabix_sce_historial.authority_historial (id_authority, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_authority,var_update, NEW.id_usuario_modificado, 'SÉ ACTUALIZO LA DESCRIPCION');
+        VALUES(NEW.id_authority,var_update, NEW.id_usuario_modificado, 'Se actualizo la descripción');
     END IF;
 
     RETURN NEW;
@@ -935,7 +935,7 @@ BEGIN
     SELECT id_catalogo INTO var_delete FROM tecabix_sce.catalogo WHERE nombre = 'ELIMINAR' AND id_catalogo_tipo IN (SELECT id_catalogo_tipo FROM tecabix_sce.catalogo_tipo WHERE nombre = 'CRUD');
     
     INSERT INTO tecabix_sce_historial.authority_historial (id_authority, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(OLD.id_authority,var_delete, OLD.id_usuario_modificado, 'SÉ ELIMINO EL REGISTRO');
+        VALUES(OLD.id_authority,var_delete, OLD.id_usuario_modificado, 'Se elimino el registro');
 
     RETURN OLD;
 END;
@@ -979,7 +979,7 @@ BEGIN
     SELECT id_catalogo INTO var_insert FROM tecabix_sce.catalogo WHERE nombre = 'CREAR' AND id_catalogo_tipo IN (SELECT id_catalogo_tipo FROM tecabix_sce.catalogo_tipo WHERE nombre = 'CRUD');
 	
 	INSERT INTO tecabix_sce_historial.perfil_historial (id_perfil, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_perfil,var_insert, NEW.id_usuario_modificado, 'SÉ CREO UN NUEVO REGISTRO' );
+        VALUES(NEW.id_perfil,var_insert, NEW.id_usuario_modificado, 'Se creo un nuevo registro' );
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
@@ -1002,19 +1002,19 @@ BEGIN
 	
     IF OLD.nombre != NEW.nombre THEN
         INSERT INTO tecabix_sce_historial.perfil_historial (id_perfil, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_perfil,var_update, NEW.id_usuario_modificado, 'SÉ ACTUALIZO EL NOMBRE DE '|| OLD.nombre || ' A ' || NEW.nombre);
+        VALUES(NEW.id_perfil,var_update, NEW.id_usuario_modificado, 'Se actualizo el nombre de '|| OLD.nombre || ' a ' || NEW.nombre);
     END IF;
 
     IF OLD.id_estatus != NEW.id_estatus THEN
         SELECT nombre INTO id_aux_1 FROM tecabix_sce.catalogo WHERE id_catalogo = OLD.id_estatus;
         SELECT nombre INTO id_aux_2 FROM tecabix_sce.catalogo WHERE id_catalogo = NEW.id_estatus;
         INSERT INTO tecabix_sce_historial.perfil_historial (id_perfil, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_perfil,var_update, NEW.id_usuario_modificado, 'SÉ ACTUALIZO EL ESTATUS DE '|| id_aux_1 || ' A ' || id_aux_2);
+        VALUES(NEW.id_perfil,var_update, NEW.id_usuario_modificado, 'Se actualizo el estatus de '|| id_aux_1 || ' a ' || id_aux_2);
     END IF;
 
     IF OLD.descripcion != NEW.descripcion THEN
         INSERT INTO tecabix_sce_historial.perfil_historial (id_perfil, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_perfil,var_update, NEW.id_usuario_modificado, 'SÉ ACTUALIZO LA DESCRIPCION');
+        VALUES(NEW.id_perfil,var_update, NEW.id_usuario_modificado, 'Se actualizo la descripción');
     END IF;
 
     RETURN NEW;
@@ -1038,7 +1038,7 @@ BEGIN
     SELECT id_catalogo INTO var_delete FROM tecabix_sce.catalogo WHERE nombre = 'ELIMINAR' AND id_catalogo_tipo IN (SELECT id_catalogo_tipo FROM tecabix_sce.catalogo_tipo WHERE nombre = 'CRUD');
 	
     INSERT INTO tecabix_sce_historial.perfil_historial (id_perfil, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(OLD.id_perfil,var_delete, OLD.id_usuario_modificado, 'SÉ ELIMINO EL REGISTRO');
+        VALUES(OLD.id_perfil,var_delete, OLD.id_usuario_modificado, 'Se elimino el registro');
 
     RETURN OLD;
 END;
@@ -1060,7 +1060,7 @@ BEGIN
     SELECT id_catalogo INTO var_insert FROM tecabix_sce.catalogo WHERE nombre = 'CREAR' AND id_catalogo_tipo IN (SELECT id_catalogo_tipo FROM tecabix_sce.catalogo_tipo WHERE nombre = 'CRUD');
 	
 	INSERT INTO tecabix_sce_historial.configuracion_historial (id_configuracion, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_configuracion,var_insert, NEW.id_usuario_modificado, 'SÉ CREO UN NUEVO REGISTRO' );
+        VALUES(NEW.id_configuracion,var_insert, NEW.id_usuario_modificado, 'Se creo un nuevo registro' );
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
@@ -1084,18 +1084,18 @@ BEGIN
 	
     IF OLD.id_tipo != NEW.id_tipo THEN
         INSERT INTO tecabix_sce_historial.configuracion_historial (id_configuracion, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_configuracion,var_update, NEW.id_usuario_modificado, 'SÉ ACTUALIZO EL TIPO DE VARIABLE DE '|| OLD.id_tipo || ' A ' || NEW.id_tipo);
+        VALUES(NEW.id_configuracion,var_update, NEW.id_usuario_modificado, 'Se actualizo el tipo de variable de '|| OLD.id_tipo || ' a ' || NEW.id_tipo);
     END IF;
     IF OLD.valor != NEW.valor THEN
         INSERT INTO tecabix_sce_historial.configuracion_historial (id_configuracion, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_configuracion,var_update, NEW.id_usuario_modificado, 'SÉ ACTUALIZO EL VALOR DE'|| OLD.valor || ' A ' || NEW.valor);
+        VALUES(NEW.id_configuracion,var_update, NEW.id_usuario_modificado, 'Se actualizo el valor de'|| OLD.valor || ' a ' || NEW.valor);
     END IF;
 
     IF OLD.id_estatus != NEW.id_estatus THEN
         SELECT nombre INTO id_aux_1 FROM tecabix_sce.catalogo WHERE id_catalogo = OLD.id_estatus;
         SELECT nombre INTO id_aux_2 FROM tecabix_sce.catalogo WHERE id_catalogo = NEW.id_estatus;
         INSERT INTO tecabix_sce_historial.configuracion_historial (id_configuracion, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_configuracion,var_update, NEW.id_usuario_modificado, 'SÉ ACTUALIZO EL ESTATUS DE '|| id_aux_1 || ' A ' || id_aux_2);
+        VALUES(NEW.id_configuracion,var_update, NEW.id_usuario_modificado, 'Se actualizo el estatus de '|| id_aux_1 || ' a ' || id_aux_2);
     END IF;
 
     RETURN NEW;
@@ -1120,10 +1120,10 @@ BEGIN
     SELECT id_catalogo INTO var_insert FROM tecabix_sce.catalogo WHERE nombre = 'CREAR' AND id_catalogo_tipo IN (SELECT id_catalogo_tipo FROM tecabix_sce.catalogo_tipo WHERE nombre = 'CRUD');
 	IF NEW.id_usuario_modificado IS NOT NULL THEN
         INSERT INTO tecabix_sce_historial.usuario_historial (id_usuario, id_accion, id_usuario_modificado, descripcion) 
-            VALUES(NEW.id_usuario,var_insert, NEW.id_usuario_modificado, 'SÉ CREO UN NUEVO REGISTRO' );
+            VALUES(NEW.id_usuario,var_insert, NEW.id_usuario_modificado, 'Se creo un nuevo registro' );
     ELSE  
         INSERT INTO tecabix_sce_historial.usuario_historial (id_usuario, id_accion, id_usuario_modificado, descripcion) 
-            VALUES(NEW.id_usuario,var_insert, NEW.id_usuario, 'SÉ CREO UN NUEVO REGISTRO' );
+            VALUES(NEW.id_usuario,var_insert, NEW.id_usuario, 'Se creo un nuevo registro' );
     END IF;
     RETURN NEW;
 END;
@@ -1142,17 +1142,17 @@ BEGIN
 	
     IF OLD.nombre != NEW.nombre THEN
         INSERT INTO tecabix_sce_historial.usuario_historial (id_usuario, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_usuario,var_update, NEW.id_usuario_modificado, 'SÉ ACTUALIZO EL NOMBRE DE '|| OLD.nombre || ' A ' || NEW.nombre);
+        VALUES(NEW.id_usuario,var_update, NEW.id_usuario_modificado, 'Se actualizo el nombre de '|| OLD.nombre || ' a ' || NEW.nombre);
     END IF;
 
     IF OLD.psw != NEW.psw THEN
         INSERT INTO tecabix_sce_historial.usuario_historial (id_usuario, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_usuario,var_update, NEW.id_usuario_modificado, 'SÉ ACTUALIZO LA CONTRASEÑA');
+        VALUES(NEW.id_usuario,var_update, NEW.id_usuario_modificado, 'Se actualizo la CONTRASEÑA');
     END IF;
 
     IF OLD.correo != NEW.correo THEN
         INSERT INTO tecabix_sce_historial.usuario_historial (id_usuario, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_usuario,var_update, NEW.id_usuario_modificado, 'SÉ ACTUALIZO EL CORREO DE '|| OLD.correo || ' A ' || NEW.correo);
+        VALUES(NEW.id_usuario,var_update, NEW.id_usuario_modificado, 'Se actualizo el CORREO DE '|| OLD.correo || ' a ' || NEW.correo);
     END IF;
 
     IF NEW.id_perfil IS NOT NULL THEN
@@ -1161,7 +1161,7 @@ BEGIN
             SELECT nombre INTO id_aux_2 FROM tecabix_sce.perfil WHERE id_perfil = NEW.id_perfil;
 
             INSERT INTO tecabix_sce_historial.usuario_historial (id_usuario, id_accion, id_usuario_modificado, descripcion) 
-            VALUES(NEW.id_usuario,var_update, NEW.id_usuario_modificado, 'SÉ ACTUALIZO EL PERFIL DE '|| id_aux_1 || ' A ' || id_aux_2);
+            VALUES(NEW.id_usuario,var_update, NEW.id_usuario_modificado, 'Se actualizo el PERFIL DE '|| id_aux_1 || ' a ' || id_aux_2);
         END IF;
     END IF;
 
@@ -1169,7 +1169,7 @@ BEGIN
         SELECT nombre INTO id_aux_1 FROM tecabix_sce.catalogo WHERE id_catalogo = OLD.id_estatus;
         SELECT nombre INTO id_aux_2 FROM tecabix_sce.catalogo WHERE id_catalogo = NEW.id_estatus;
         INSERT INTO tecabix_sce_historial.usuario_historial (id_usuario, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_usuario,var_update, NEW.id_usuario_modificado, 'SÉ ACTUALIZO EL ESTATUS DE '|| id_aux_1 || ' A ' || id_aux_2);
+        VALUES(NEW.id_usuario,var_update, NEW.id_usuario_modificado, 'Se actualizo el estatus de '|| id_aux_1 || ' a ' || id_aux_2);
     END IF;
 
     RETURN NEW;
@@ -1244,7 +1244,7 @@ BEGIN
     SELECT id_catalogo INTO var_insert FROM tecabix_sce.catalogo WHERE nombre = 'CREAR' AND id_catalogo_tipo IN (SELECT id_catalogo_tipo FROM tecabix_sce.catalogo_tipo WHERE nombre = 'CRUD');
 	
 	INSERT INTO tecabix_sce_historial.persona_moral_historial (id_persona_moral, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_persona_moral,var_insert, NEW.id_usuario_modificado, 'SÉ CREO UN NUEVO REGISTRO' );
+        VALUES(NEW.id_persona_moral,var_insert, NEW.id_usuario_modificado, 'Se creo un nuevo registro' );
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
@@ -1267,24 +1267,24 @@ BEGIN
 	
     IF OLD.razon_social != NEW.razon_social THEN
         INSERT INTO tecabix_sce_historial.persona_moral_historial (id_persona_moral, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_persona_moral,var_update, NEW.id_usuario_modificado, 'SÉ ACTUALIZO EL NOMBRE DE '|| OLD.razon_social || ' A ' || NEW.razon_social);
+        VALUES(NEW.id_persona_moral,var_update, NEW.id_usuario_modificado, 'Se actualizo el nombre de '|| OLD.razon_social || ' a ' || NEW.razon_social);
     END IF;
 
     IF OLD.rfc != NEW.rfc THEN
         INSERT INTO tecabix_sce_historial.persona_moral_historial (id_persona_moral, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_persona_moral,var_update, NEW.id_usuario_modificado, 'SÉ ACTUALIZO EL RFC DE '|| OLD.rfc || ' A ' || NEW.rfc);
+        VALUES(NEW.id_persona_moral,var_update, NEW.id_usuario_modificado, 'Se actualizo el RFC DE '|| OLD.rfc || ' a ' || NEW.rfc);
     END IF;
 
     IF OLD.fundada != NEW.fundada THEN
         INSERT INTO tecabix_sce_historial.persona_moral_historial (id_persona_moral, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_persona_moral,var_update, NEW.id_usuario_modificado, 'SÉ ACTUALIZO LA FECHA DE FUNDACION DE '|| OLD.fundada || ' A ' || NEW.fundada);
+        VALUES(NEW.id_persona_moral,var_update, NEW.id_usuario_modificado, 'Se actualizo la FECHA DE FUNDACION DE '|| OLD.fundada || ' a ' || NEW.fundada);
     END IF;
 
     IF OLD.id_estatus != NEW.id_estatus THEN
         SELECT nombre INTO id_aux_1 FROM tecabix_sce.catalogo WHERE id_catalogo = OLD.id_estatus;
         SELECT nombre INTO id_aux_2 FROM tecabix_sce.catalogo WHERE id_catalogo = NEW.id_estatus;
         INSERT INTO tecabix_sce_historial.persona_moral_historial (id_persona_moral, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_persona_moral,var_update, NEW.id_usuario_modificado, 'SÉ ACTUALIZO EL ESTATUS DE '|| id_aux_1 || ' A ' || id_aux_2);
+        VALUES(NEW.id_persona_moral,var_update, NEW.id_usuario_modificado, 'Se actualizo el estatus de '|| id_aux_1 || ' a ' || id_aux_2);
     END IF;
 
     RETURN NEW;
@@ -1307,7 +1307,7 @@ BEGIN
     SELECT id_catalogo INTO var_insert FROM tecabix_sce.catalogo WHERE nombre = 'CREAR' AND id_catalogo_tipo IN (SELECT id_catalogo_tipo FROM tecabix_sce.catalogo_tipo WHERE nombre = 'CRUD');
 	
 	INSERT INTO tecabix_sce_historial.persona_fisica_historial (id_persona_fisica, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_persona_fisica,var_insert, NEW.id_usuario_modificado, 'SÉ CREO UN NUEVO REGISTRO' );
+        VALUES(NEW.id_persona_fisica,var_insert, NEW.id_usuario_modificado, 'Se creo un nuevo registro' );
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
@@ -1331,17 +1331,17 @@ BEGIN
 	
     IF OLD.nombre != NEW.nombre THEN
         INSERT INTO tecabix_sce_historial.persona_fisica_historial (id_persona_fisica, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_persona_fisica,var_update, NEW.id_usuario_modificado, 'SÉ ACTUALIZO EL NOMBRE DE '|| OLD.nombre || ' A ' || NEW.nombre);
+        VALUES(NEW.id_persona_fisica,var_update, NEW.id_usuario_modificado, 'Se actualizo el nombre de '|| OLD.nombre || ' a ' || NEW.nombre);
     END IF;
 
     IF OLD.apellido_paterno != NEW.apellido_paterno THEN
         INSERT INTO tecabix_sce_historial.persona_fisica_historial (id_persona_fisica, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_persona_fisica,var_update, NEW.id_usuario_modificado, 'SÉ ACTUALIZO EL APELLIDO PATERNO DE '|| OLD.apellido_paterno || ' A ' || NEW.apellido_paterno);
+        VALUES(NEW.id_persona_fisica,var_update, NEW.id_usuario_modificado, 'Se actualizo el APELLIDO PATERNO DE '|| OLD.apellido_paterno || ' a ' || NEW.apellido_paterno);
     END IF;
 
     IF OLD.apellido_materno != NEW.apellido_materno THEN
         INSERT INTO tecabix_sce_historial.persona_fisica_historial (id_persona_fisica, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_persona_fisica,var_update, NEW.id_usuario_modificado, 'SÉ ACTUALIZO EL APELLIDO MATERNO DE '|| OLD.apellido_materno || ' A ' || NEW.apellido_materno);
+        VALUES(NEW.id_persona_fisica,var_update, NEW.id_usuario_modificado, 'Se actualizo el APELLIDO MATERNO DE '|| OLD.apellido_materno || ' a ' || NEW.apellido_materno);
     END IF;
 
     IF NEW.id_sexo IS NOT NULL THEN
@@ -1349,20 +1349,20 @@ BEGIN
             SELECT nombre INTO id_aux_1 FROM tecabix_sce.catalogo WHERE id_catalogo = OLD.id_sexo;
             SELECT nombre INTO id_aux_2 FROM tecabix_sce.catalogo WHERE id_catalogo = NEW.id_sexo;
             INSERT INTO tecabix_sce_historial.persona_fisica_historial (id_persona_fisica, id_accion, id_usuario_modificado, descripcion) 
-            VALUES(NEW.id_persona_fisica,var_update, NEW.id_usuario_modificado, 'SÉ ACTUALIZO EL SEXO DE '|| id_aux_1 || ' A ' || id_aux_2);
+            VALUES(NEW.id_persona_fisica,var_update, NEW.id_usuario_modificado, 'Se actualizo el SEXO DE '|| id_aux_1 || ' a ' || id_aux_2);
         END IF;
     END IF;
 
     IF OLD.fecha_nacimiento != NEW.fecha_nacimiento THEN
         INSERT INTO tecabix_sce_historial.persona_fisica_historial (id_persona_fisica, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_persona_fisica,var_update, NEW.id_usuario_modificado, 'SÉ ACTUALIZO LA FECHA DE NACIMIENTO DE '|| OLD.fecha_nacimiento || ' A ' || NEW.fecha_nacimiento);
+        VALUES(NEW.id_persona_fisica,var_update, NEW.id_usuario_modificado, 'Se actualizo la FECHA DE NACIMIENTO DE '|| OLD.fecha_nacimiento || ' a ' || NEW.fecha_nacimiento);
     END IF;
 
     IF OLD.id_estatus != NEW.id_estatus THEN
         SELECT nombre INTO id_aux_1 FROM tecabix_sce.catalogo WHERE id_catalogo = OLD.id_estatus;
         SELECT nombre INTO id_aux_2 FROM tecabix_sce.catalogo WHERE id_catalogo = NEW.id_estatus;
         INSERT INTO tecabix_sce_historial.persona_fisica_historial (id_persona_fisica, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_persona_fisica,var_update, NEW.id_usuario_modificado, 'SÉ ACTUALIZO EL ESTATUS DE '|| id_aux_1 || ' A ' || id_aux_2);
+        VALUES(NEW.id_persona_fisica,var_update, NEW.id_usuario_modificado, 'Se actualizo el estatus de '|| id_aux_1 || ' a ' || id_aux_2);
     END IF;
 
     RETURN NEW;
@@ -1386,7 +1386,7 @@ BEGIN
     SELECT id_catalogo INTO var_insert FROM tecabix_sce.catalogo WHERE nombre = 'CREAR' AND id_catalogo_tipo IN (SELECT id_catalogo_tipo FROM tecabix_sce.catalogo_tipo WHERE nombre = 'CRUD');
 	
 	INSERT INTO tecabix_sce_historial.departamento_historial (id_departamento, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_departamento,var_insert, NEW.id_usuario_modificado, 'SÉ CREO UN NUEVO REGISTRO' );
+        VALUES(NEW.id_departamento,var_insert, NEW.id_usuario_modificado, 'Se creo un nuevo registro' );
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
@@ -1410,19 +1410,19 @@ BEGIN
 	
     IF OLD.nombre != NEW.nombre THEN
         INSERT INTO tecabix_sce_historial.departamento_historial (id_departamento, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_departamento,var_update, NEW.id_usuario_modificado, 'SÉ ACTUALIZO EL NOMBRE DE '|| OLD.nombre || ' A ' || NEW.nombre);
+        VALUES(NEW.id_departamento,var_update, NEW.id_usuario_modificado, 'Se actualizo el nombre de '|| OLD.nombre || ' a ' || NEW.nombre);
     END IF;
 
     IF OLD.descripcion != NEW.descripcion THEN
         INSERT INTO tecabix_sce_historial.departamento_historial (id_departamento, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_departamento,var_update, NEW.id_usuario_modificado, 'SÉ ACTUALIZO LA DESCRIPCION');
+        VALUES(NEW.id_departamento,var_update, NEW.id_usuario_modificado, 'Se actualizo la descripción');
     END IF;
 
     IF OLD.id_estatus != NEW.id_estatus THEN
         SELECT nombre INTO id_aux_1 FROM tecabix_sce.catalogo WHERE id_catalogo = OLD.id_estatus;
         SELECT nombre INTO id_aux_2 FROM tecabix_sce.catalogo WHERE id_catalogo = NEW.id_estatus;
         INSERT INTO tecabix_sce_historial.departamento_historial (id_departamento, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_departamento,var_update, NEW.id_usuario_modificado, 'SÉ ACTUALIZO EL ESTATUS DE '|| id_aux_1 || ' A ' || id_aux_2);
+        VALUES(NEW.id_departamento,var_update, NEW.id_usuario_modificado, 'Se actualizo el estatus de '|| id_aux_1 || ' a ' || id_aux_2);
     END IF;
 
     RETURN NEW;
@@ -1446,7 +1446,7 @@ BEGIN
     SELECT id_catalogo INTO var_insert FROM tecabix_sce.catalogo WHERE nombre = 'CREAR' AND id_catalogo_tipo IN (SELECT id_catalogo_tipo FROM tecabix_sce.catalogo_tipo WHERE nombre = 'CRUD');
 	
 	INSERT INTO tecabix_sce_historial.puesto_historial (id_puesto, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_puesto,var_insert, NEW.id_usuario_modificado, 'SÉ CREO UN NUEVO REGISTRO' );
+        VALUES(NEW.id_puesto,var_insert, NEW.id_usuario_modificado, 'Se creo un nuevo registro' );
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
@@ -1470,26 +1470,26 @@ BEGIN
 	
     IF OLD.nombre != NEW.nombre THEN
         INSERT INTO tecabix_sce_historial.puesto_historial (id_persona_fisica, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_persona_fisica,var_update, NEW.id_usuario_modificado, 'SÉ ACTUALIZO EL NOMBRE DE '|| OLD.nombre || ' A ' || NEW.nombre);
+        VALUES(NEW.id_persona_fisica,var_update, NEW.id_usuario_modificado, 'Se actualizo el nombre de '|| OLD.nombre || ' a ' || NEW.nombre);
     END IF;
 
     IF OLD.descripcion != NEW.descripcion THEN
         INSERT INTO tecabix_sce_historial.puesto_historial (id_persona_fisica, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_persona_fisica,var_update, NEW.id_usuario_modificado, 'SÉ ACTUALIZO LA DESCRIPCION');
+        VALUES(NEW.id_persona_fisica,var_update, NEW.id_usuario_modificado, 'Se actualizo la descripción');
     END IF;
 
     IF OLD.id_departamento != NEW.id_departamento THEN
         SELECT nombre INTO id_aux_1 FROM tecabix_sce.departamento WHERE id_departamento = OLD.id_estatus;
         SELECT nombre INTO id_aux_2 FROM tecabix_sce.departamento WHERE id_departamento = NEW.id_estatus;
         INSERT INTO tecabix_sce_historial.puesto_historial (id_persona_fisica, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_persona_fisica,var_update, NEW.id_usuario_modificado, 'SÉ ACTUALIZO EL DEPARTAMENTO DE '|| id_aux_1 || ' A ' || id_aux_2);
+        VALUES(NEW.id_persona_fisica,var_update, NEW.id_usuario_modificado, 'Se actualizo el DEPARTAMENTO DE '|| id_aux_1 || ' a ' || id_aux_2);
     END IF;
 
     IF OLD.id_estatus != NEW.id_estatus THEN
         SELECT nombre INTO id_aux_1 FROM tecabix_sce.catalogo WHERE id_catalogo = OLD.id_estatus;
         SELECT nombre INTO id_aux_2 FROM tecabix_sce.catalogo WHERE id_catalogo = NEW.id_estatus;
         INSERT INTO tecabix_sce_historial.puesto_historial (id_persona_fisica, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_persona_fisica,var_update, NEW.id_usuario_modificado, 'SÉ ACTUALIZO EL ESTATUS DE '|| id_aux_1 || ' A ' || id_aux_2);
+        VALUES(NEW.id_persona_fisica,var_update, NEW.id_usuario_modificado, 'Se actualizo el estatus de '|| id_aux_1 || ' a ' || id_aux_2);
     END IF;
 
     RETURN NEW;
@@ -1512,7 +1512,7 @@ BEGIN
     SELECT id_catalogo INTO var_insert FROM tecabix_sce.catalogo WHERE nombre = 'CREAR' AND id_catalogo_tipo IN (SELECT id_catalogo_tipo FROM tecabix_sce.catalogo_tipo WHERE nombre = 'CRUD');
 	
 	INSERT INTO tecabix_sce_historial.plantel_historial (id_plantel, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_plantel,var_insert, NEW.id_usuario_modificado, 'SÉ CREO UN NUEVO REGISTRO' );
+        VALUES(NEW.id_plantel,var_insert, NEW.id_usuario_modificado, 'Se creo un nuevo registro' );
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
@@ -1536,21 +1536,21 @@ BEGIN
 	
     IF OLD.nombre != NEW.nombre THEN
         INSERT INTO tecabix_sce_historial.plantel_historial (id_plantel, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_plantel,var_update, NEW.id_usuario_modificado, 'SÉ ACTUALIZO EL NOMBRE DE '|| OLD.nombre || ' A ' || NEW.nombre);
+        VALUES(NEW.id_plantel,var_update, NEW.id_usuario_modificado, 'Se actualizo el nombre de '|| OLD.nombre || ' a ' || NEW.nombre);
     END IF;
 
     IF OLD.id_gerente != NEW.id_gerente THEN
         SELECT nombre INTO id_aux_1 FROM tecabix_sce.persona_fisica WHERE id_persona_fisica IN (SELECT id_persona_fisica FROM tecabix_sce.trabajador WHERE id_trabajador = OLD.id_gerente);        
         SELECT nombre INTO id_aux_2 FROM tecabix_sce.persona_fisica WHERE id_persona_fisica IN (SELECT id_persona_fisica FROM tecabix_sce.trabajador WHERE id_trabajador = NEW.id_gerente);        
         INSERT INTO tecabix_sce_historial.plantel_historial (id_plantel, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_plantel,var_update, NEW.id_usuario_modificado, 'SÉ ACTUALIZO EL GERENTE DE '|| id_aux_1 || ' CON ID DE TRABAJADOR'|| OLD.id_gerente ||' A ' || id_aux_2 || ' CON ID DE TRABAJADOR'|| NEW.id_gerente);
+        VALUES(NEW.id_plantel,var_update, NEW.id_usuario_modificado, 'Se actualizo el GERENTE DE '|| id_aux_1 || ' CON ID DE TRABAJADOR'|| OLD.id_gerente ||' a ' || id_aux_2 || ' CON ID DE TRABAJADOR'|| NEW.id_gerente);
     END IF;
 
     IF OLD.id_estatus != NEW.id_estatus THEN
         SELECT nombre INTO id_aux_1 FROM tecabix_sce.catalogo WHERE id_catalogo = OLD.id_estatus;
         SELECT nombre INTO id_aux_2 FROM tecabix_sce.catalogo WHERE id_catalogo = NEW.id_estatus;
         INSERT INTO tecabix_sce_historial.plantel_historial (id_plantel, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_plantel,var_update, NEW.id_usuario_modificado, 'SÉ ACTUALIZO EL ESTATUS DE '|| id_aux_1 || ' A ' || id_aux_2);
+        VALUES(NEW.id_plantel,var_update, NEW.id_usuario_modificado, 'Se actualizo el estatus de '|| id_aux_1 || ' a ' || id_aux_2);
     END IF;
 
     RETURN NEW;
@@ -1573,7 +1573,7 @@ BEGIN
     SELECT id_catalogo INTO var_insert FROM tecabix_sce.catalogo WHERE nombre = 'CREAR' AND id_catalogo_tipo IN (SELECT id_catalogo_tipo FROM tecabix_sce.catalogo_tipo WHERE nombre = 'CRUD');
 	
 	INSERT INTO tecabix_sce_historial.banco_historial (id_banco, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_banco,var_insert, NEW.id_usuario_modificado, 'SÉ CREO UN NUEVO REGISTRO '|| NEW.nombre );
+        VALUES(NEW.id_banco,var_insert, NEW.id_usuario_modificado, 'Se creo un nuevo registro '|| NEW.nombre );
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
@@ -1596,19 +1596,19 @@ BEGIN
 	
     IF OLD.nombre != NEW.nombre THEN
         INSERT INTO tecabix_sce_historial.banco_historial (id_banco, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_banco,var_update, NEW.id_usuario_modificado, 'SÉ ACTUALIZO EL NOMBRE DE '|| OLD.nombre || ' A ' || NEW.nombre);
+        VALUES(NEW.id_banco,var_update, NEW.id_usuario_modificado, 'Se actualizo el nombre de '|| OLD.nombre || ' a ' || NEW.nombre);
     END IF;
 
     IF OLD.id_estatus != NEW.id_estatus THEN
         SELECT nombre INTO id_aux_1 FROM tecabix_sce.catalogo WHERE id_catalogo = OLD.id_estatus;
         SELECT nombre INTO id_aux_2 FROM tecabix_sce.catalogo WHERE id_catalogo = NEW.id_estatus;
         INSERT INTO tecabix_sce_historial.banco_historial (id_banco, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_banco,var_update, NEW.id_usuario_modificado, 'SÉ ACTUALIZO EL ESTATUS DE '|| id_aux_1 || ' A ' || id_aux_2);
+        VALUES(NEW.id_banco,var_update, NEW.id_usuario_modificado, 'Se actualizo el estatus de '|| id_aux_1 || ' a ' || id_aux_2);
     END IF;
 
     IF OLD.razon_social != NEW.razon_social THEN
         INSERT INTO tecabix_sce_historial.banco_historial (id_banco, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_banco,var_update, NEW.id_usuario_modificado, 'SÉ ACTUALIZO LA RAZON SOCIAL DE '|| OLD.razon_social || ' A ' || NEW.razon_social);
+        VALUES(NEW.id_banco,var_update, NEW.id_usuario_modificado, 'Se actualizo la RAZON SOCIAL DE '|| OLD.razon_social || ' a ' || NEW.razon_social);
     END IF;
 
     RETURN NEW;
@@ -1632,7 +1632,7 @@ BEGIN
     SELECT id_catalogo INTO var_delete FROM tecabix_sce.catalogo WHERE nombre = 'ELIMINAR' AND id_catalogo_tipo IN (SELECT id_catalogo_tipo FROM tecabix_sce.catalogo_tipo WHERE nombre = 'CRUD');
 	
     INSERT INTO tecabix_sce_historial.banco_historial (id_banco, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(OLD.id_banco,var_delete, OLD.id_usuario_modificado, 'SÉ ELIMINO EL REGISTRO');
+        VALUES(OLD.id_banco,var_delete, OLD.id_usuario_modificado, 'Se elimino el registro');
 
     RETURN OLD;
 END;
@@ -1654,7 +1654,7 @@ BEGIN
     SELECT id_catalogo INTO var_insert FROM tecabix_sce.catalogo WHERE nombre = 'CREAR' AND id_catalogo_tipo IN (SELECT id_catalogo_tipo FROM tecabix_sce.catalogo_tipo WHERE nombre = 'CRUD');
 	
 	INSERT INTO tecabix_sce_historial.estado_historial (id_estado, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_estado,var_insert, NEW.id_usuario_modificado, 'SÉ CREO UN NUEVO REGISTRO '|| upper(NEW.nombre) );
+        VALUES(NEW.id_estado,var_insert, NEW.id_usuario_modificado, 'Se creo un nuevo registro '|| upper(NEW.nombre) );
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
@@ -1677,19 +1677,19 @@ BEGIN
 	
     IF OLD.nombre != NEW.nombre THEN
         INSERT INTO tecabix_sce_historial.estado_historial (id_estado, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_estado,var_update, NEW.id_usuario_modificado, 'SÉ ACTUALIZO EL NOMBRE DE '|| OLD.nombre || ' A ' || NEW.nombre);
+        VALUES(NEW.id_estado,var_update, NEW.id_usuario_modificado, 'Se actualizo el nombre de '|| OLD.nombre || ' a ' || NEW.nombre);
     END IF;
 
     IF OLD.id_estatus != NEW.id_estatus THEN
         SELECT nombre INTO id_aux_1 FROM tecabix_sce.catalogo WHERE id_catalogo = OLD.id_estatus;
         SELECT nombre INTO id_aux_2 FROM tecabix_sce.catalogo WHERE id_catalogo = NEW.id_estatus;
         INSERT INTO tecabix_sce_historial.estado_historial (id_estado, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_estado,var_update, NEW.id_usuario_modificado, 'SÉ ACTUALIZO EL ESTATUS DE '|| id_aux_1 || ' A ' || id_aux_2);
+        VALUES(NEW.id_estado,var_update, NEW.id_usuario_modificado, 'Se actualizo el estatus de '|| id_aux_1 || ' a ' || id_aux_2);
     END IF;
 
     IF OLD.abreviatura != NEW.abreviatura THEN
         INSERT INTO tecabix_sce_historial.estado_historial (id_estado, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_estado,var_update, NEW.id_usuario_modificado, 'SÉ ACTUALIZO LA ABREVIACION DE '|| OLD.abreviatura || ' A ' || NEW.abreviatura);
+        VALUES(NEW.id_estado,var_update, NEW.id_usuario_modificado, 'Se actualizo la ABREVIACION DE '|| OLD.abreviatura || ' a ' || NEW.abreviatura);
     END IF;
 
     RETURN NEW;
@@ -1713,7 +1713,7 @@ BEGIN
     SELECT id_catalogo INTO var_delete FROM tecabix_sce.catalogo WHERE nombre = 'ELIMINAR' AND id_catalogo_tipo IN (SELECT id_catalogo_tipo FROM tecabix_sce.catalogo_tipo WHERE nombre = 'CRUD');
 	
     INSERT INTO tecabix_sce_historial.estado_historial (id_estado, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(OLD.id_estado,var_delete, OLD.id_usuario_modificado, 'SÉ ELIMINO EL REGISTRO');
+        VALUES(OLD.id_estado,var_delete, OLD.id_usuario_modificado, 'Se elimino el registro');
 
     RETURN OLD;
 END;
@@ -1736,7 +1736,7 @@ BEGIN
     SELECT id_catalogo INTO var_insert FROM tecabix_sce.catalogo WHERE nombre = 'CREAR' AND id_catalogo_tipo IN (SELECT id_catalogo_tipo FROM tecabix_sce.catalogo_tipo WHERE nombre = 'CRUD');
 	
 	INSERT INTO tecabix_sce_historial.municipio_historial (id_municipio, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_municipio,var_insert, NEW.id_usuario_modificado, 'SÉ CREO UN NUEVO REGISTRO '|| upper(NEW.nombre) );
+        VALUES(NEW.id_municipio,var_insert, NEW.id_usuario_modificado, 'Se creo un nuevo registro '|| upper(NEW.nombre) );
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
@@ -1759,14 +1759,14 @@ BEGIN
 	
     IF OLD.nombre != NEW.nombre THEN
         INSERT INTO tecabix_sce_historial.municipio_historial (id_municipio, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_municipio,var_update, NEW.id_usuario_modificado, 'SÉ ACTUALIZO EL NOMBRE DE '|| OLD.nombre || ' A ' || NEW.nombre);
+        VALUES(NEW.id_municipio,var_update, NEW.id_usuario_modificado, 'Se actualizo el nombre de '|| OLD.nombre || ' a ' || NEW.nombre);
     END IF;
 
     IF OLD.id_estatus != NEW.id_estatus THEN
         SELECT nombre INTO id_aux_1 FROM tecabix_sce.catalogo WHERE id_catalogo = OLD.id_estatus;
         SELECT nombre INTO id_aux_2 FROM tecabix_sce.catalogo WHERE id_catalogo = NEW.id_estatus;
         INSERT INTO tecabix_sce_historial.municipio_historial (id_municipio, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_municipio,var_update, NEW.id_usuario_modificado, 'SÉ ACTUALIZO EL ESTATUS DE '|| id_aux_1 || ' A ' || id_aux_2);
+        VALUES(NEW.id_municipio,var_update, NEW.id_usuario_modificado, 'Se actualizo el estatus de '|| id_aux_1 || ' a ' || id_aux_2);
     END IF;
 
     RETURN NEW;
@@ -1790,7 +1790,7 @@ BEGIN
     SELECT id_catalogo INTO var_delete FROM tecabix_sce.catalogo WHERE nombre = 'ELIMINAR' AND id_catalogo_tipo IN (SELECT id_catalogo_tipo FROM tecabix_sce.catalogo_tipo WHERE nombre = 'CRUD');
 	
     INSERT INTO tecabix_sce_historial.municipio_historial (id_municipio, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(OLD.id_municipio,var_delete, OLD.id_usuario_modificado, 'SÉ ELIMINO EL REGISTRO');
+        VALUES(OLD.id_municipio,var_delete, OLD.id_usuario_modificado, 'Se elimino el registro');
 
     RETURN OLD;
 END;
@@ -1813,7 +1813,7 @@ BEGIN
     SELECT id_catalogo INTO var_insert FROM tecabix_sce.catalogo WHERE nombre = 'CREAR' AND id_catalogo_tipo IN (SELECT id_catalogo_tipo FROM tecabix_sce.catalogo_tipo WHERE nombre = 'CRUD');
 	
 	INSERT INTO tecabix_sce_historial.plan_historial (id_plan, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_plan,var_insert, NEW.id_usuario_modificado, 'SÉ CREO UN NUEVO REGISTRO '|| NEW.nombre );
+        VALUES(NEW.id_plan,var_insert, NEW.id_usuario_modificado, 'Se creo un nuevo registro '|| NEW.nombre );
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
@@ -1836,20 +1836,20 @@ BEGIN
 	
     IF OLD.nombre != NEW.nombre THEN
         INSERT INTO tecabix_sce_historial.plan_historial (id_plan, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_plan,var_update, NEW.id_usuario_modificado, 'SÉ ACTUALIZO EL NOMBRE DE '|| OLD.nombre || ' A ' || NEW.nombre);
+        VALUES(NEW.id_plan,var_update, NEW.id_usuario_modificado, 'Se actualizo el nombre de '|| OLD.nombre || ' a ' || NEW.nombre);
     END IF;
 
     IF OLD.id_estatus != NEW.id_estatus THEN
         SELECT nombre INTO id_aux_1 FROM tecabix_sce.catalogo WHERE id_catalogo = OLD.id_estatus;
         SELECT nombre INTO id_aux_2 FROM tecabix_sce.catalogo WHERE id_catalogo = NEW.id_estatus;
         INSERT INTO tecabix_sce_historial.plan_historial (id_plan, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_plan,var_update, NEW.id_usuario_modificado, 'SÉ ACTUALIZO EL ESTATUS DE '|| id_aux_1 || ' A ' || id_aux_2);
+        VALUES(NEW.id_plan,var_update, NEW.id_usuario_modificado, 'Se actualizo el estatus de '|| id_aux_1 || ' a ' || id_aux_2);
     END IF;
 
     IF OLD.precio != NEW.precio THEN
         SELECT nombre INTO id_aux_2 FROM tecabix_sce.catalogo WHERE id_catalogo = NEW.id_estatus;
         INSERT INTO tecabix_sce_historial.plan_historial (id_plan, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_plan,var_update, NEW.id_usuario_modificado, 'SÉ ACTUALIZO EL PRECIO DE '|| OLD.precio || ' A ' || NEW.precio);
+        VALUES(NEW.id_plan,var_update, NEW.id_usuario_modificado, 'Se actualizo el PRECIO DE '|| OLD.precio || ' a ' || NEW.precio);
     END IF;
 
     RETURN NEW;
@@ -1873,7 +1873,7 @@ BEGIN
     SELECT id_catalogo INTO var_delete FROM tecabix_sce.catalogo WHERE nombre = 'ELIMINAR' AND id_catalogo_tipo IN (SELECT id_catalogo_tipo FROM tecabix_sce.catalogo_tipo WHERE nombre = 'CRUD');
 	
     INSERT INTO tecabix_sce_historial.plan_historial (id_plan, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(OLD.id_plan,var_delete, OLD.id_usuario_modificado, 'SÉ ELIMINO EL REGISTRO');
+        VALUES(OLD.id_plan,var_delete, OLD.id_usuario_modificado, 'Se elimino el registro');
 
     RETURN OLD;
 END;
@@ -1896,7 +1896,7 @@ BEGIN
     SELECT id_catalogo INTO var_insert FROM tecabix_sce.catalogo WHERE nombre = 'CREAR' AND id_catalogo_tipo IN (SELECT id_catalogo_tipo FROM tecabix_sce.catalogo_tipo WHERE nombre = 'CRUD');
 	
 	INSERT INTO tecabix_sce_historial.servicio_historial (id_servicio, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_servicio,var_insert, NEW.id_usuario_modificado, 'SÉ CREO UN NUEVO REGISTRO '|| NEW.nombre );
+        VALUES(NEW.id_servicio,var_insert, NEW.id_usuario_modificado, 'Se creo un nuevo registro '|| NEW.nombre );
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
@@ -1919,21 +1919,21 @@ BEGIN
 	
     IF OLD.nombre != NEW.nombre THEN
         INSERT INTO tecabix_sce_historial.servicio_historial (id_servicio, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_servicio,var_update, NEW.id_usuario_modificado, 'SÉ ACTUALIZO EL NOMBRE DE '|| OLD.nombre || ' A ' || NEW.nombre);
+        VALUES(NEW.id_servicio,var_update, NEW.id_usuario_modificado, 'Se actualizo el nombre de '|| OLD.nombre || ' a ' || NEW.nombre);
     END IF;
 
     IF OLD.id_estatus != NEW.id_estatus THEN
         SELECT nombre INTO id_aux_1 FROM tecabix_sce.catalogo WHERE id_catalogo = OLD.id_estatus;
         SELECT nombre INTO id_aux_2 FROM tecabix_sce.catalogo WHERE id_catalogo = NEW.id_estatus;
         INSERT INTO tecabix_sce_historial.servicio_historial (id_servicio, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_servicio,var_update, NEW.id_usuario_modificado, 'SÉ ACTUALIZO EL ESTATUS DE '|| id_aux_1 || ' A ' || id_aux_2);
+        VALUES(NEW.id_servicio,var_update, NEW.id_usuario_modificado, 'Se actualizo el estatus de '|| id_aux_1 || ' a ' || id_aux_2);
     END IF;
 
     IF OLD.id_tipo != NEW.id_tipo THEN
         SELECT nombre INTO id_aux_1 FROM tecabix_sce.catalogo WHERE id_catalogo = OLD.id_tipo;
         SELECT nombre INTO id_aux_2 FROM tecabix_sce.catalogo WHERE id_catalogo = NEW.id_tipo;
         INSERT INTO tecabix_sce_historial.servicio_historial (id_servicio, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_servicio,var_update, NEW.id_usuario_modificado, 'SÉ ACTUALIZO EL TIPO DE '|| id_aux_1 || ' A ' || id_aux_2);
+        VALUES(NEW.id_servicio,var_update, NEW.id_usuario_modificado, 'Se actualizo el tipo de '|| id_aux_1 || ' a ' || id_aux_2);
     END IF;
 
     RETURN NEW;
@@ -1957,7 +1957,7 @@ BEGIN
     SELECT id_catalogo INTO var_delete FROM tecabix_sce.catalogo WHERE nombre = 'ELIMINAR' AND id_catalogo_tipo IN (SELECT id_catalogo_tipo FROM tecabix_sce.catalogo_tipo WHERE nombre = 'CRUD');
 	
     INSERT INTO tecabix_sce_historial.servicio_historial (id_servicio, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(OLD.id_servicio,var_delete, OLD.id_usuario_modificado, 'SÉ ELIMINO EL REGISTRO');
+        VALUES(OLD.id_servicio,var_delete, OLD.id_usuario_modificado, 'Se elimino el registro');
 
     RETURN OLD;
 END;
@@ -1980,7 +1980,7 @@ BEGIN
     SELECT id_catalogo INTO var_insert FROM tecabix_sce.catalogo WHERE nombre = 'CREAR' AND id_catalogo_tipo IN (SELECT id_catalogo_tipo FROM tecabix_sce.catalogo_tipo WHERE nombre = 'CRUD');
 	
 	INSERT INTO tecabix_sce_historial.plan_servicio_historial (id_plan_servicio, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_plan_servicio,var_insert, NEW.id_usuario_modificado, 'SÉ CREO UN NUEVO REGISTRO');
+        VALUES(NEW.id_plan_servicio,var_insert, NEW.id_usuario_modificado, 'Se creo un nuevo registro');
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
@@ -2003,14 +2003,14 @@ BEGIN
 	
     IF OLD.numero_licencias != NEW.numero_licencias THEN
         INSERT INTO tecabix_sce_historial.plan_servicio_historial (id_plan_servicio, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_plan_servicio,var_update, NEW.id_usuario_modificado, 'SÉ ACTUALIZO EL NUMERO DE LICENCIAS DE '|| OLD.numero_licencias || ' A ' || NEW.numero_licencias);
+        VALUES(NEW.id_plan_servicio,var_update, NEW.id_usuario_modificado, 'Se actualizo el numero de licencias de  '|| OLD.numero_licencias || ' a ' || NEW.numero_licencias);
     END IF;
 
     IF OLD.id_estatus != NEW.id_estatus THEN
         SELECT nombre INTO id_aux_1 FROM tecabix_sce.catalogo WHERE id_catalogo = OLD.id_estatus;
         SELECT nombre INTO id_aux_2 FROM tecabix_sce.catalogo WHERE id_catalogo = NEW.id_estatus;
         INSERT INTO tecabix_sce_historial.plan_servicio_historial (id_plan_servicio, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_plan_servicio,var_update, NEW.id_usuario_modificado, 'SÉ ACTUALIZO EL ESTATUS DE '|| id_aux_1 || ' A ' || id_aux_2);
+        VALUES(NEW.id_plan_servicio,var_update, NEW.id_usuario_modificado, 'Se actualizo el estatus de '|| id_aux_1 || ' a ' || id_aux_2);
     END IF;
 
     RETURN NEW;
@@ -2034,7 +2034,7 @@ BEGIN
     SELECT id_catalogo INTO var_delete FROM tecabix_sce.catalogo WHERE nombre = 'ELIMINAR' AND id_catalogo_tipo IN (SELECT id_catalogo_tipo FROM tecabix_sce.catalogo_tipo WHERE nombre = 'CRUD');
 	
     INSERT INTO tecabix_sce_historial.plan_servicio_historial (id_plan_servicio, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(OLD.id_plan_servicio,var_delete, OLD.id_usuario_modificado, 'SÉ ELIMINO EL REGISTRO');
+        VALUES(OLD.id_plan_servicio,var_delete, OLD.id_usuario_modificado, 'Se elimino el registro');
 
     RETURN OLD;
 END;
@@ -2056,7 +2056,7 @@ BEGIN
     SELECT id_catalogo INTO var_insert FROM tecabix_sce.catalogo WHERE nombre = 'CREAR' AND id_catalogo_tipo IN (SELECT id_catalogo_tipo FROM tecabix_sce.catalogo_tipo WHERE nombre = 'CRUD');
 	
 	INSERT INTO tecabix_sce_historial.correo_historial (id_correo, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_correo,var_insert, NEW.id_usuario_modificado, 'SÉ CREO UN NUEVO REGISTRO '|| upper(NEW.remitente) );
+        VALUES(NEW.id_correo,var_insert, NEW.id_usuario_modificado, 'Se creo un nuevo registro '|| upper(NEW.remitente) );
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
@@ -2079,36 +2079,36 @@ BEGIN
 	
     IF OLD.remitente != NEW.remitente THEN
         INSERT INTO tecabix_sce_historial.correo_historial (id_correo, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_correo,var_update, NEW.id_usuario_modificado, 'SÉ ACTUALIZO EL REMITENTE DE '|| OLD.remitente || ' A ' || NEW.remitente);
+        VALUES(NEW.id_correo,var_update, NEW.id_usuario_modificado, 'Se actualizo el remitente de '|| OLD.remitente || ' a ' || NEW.remitente);
     END IF;
 
     IF OLD.id_estatus != NEW.id_estatus THEN
         SELECT nombre INTO id_aux_1 FROM tecabix_sce.catalogo WHERE id_catalogo = OLD.id_estatus;
         SELECT nombre INTO id_aux_2 FROM tecabix_sce.catalogo WHERE id_catalogo = NEW.id_estatus;
         INSERT INTO tecabix_sce_historial.correo_historial (id_correo, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_correo,var_update, NEW.id_usuario_modificado, 'SÉ ACTUALIZO EL ESTATUS DE '|| id_aux_1 || ' A ' || id_aux_2);
+        VALUES(NEW.id_correo,var_update, NEW.id_usuario_modificado, 'Se actualizo el estatus de '|| id_aux_1 || ' a ' || id_aux_2);
     END IF;
 
     IF OLD.psw != NEW.psw THEN
         INSERT INTO tecabix_sce_historial.correo_historial (id_correo, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_correo,var_update, NEW.id_usuario_modificado, 'SÉ ACTUALIZO LA CONTRASEÑA');
+        VALUES(NEW.id_correo,var_update, NEW.id_usuario_modificado, 'Se actualizo la contraseña');
     END IF;
 
     IF OLD.smtp_servidor != NEW.smtp_servidor THEN
         INSERT INTO tecabix_sce_historial.correo_historial (id_correo, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_correo,var_update, NEW.id_usuario_modificado, 'SÉ ACTUALIZO EL SMTP SERVIDOR DE '|| upper(OLD.smtp_servidor) || ' A ' || upper(NEW.smtp_servidor));
+        VALUES(NEW.id_correo,var_update, NEW.id_usuario_modificado, 'Se actualizo el smtp servidor de '|| upper(OLD.smtp_servidor) || ' a ' || upper(NEW.smtp_servidor));
     END IF;
 
     IF OLD.smtp_port != NEW.smtp_port THEN
         INSERT INTO tecabix_sce_historial.correo_historial (id_correo, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_correo,var_update, NEW.id_usuario_modificado, 'SÉ ACTUALIZO EL SMTP PORT DE '|| OLD.smtp_port || ' A ' || NEW.smtp_port);
+        VALUES(NEW.id_correo,var_update, NEW.id_usuario_modificado, 'Se actualizo el smtp port DE '|| OLD.smtp_port || ' a ' || NEW.smtp_port);
     END IF;
 
     IF OLD.id_tipo != NEW.id_tipo THEN
         SELECT nombre INTO id_aux_1 FROM tecabix_sce.catalogo WHERE id_catalogo = OLD.id_tipo;
         SELECT nombre INTO id_aux_2 FROM tecabix_sce.catalogo WHERE id_catalogo = NEW.id_tipo;
         INSERT INTO tecabix_sce_historial.correo_historial (id_correo, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_correo,var_update, NEW.id_usuario_modificado, 'SÉ ACTUALIZO EL TIPO DE '|| id_aux_1 || ' A ' || id_aux_2);
+        VALUES(NEW.id_correo,var_update, NEW.id_usuario_modificado, 'Se actualizo el tipo de '|| id_aux_1 || ' a ' || id_aux_2);
     END IF;
 
     RETURN NEW;
@@ -2132,7 +2132,7 @@ BEGIN
     SELECT id_catalogo INTO var_delete FROM tecabix_sce.catalogo WHERE nombre = 'ELIMINAR' AND id_catalogo_tipo IN (SELECT id_catalogo_tipo FROM tecabix_sce.catalogo_tipo WHERE nombre = 'CRUD');
 	
     INSERT INTO tecabix_sce_historial.correo_historial (id_correo, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(OLD.id_correo,var_delete, OLD.id_usuario_modificado, 'SÉ ELIMINO EL REGISTRO');
+        VALUES(OLD.id_correo,var_delete, OLD.id_usuario_modificado, 'Se elimino el registro');
 
     RETURN OLD;
 END;
