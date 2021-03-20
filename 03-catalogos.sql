@@ -234,7 +234,7 @@ BEGIN
 	SELECT id_authority INTO id_aux_1 FROM tecabix_sce.authority WHERE nombre = 'ADMINISTRADOR_ROOT';
 		INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('ROOT_SESION', 'SESION EN ROOT', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 		SELECT id_authority INTO id_aux_1 FROM tecabix_sce.authority WHERE nombre = 'ROOT_SESION';
-			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('ROOT_SESION_ELIMINAR', 'ELIMINAR OTRAS SESIONES DE CUALQUIER ESCUELA', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('ROOT_SESION_ELIMINAR', 'ELIMINAR OTRAS SESIONES DE CUALQUIER EMPRESA', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 
 	SELECT id_authority INTO id_aux_1 FROM tecabix_sce.authority WHERE nombre = 'AUTENTIFICADOS';
 		INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('TRABAJADOR', 'TRABAJADOR', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
@@ -274,9 +274,9 @@ BEGIN
 		INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('BANCO', 'INFORMACION DE LISTAS DE ENTIDADES BANCARIAS', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 
 	SELECT id_authority INTO id_aux_1 FROM tecabix_sce.authority WHERE nombre = 'ADMINISTRADOR_ROOT';
-		INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('ROOT_ESCUELA', 'INFORMACION DE LISTAS DE ENTIDADES EDUCATIVAS', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
-		SELECT id_authority INTO id_aux_1 FROM tecabix_sce.authority WHERE nombre = 'ROOT_ESCUELA';
-			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('ROOT_ESCUELA_CREAR', 'CREAR INFORMACION DE UNA ENTIDAD EDUCATIVA', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+		INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('ROOT_EMPRESA', 'INFORMACION DE LISTAS DE ENTIDADES EDUCATIVAS', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+		SELECT id_authority INTO id_aux_1 FROM tecabix_sce.authority WHERE nombre = 'ROOT_EMPRESA';
+			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('ROOT_EMPRESA_CREAR', 'CREAR INFORMACION DE UNA ENTIDAD EDUCATIVA', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 
 	SELECT id_authority INTO id_aux_1 FROM tecabix_sce.authority WHERE nombre = 'AUTENTIFICADOS';
 		INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('DEPARTAMENTO', 'DEPARTAMENTO', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);

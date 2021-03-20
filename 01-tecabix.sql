@@ -182,7 +182,7 @@ CREATE TABLE tecabix_sce.perfil(
 	id_perfil bigint NOT NULL DEFAULT nextval('tecabix_sce.perfil_seq'::regclass),
 	nombre character varying(45) NOT NULL,
 	descripcion character varying(500) NOT NULL,
-	id_escuela bigint NOT NULL,
+	id_empresa bigint NOT NULL,
     id_usuario_modificado bigint NOT NULL,
 	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
     id_estatus integer NOT NULL,
@@ -193,7 +193,7 @@ COMMENT ON TABLE tecabix_sce.perfil IS 'PERFIL';
 COMMENT ON COLUMN tecabix_sce.perfil.id_perfil IS 'IDENTIFICADOR UNICO DEL PERFIL';
 COMMENT ON COLUMN tecabix_sce.perfil.nombre IS 'NOMBRE DEL PERFIL';
 COMMENT ON COLUMN tecabix_sce.perfil.descripcion IS 'DESCRIPCION DEL PERFIL';
-COMMENT ON COLUMN tecabix_sce.perfil.id_escuela IS 'ESCUELA AL QUE PERTENECE EL PERFIL';
+COMMENT ON COLUMN tecabix_sce.perfil.id_empresa IS 'EMPRESA AL QUE PERTENECE EL PERFIL';
 COMMENT ON COLUMN tecabix_sce.perfil.id_usuario_modificado IS 'ULTIMO USUARIO QUE MODIFICO EL REGISTRO';
 COMMENT ON COLUMN tecabix_sce.perfil.fecha_modificado IS 'ULTIMA FECHA QUE SE MODIFICO EL REGISTRO';
 COMMENT ON COLUMN tecabix_sce.perfil.id_estatus IS 'STATUS DEL REGISTRO, CATALOGO_TIPO = ESTATUS';
@@ -403,7 +403,7 @@ CREATE SEQUENCE tecabix_sce.persona_seq
 CREATE TABLE tecabix_sce.persona(
 	id_persona bigint NOT NULL DEFAULT nextval('tecabix_sce.persona_seq'::regclass),
 	id_tipo integer NOT NULL,
-    id_escuela bigint,
+    id_empresa bigint,
 	id_usuario_modificado bigint NOT NULL,
 	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
 	id_estatus integer NOT NULL,
@@ -413,7 +413,7 @@ CONSTRAINT pk_persona_id_persona PRIMARY KEY (id_persona)
 COMMENT ON TABLE tecabix_sce.persona IS 'PERSONA QUE PUEDE SER FISICA O MORAL';
 COMMENT ON COLUMN tecabix_sce.persona.id_persona IS 'IDENTIFICADOR UNICO DE LA PERSONA';
 COMMENT ON COLUMN tecabix_sce.persona.id_tipo IS 'TIPO DE PERSONA, CATALOGO_TIPO = TIPO_DE_PERSONA';
-COMMENT ON COLUMN tecabix_sce.persona.id_escuela IS 'ESCUELA AL QUE PERTENECE LA PERSONA';
+COMMENT ON COLUMN tecabix_sce.persona.id_empresa IS 'EMPRESA AL QUE PERTENECE LA PERSONA';
 COMMENT ON COLUMN tecabix_sce.persona.id_usuario_modificado IS 'ULTIMO USUARIO QUE MODIFICO EL REGISTRO';
 COMMENT ON COLUMN tecabix_sce.persona.fecha_modificado IS 'ULTIMA FECHA QUE SE MODIFICO EL REGISTRO';
 COMMENT ON COLUMN tecabix_sce.persona.id_estatus IS 'STATUS DEL REGISTRO, CATALOGO_TIPO = ESTATUS';
@@ -522,11 +522,11 @@ ALTER TABLE tecabix_sce.persona_moral ADD CONSTRAINT fk_persona_moral_id_estatus
 REFERENCES tecabix_sce.catalogo(id_catalogo) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
-ALTER TABLE tecabix_sce.persona ADD CONSTRAINT fk_persona_id_escuela FOREIGN KEY (id_escuela)
+ALTER TABLE tecabix_sce.persona ADD CONSTRAINT fk_persona_id_empresa FOREIGN KEY (id_empresa)
 REFERENCES tecabix_sce.persona_moral(id_persona_moral) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
-ALTER TABLE tecabix_sce.perfil ADD CONSTRAINT fk_perfil_id_escuela FOREIGN KEY (id_escuela)
+ALTER TABLE tecabix_sce.perfil ADD CONSTRAINT fk_perfil_id_empresa FOREIGN KEY (id_empresa)
 REFERENCES tecabix_sce.persona_moral(id_persona_moral) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
@@ -680,7 +680,7 @@ CREATE TABLE tecabix_sce.departamento(
 	id_departamento bigint NOT NULL DEFAULT nextval('tecabix_sce.departamento_seq'::regclass),
 	nombre character varying(35) NOT NULL,
 	descripcion character varying(300) NOT NULL,
-	id_escuela bigint NOT NULL,
+	id_empresa bigint NOT NULL,
 	id_usuario_modificado bigint NOT NULL,
 	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
 	id_estatus integer NOT NULL,
@@ -691,7 +691,7 @@ COMMENT ON TABLE tecabix_sce.departamento IS 'DEPARTAMENTO DE LA EMPRESA';
 COMMENT ON COLUMN tecabix_sce.departamento.id_departamento IS 'IDENTIFICADOR UNICO DEL DEPARTAMENTO';
 COMMENT ON COLUMN tecabix_sce.departamento.nombre IS 'NOMBRE DEL DEPARTAMENTO';
 COMMENT ON COLUMN tecabix_sce.departamento.descripcion IS 'DESCRIPCION DEL DEPARTAMENTO';
-COMMENT ON COLUMN tecabix_sce.departamento.id_escuela IS 'ESCUELA AL QUE PERTENECE EL DEPARTAMENTO';
+COMMENT ON COLUMN tecabix_sce.departamento.id_empresa IS 'EMPRESA AL QUE PERTENECE EL DEPARTAMENTO';
 COMMENT ON COLUMN tecabix_sce.departamento.id_usuario_modificado IS 'ULTIMO USUARIO QUE MODIFICO EL REGISTRO';
 COMMENT ON COLUMN tecabix_sce.departamento.fecha_modificado IS 'ULTIMA FECHA QUE SE MODIFICO EL REGISTRO';
 COMMENT ON COLUMN tecabix_sce.departamento.id_estatus IS 'STATUS DEL REGISTRO, CATALOGO_TIPO = ESTATUS';
@@ -704,7 +704,7 @@ ALTER TABLE tecabix_sce.departamento ADD CONSTRAINT fk_departamento_id_usuario_m
 REFERENCES tecabix_sce.usuario(id_usuario) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
-ALTER TABLE tecabix_sce.departamento ADD CONSTRAINT fk_departamento_id_escuela FOREIGN KEY (id_escuela)
+ALTER TABLE tecabix_sce.departamento ADD CONSTRAINT fk_departamento_id_empresa FOREIGN KEY (id_empresa)
 REFERENCES tecabix_sce.persona_moral(id_persona_moral) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
@@ -769,7 +769,7 @@ CREATE TABLE tecabix_sce.trabajador(
     id_plantel bigint,
 	id_jefe bigint,
 	url_imagen character varying(200) ,
-	id_escuela bigint NOT NULL,
+	id_empresa bigint NOT NULL,
 	id_usuario_modificado bigint NOT NULL,
 	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
 	id_estatus integer NOT NULL,
@@ -784,7 +784,7 @@ COMMENT ON COLUMN tecabix_sce.trabajador.id_puesto IS 'LLAVE FORANEA DEL PUESTO'
 COMMENT ON COLUMN tecabix_sce.trabajador.id_plantel IS 'LLAVE FORANEA DEL PLANTEL';
 COMMENT ON COLUMN tecabix_sce.trabajador.id_jefe IS 'LLAVE FORANEA DEL JEFE DIRECTO';
 COMMENT ON COLUMN tecabix_sce.trabajador.url_imagen IS 'URL DE LA IMAGEN DE PERFIL DEL TRABAJADOR';
-COMMENT ON COLUMN tecabix_sce.trabajador.id_escuela IS 'LLAVE FORANEA DE LA ESCUELA AL QUE TRABAJA';
+COMMENT ON COLUMN tecabix_sce.trabajador.id_empresa IS 'LLAVE FORANEA DE LA EMPRESA AL QUE TRABAJA';
 COMMENT ON COLUMN tecabix_sce.trabajador.id_usuario_modificado IS 'ULTIMO USUARIO QUE MODIFICO EL REGISTRO';
 COMMENT ON COLUMN tecabix_sce.trabajador.fecha_modificado IS 'ULTIMA FECHA QUE SE MODIFICO EL REGISTRO';
 COMMENT ON COLUMN tecabix_sce.trabajador.id_estatus IS 'STATUS DEL REGISTRO, CATALOGO_TIPO = ESTATUS';
@@ -801,7 +801,7 @@ ALTER TABLE tecabix_sce.trabajador ADD CONSTRAINT fk_trabajador_id_puesto FOREIG
 REFERENCES tecabix_sce.puesto(id_puesto) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
-ALTER TABLE tecabix_sce.trabajador ADD CONSTRAINT fk_trabajador_id_escuela FOREIGN KEY (id_escuela)
+ALTER TABLE tecabix_sce.trabajador ADD CONSTRAINT fk_trabajador_id_empresa FOREIGN KEY (id_empresa)
 REFERENCES tecabix_sce.persona_moral(id_persona_moral) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
@@ -828,7 +828,7 @@ CREATE TABLE tecabix_sce.plantel(
 	nombre character varying(200) ,
 	id_gerente bigint NOT NULL,
 	id_direccion bigint NOT NULL,
-	id_escuela bigint NOT NULL,
+	id_empresa bigint NOT NULL,
 	id_usuario_modificado bigint NOT NULL,
 	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
 	id_estatus integer NOT NULL,
@@ -840,7 +840,7 @@ COMMENT ON COLUMN tecabix_sce.plantel.id_plantel IS 'IDENTIFICADOR UNICO DE LA P
 COMMENT ON COLUMN tecabix_sce.plantel.nombre IS 'NOMBRE DE LA PLANTEL';
 COMMENT ON COLUMN tecabix_sce.plantel.id_gerente IS 'GERENTE';
 COMMENT ON COLUMN tecabix_sce.plantel.id_direccion IS 'DIRECCION';
-COMMENT ON COLUMN tecabix_sce.plantel.id_escuela IS 'ESCUELA AL QUE PERTENECE LA PLANTEL';
+COMMENT ON COLUMN tecabix_sce.plantel.id_empresa IS 'EMPRESA AL QUE PERTENECE LA PLANTEL';
 COMMENT ON COLUMN tecabix_sce.plantel.id_usuario_modificado IS 'ULTIMO USUARIO QUE MODIFICO EL REGISTRO';
 COMMENT ON COLUMN tecabix_sce.plantel.fecha_modificado IS 'ULTIMA FECHA QUE SE MODIFICO EL REGISTRO';
 COMMENT ON COLUMN tecabix_sce.plantel.id_estatus IS 'STATUS DEL REGISTRO, CATALOGO_TIPO = ESTATUS';
@@ -854,7 +854,7 @@ ALTER TABLE tecabix_sce.plantel ADD CONSTRAINT fk_trabajador_id_usuario_modifica
 REFERENCES tecabix_sce.usuario(id_usuario) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
-ALTER TABLE tecabix_sce.plantel ADD CONSTRAINT fk_plantel_id_escuela FOREIGN KEY (id_escuela)
+ALTER TABLE tecabix_sce.plantel ADD CONSTRAINT fk_plantel_id_empresa FOREIGN KEY (id_empresa)
 REFERENCES tecabix_sce.persona_moral(id_persona_moral) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
@@ -883,7 +883,7 @@ CREATE SEQUENCE tecabix_sce.configuracion_seq
 
 CREATE TABLE tecabix_sce.configuracion(
 	id_configuracion bigint NOT NULL DEFAULT nextval('tecabix_sce.configuracion_seq'::regclass),
-	id_escuela bigint NOT NULL,
+	id_empresa bigint NOT NULL,
     id_tipo integer NOT NULL,
 	valor character varying(250) NOT NULL,
 	id_usuario_modificado bigint NOT NULL,
@@ -904,7 +904,7 @@ ALTER TABLE tecabix_sce.configuracion ADD CONSTRAINT fk_configuracion_id_tipo FO
 REFERENCES tecabix_sce.catalogo(id_catalogo) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
-ALTER TABLE tecabix_sce.configuracion ADD CONSTRAINT fk_configuracion_id_escuela FOREIGN KEY (id_escuela)
+ALTER TABLE tecabix_sce.configuracion ADD CONSTRAINT fk_configuracion_id_empresa FOREIGN KEY (id_empresa)
 REFERENCES tecabix_sce.persona_moral(id_persona_moral) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
@@ -1063,7 +1063,7 @@ CREATE SEQUENCE tecabix_sce.suscripcion_seq
 
 CREATE TABLE tecabix_sce.suscripcion(
 	id_suscripcion bigint NOT NULL DEFAULT nextval('tecabix_sce.suscripcion_seq'::regclass),
-	id_escuela bigint NOT NULL UNIQUE,
+	id_empresa bigint NOT NULL UNIQUE,
     id_plan integer NOT NULL,
 	vencimiento date NOT NULL DEFAULT now (),
 	id_usuario_modificado bigint NOT NULL,
@@ -1075,7 +1075,7 @@ CONSTRAINT pk_suscripcion_id_suscripcion PRIMARY KEY (id_suscripcion)
 COMMENT ON TABLE tecabix_sce.suscripcion IS 'SUSCRIPCION';
 COMMENT ON COLUMN tecabix_sce.suscripcion.id_suscripcion IS 'IDENTIFICADOR UNICO DE LA SUSCRIPCION';
 COMMENT ON COLUMN tecabix_sce.suscripcion.id_plan IS 'LLAVE FORANEA DEL PLAN';
-COMMENT ON COLUMN tecabix_sce.suscripcion.id_escuela IS 'ESCUELA AL QUE PERTENECE LA SUSCRIPCION';
+COMMENT ON COLUMN tecabix_sce.suscripcion.id_empresa IS 'EMPRESA AL QUE PERTENECE LA SUSCRIPCION';
 COMMENT ON COLUMN tecabix_sce.suscripcion.vencimiento IS 'VENCIMIENTO DE LA SUSCRIPCION';
 COMMENT ON COLUMN tecabix_sce.suscripcion.id_usuario_modificado IS 'ULTIMO USUARIO QUE MODIFICO EL REGISTRO';
 COMMENT ON COLUMN tecabix_sce.suscripcion.fecha_modificado IS 'ULTIMA FECHA QUE SE MODIFICO EL REGISTRO';
@@ -1090,7 +1090,7 @@ ALTER TABLE tecabix_sce.suscripcion ADD CONSTRAINT fk_suscripcion_id_usuario_mod
 REFERENCES tecabix_sce.usuario(id_usuario) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
-ALTER TABLE tecabix_sce.suscripcion ADD CONSTRAINT fk_suscripcion_id_escuela FOREIGN KEY (id_escuela)
+ALTER TABLE tecabix_sce.suscripcion ADD CONSTRAINT fk_suscripcion_id_empresa FOREIGN KEY (id_empresa)
 REFERENCES tecabix_sce.persona_moral(id_persona_moral) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
@@ -1207,7 +1207,7 @@ CREATE SEQUENCE tecabix_sce.soporte_seq
 
 CREATE TABLE tecabix_sce.soporte(
 	id_soporte bigint NOT NULL DEFAULT nextval('tecabix_sce.soporte_seq'::regclass),
-    id_escuela bigint NOT NULL,
+    id_empresa bigint NOT NULL,
     id_tipo integer NOT NULL,
 	asunto character varying(45) NOT NULL,
 	descripcion character varying(500) NOT NULL,
@@ -1219,7 +1219,7 @@ CONSTRAINT pk_soporte_id_soporte PRIMARY KEY (id_soporte)
 );
 COMMENT ON TABLE tecabix_sce.soporte IS 'SOPORTE';
 COMMENT ON COLUMN tecabix_sce.soporte.id_soporte IS 'IDENTIFICADOR UNICO DEL SOPORTE';
-COMMENT ON COLUMN tecabix_sce.soporte.id_escuela IS 'INSTITUCION QUE BRINDA EL SOPORTE DENTRO DE LA PLATAFORMA';
+COMMENT ON COLUMN tecabix_sce.soporte.id_empresa IS 'INSTITUCION QUE BRINDA EL SOPORTE DENTRO DE LA PLATAFORMA';
 COMMENT ON COLUMN tecabix_sce.soporte.id_tipo IS 'TIPO DE SOPORTE, CATALOGO_TIPO = TIPO_SOPORTE';
 COMMENT ON COLUMN tecabix_sce.soporte.descripcion IS 'DESCRIPCION DEL CATALOGO';
 COMMENT ON COLUMN tecabix_sce.soporte.asunto IS 'ASUNTO DEL SOPORTE';
@@ -1239,7 +1239,7 @@ ALTER TABLE tecabix_sce.soporte ADD CONSTRAINT fk_soporte_id_tipo FOREIGN KEY (i
 REFERENCES tecabix_sce.catalogo(id_catalogo) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
-ALTER TABLE tecabix_sce.soporte ADD CONSTRAINT fk_soporte_id_escuela FOREIGN KEY (id_escuela)
+ALTER TABLE tecabix_sce.soporte ADD CONSTRAINT fk_soporte_id_empresa FOREIGN KEY (id_empresa)
 REFERENCES tecabix_sce.persona_moral(id_persona_moral) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
@@ -1356,7 +1356,7 @@ CREATE TABLE tecabix_sce.carrera(
 	nombre character varying(45) NOT NULL,
 	descripcion character varying(500) NOT NULL,
     id_facultad integer,
-    id_escuela bigint NOT NULL,
+    id_empresa bigint NOT NULL,
     id_usuario_modificado bigint NOT NULL,
 	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
 	id_estatus integer NOT NULL,
@@ -1368,7 +1368,7 @@ COMMENT ON COLUMN tecabix_sce.carrera.id_carrera IS 'IDENTIFICADOR UNICO DE LA C
 COMMENT ON COLUMN tecabix_sce.carrera.nombre IS 'NOMBRE DE LA CARRERA';
 COMMENT ON COLUMN tecabix_sce.carrera.descripcion IS 'DESCRIPCION DEL CATALOGO';
 COMMENT ON COLUMN tecabix_sce.carrera.id_facultad IS 'FACULTAD DE LA CARRERA, CATALOGO_TIPO = FACULTAD';
-COMMENT ON COLUMN tecabix_sce.carrera.id_escuela IS 'ESCUELA AL QUE PERTENECE LA CARRERA';
+COMMENT ON COLUMN tecabix_sce.carrera.id_empresa IS 'EMPRESA AL QUE PERTENECE LA CARRERA';
 COMMENT ON COLUMN tecabix_sce.carrera.id_usuario_modificado IS 'ULTIMO USUARIO QUE MODIFICO EL REGISTRO';
 COMMENT ON COLUMN tecabix_sce.carrera.fecha_modificado IS 'ULTIMA FECHA QUE SE MODIFICO EL REGISTRO';
 COMMENT ON COLUMN tecabix_sce.carrera.id_estatus IS 'STATUS DEL REGISTRO, CATALOGO_TIPO = ESTATUS';
@@ -1385,7 +1385,7 @@ ALTER TABLE tecabix_sce.carrera ADD CONSTRAINT fk_carrera_id_facultad FOREIGN KE
 REFERENCES tecabix_sce.catalogo(id_catalogo) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
-ALTER TABLE tecabix_sce.carrera ADD CONSTRAINT fk_carrera_id_escuela FOREIGN KEY (id_escuela)
+ALTER TABLE tecabix_sce.carrera ADD CONSTRAINT fk_carrera_id_empresa FOREIGN KEY (id_empresa)
 REFERENCES tecabix_sce.persona_moral(id_persona_moral) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
@@ -1503,7 +1503,7 @@ CREATE TABLE tecabix_sce.asignatura(
 	nombre character varying(45) NOT NULL,
 	descripcion character varying(500) NOT NULL,
     id_pre_asignatura bigint, 
-    id_escuela bigint NOT NULL,
+    id_empresa bigint NOT NULL,
     id_usuario_modificado bigint NOT NULL,
 	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
 	id_estatus integer NOT NULL,
@@ -1515,7 +1515,7 @@ COMMENT ON COLUMN tecabix_sce.asignatura.id_asignatura IS 'IDENTIFICADOR UNICO D
 COMMENT ON COLUMN tecabix_sce.asignatura.nombre IS 'NOMBRE DE LA ASIGNATURA';
 COMMENT ON COLUMN tecabix_sce.asignatura.descripcion IS 'DESCRIPCION DEL ASIGNATURA';
 COMMENT ON COLUMN tecabix_sce.asignatura.id_pre_asignatura IS 'ASIGNATURA QUE DEBE SER CURSADA PARA TOMAR ESTA ASIGNATURA';
-COMMENT ON COLUMN tecabix_sce.asignatura.id_escuela IS 'ESCUELA AL QUE PERTENECE LA ASIGNATURA';
+COMMENT ON COLUMN tecabix_sce.asignatura.id_empresa IS 'EMPRESA AL QUE PERTENECE LA ASIGNATURA';
 COMMENT ON COLUMN tecabix_sce.asignatura.id_usuario_modificado IS 'ULTIMO USUARIO QUE MODIFICO EL REGISTRO';
 COMMENT ON COLUMN tecabix_sce.asignatura.fecha_modificado IS 'ULTIMA FECHA QUE SE MODIFICO EL REGISTRO';
 COMMENT ON COLUMN tecabix_sce.asignatura.id_estatus IS 'STATUS DEL REGISTRO, CATALOGO_TIPO = ESTATUS';
@@ -1528,7 +1528,7 @@ ALTER TABLE tecabix_sce.asignatura ADD CONSTRAINT fk_asignatura_id_usuario_modif
 REFERENCES tecabix_sce.usuario(id_usuario) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
-ALTER TABLE tecabix_sce.asignatura ADD CONSTRAINT fk_asignatura_id_escuela FOREIGN KEY (id_escuela)
+ALTER TABLE tecabix_sce.asignatura ADD CONSTRAINT fk_asignatura_id_empresa FOREIGN KEY (id_empresa)
 REFERENCES tecabix_sce.persona_moral(id_persona_moral) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
