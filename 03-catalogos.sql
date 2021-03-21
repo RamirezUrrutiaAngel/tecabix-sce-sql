@@ -240,7 +240,6 @@ BEGIN
 		INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('TRABAJADOR', 'TRABAJADOR', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 		SELECT id_authority INTO id_aux_1 FROM tecabix_sce.authority WHERE nombre = 'TRABAJADOR';
 			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('TRABAJADOR_CREAR', 'CREAR TRABAJADOR EN ESTSTUS PENDIENTE', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
-			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('TRABAJADOR_ACTIVAR', 'ACTIVAR EL REGISTRO DE TRABAJADOR PENDIENTE', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('TRABAJADOR_EDITAR', 'EDITAR TRABAJADOR', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('TRABAJADOR_ELIMINAR', 'ELIMINAR TRABAJADOR', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 	
@@ -314,12 +313,14 @@ BEGIN
 		SELECT id_authority INTO id_aux_1 FROM tecabix_sce.authority WHERE nombre = 'PLANTEL';
 			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('PLANTEL_CREAR', 'CREAR PLANTEL', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('PLANTEL_EDITAR', 'EDITAR PLANTEL', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('PLANTEL_ELIMINAR', 'ELIMINAR PLANTEL', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 
 	SELECT id_authority INTO id_aux_1 FROM tecabix_sce.authority WHERE nombre = 'AUTENTIFICADOS';
 		INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('PUESTO', 'PUESTO', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 		SELECT id_authority INTO id_aux_1 FROM tecabix_sce.authority WHERE nombre = 'PUESTO';
 			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('PUESTO_CREAR', 'CREAR PUESTO', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('PUESTOS_EDITAR', 'EDITAR PUESTO', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('PUESTOS_ELIMINAR', 'ELIMINAR PUESTO', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 
 	/**************************** BANCO ****************************/
 
