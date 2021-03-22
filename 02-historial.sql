@@ -1469,27 +1469,27 @@ BEGIN
     SELECT id_catalogo INTO var_update FROM tecabix_sce.catalogo WHERE nombre = 'ACTUALIZAR' AND id_catalogo_tipo IN (SELECT id_catalogo_tipo FROM tecabix_sce.catalogo_tipo WHERE nombre = 'CRUD');
 	
     IF OLD.nombre != NEW.nombre THEN
-        INSERT INTO tecabix_sce_historial.puesto_historial (id_persona_fisica, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_persona_fisica,var_update, NEW.id_usuario_modificado, 'Se actualizo el nombre de '|| OLD.nombre || ' a ' || NEW.nombre);
+        INSERT INTO tecabix_sce_historial.puesto_historial (id_puesto, id_accion, id_usuario_modificado, descripcion) 
+        VALUES(NEW.id_puesto,var_update, NEW.id_usuario_modificado, 'Se actualizo el nombre de '|| OLD.nombre || ' a ' || NEW.nombre);
     END IF;
 
     IF OLD.descripcion != NEW.descripcion THEN
-        INSERT INTO tecabix_sce_historial.puesto_historial (id_persona_fisica, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_persona_fisica,var_update, NEW.id_usuario_modificado, 'Se actualizo la descripción');
+        INSERT INTO tecabix_sce_historial.puesto_historial (id_puesto, id_accion, id_usuario_modificado, descripcion) 
+        VALUES(NEW.id_puesto,var_update, NEW.id_usuario_modificado, 'Se actualizo la descripción');
     END IF;
 
     IF OLD.id_departamento != NEW.id_departamento THEN
         SELECT nombre INTO id_aux_1 FROM tecabix_sce.departamento WHERE id_departamento = OLD.id_estatus;
         SELECT nombre INTO id_aux_2 FROM tecabix_sce.departamento WHERE id_departamento = NEW.id_estatus;
-        INSERT INTO tecabix_sce_historial.puesto_historial (id_persona_fisica, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_persona_fisica,var_update, NEW.id_usuario_modificado, 'Se actualizo el DEPARTAMENTO DE '|| id_aux_1 || ' a ' || id_aux_2);
+        INSERT INTO tecabix_sce_historial.puesto_historial (id_puesto, id_accion, id_usuario_modificado, descripcion) 
+        VALUES(NEW.id_puesto,var_update, NEW.id_usuario_modificado, 'Se actualizo el departamento de '|| id_aux_1 || ' a ' || id_aux_2);
     END IF;
 
     IF OLD.id_estatus != NEW.id_estatus THEN
         SELECT nombre INTO id_aux_1 FROM tecabix_sce.catalogo WHERE id_catalogo = OLD.id_estatus;
         SELECT nombre INTO id_aux_2 FROM tecabix_sce.catalogo WHERE id_catalogo = NEW.id_estatus;
-        INSERT INTO tecabix_sce_historial.puesto_historial (id_persona_fisica, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_persona_fisica,var_update, NEW.id_usuario_modificado, 'Se actualizo el estatus de '|| id_aux_1 || ' a ' || id_aux_2);
+        INSERT INTO tecabix_sce_historial.puesto_historial (id_puesto, id_accion, id_usuario_modificado, descripcion) 
+        VALUES(NEW.id_puesto,var_update, NEW.id_usuario_modificado, 'Se actualizo el estatus de '|| id_aux_1 || ' a ' || id_aux_2);
     END IF;
 
     RETURN NEW;
