@@ -97,16 +97,16 @@ BEGIN
 
 	INSERT INTO tecabix_sce.catalogo_tipo (nombre, descripcion, id_usuario_modificado, id_estatus) VALUES ('CONFIGURACION_PLAN', 'CONFIGURACION DEL PLAN', VAR_USR_CREA, VAR_ACTIVO);
 	SELECT id_catalogo_tipo INTO id_aux_1 FROM tecabix_sce.catalogo_tipo WHERE nombre = 'CONFIGURACION_PLAN';
-	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('MAX_DEPARTAMENTO','NUMERO MÁXIMO DE DEPARTAMENTOS', 'NUMERO DE DEPARTAMENTOS MÁXIMO QUE SE PUEDEN GUARDAR', 1, id_aux_1, VAR_USR_CREA, VAR_ACTIVO) RETURNING id_catalogo INTO id_aux_2;
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('MAX_REG_DEPARTAMENTO','NUMERO MÁXIMO DE REGISTROS DE DEPARTAMENTOS', 'NUMERO DE DEPARTAMENTOS MÁXIMO QUE SE PUEDEN GUARDAR', 1, id_aux_1, VAR_USR_CREA, VAR_ACTIVO) RETURNING id_catalogo INTO id_aux_2;
 		INSERT INTO tecabix_sce.configuracion(id_tipo, valor, id_usuario_modificado, id_estatus)VALUES (id_aux_2, '100', VAR_USR_CREA, VAR_ACTIVO) RETURNING id_configuracion INTO id_aux_2;
 			INSERT INTO tecabix_sce.plan_configuracion(id_plan, id_configuracion)VALUES (id_aux_3, id_aux_2);
-	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('MAX_PUESTO','NUMERO MÁXIMO DE PUESTOS', 'NUMERO MÁXIMO DE PUESTOS QUE SE PUEDEN GUARDAR', 2, id_aux_1, VAR_USR_CREA, VAR_ACTIVO) RETURNING id_catalogo INTO id_aux_2;
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('MAX_REG_PUESTO','NUMERO MÁXIMO DE REGISTROS DE PUESTOS', 'NUMERO MÁXIMO DE REGISTROS DE PUESTOS QUE SE PUEDEN GUARDAR', 2, id_aux_1, VAR_USR_CREA, VAR_ACTIVO) RETURNING id_catalogo INTO id_aux_2;
 		INSERT INTO tecabix_sce.configuracion(id_tipo, valor, id_usuario_modificado, id_estatus)VALUES (id_aux_2, '100', VAR_USR_CREA, VAR_ACTIVO) RETURNING id_configuracion INTO id_aux_2;
 			INSERT INTO tecabix_sce.plan_configuracion(id_plan, id_configuracion)VALUES (id_aux_3, id_aux_2);
-	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('MAX_PLANTEL','NUMERO MÁXIMO DE PLANTELES', 'NUMERO MÁXIMO DE PLANTELES QUE SE PUEDEN GUARDAR', 3, id_aux_1, VAR_USR_CREA, VAR_ACTIVO) RETURNING id_catalogo INTO id_aux_2;
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('MAX_REG_PLANTEL','NUMERO MÁXIMO DE REGISTROS DE PLANTELES', 'NUMERO MÁXIMO DE REGISTROS DE PLANTELES QUE SE PUEDEN GUARDAR', 3, id_aux_1, VAR_USR_CREA, VAR_ACTIVO) RETURNING id_catalogo INTO id_aux_2;
 		INSERT INTO tecabix_sce.configuracion(id_tipo, valor, id_usuario_modificado, id_estatus)VALUES (id_aux_2, '100', VAR_USR_CREA, VAR_ACTIVO) RETURNING id_configuracion INTO id_aux_2;
 			INSERT INTO tecabix_sce.plan_configuracion(id_plan, id_configuracion)VALUES (id_aux_3, id_aux_2);
-	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('MAX_PERFIL','NUMERO MÁXIMO DE PERFILES', 'NUMERO MÁXIMO DE PERFILES QUE SE PUEDEN GUARDAR', 4, id_aux_1, VAR_USR_CREA, VAR_ACTIVO) RETURNING id_catalogo INTO id_aux_2;
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('MAX_REG_PERFIL','NUMERO MÁXIMO DE REGISTROS DE PERFILES', 'NUMERO MÁXIMO DE REGISTROS DE PERFILES QUE SE PUEDEN GUARDAR', 4, id_aux_1, VAR_USR_CREA, VAR_ACTIVO) RETURNING id_catalogo INTO id_aux_2;
 		INSERT INTO tecabix_sce.configuracion(id_tipo, valor, id_usuario_modificado, id_estatus)VALUES (id_aux_2, '100', VAR_USR_CREA, VAR_ACTIVO) RETURNING id_configuracion INTO id_aux_2;
 			INSERT INTO tecabix_sce.plan_configuracion(id_plan, id_configuracion)VALUES (id_aux_3, id_aux_2);
 

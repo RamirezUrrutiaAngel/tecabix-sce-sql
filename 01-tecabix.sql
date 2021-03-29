@@ -2056,5 +2056,5 @@ CREATE MATERIALIZED VIEW tecabix_sce.numero_maximo_registro AS
 		JOIN tecabix_sce.plan_configuracion c ON (p.id_plan = c.id_plan) 
 		JOIN tecabix_sce.configuracion o ON (c.id_configuracion = o.id_configuracion)
 		JOIN tecabix_sce.catalogo a ON (o.id_tipo = a.id_catalogo)
-		WHERE a.nombre LIKE 'MAX_%';
+		WHERE a.nombre LIKE 'MAX_REG_%';
 

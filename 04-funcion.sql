@@ -23,7 +23,7 @@ DECLARE
     num_max     bigint;
 BEGIN
     SELECT COUNT(*) INTO num FROM tecabix_sce.departamento d WHERE d.id_empresa = arg_id_empresa;
-    SELECT n.valor INTO num_max FROM tecabix_sce.numero_maximo_registro n WHERE n.id_empresa = arg_id_empresa AND nombre = 'MAX_DEPARTAMENTO';
+    SELECT n.valor INTO num_max FROM tecabix_sce.numero_maximo_registro n WHERE n.id_empresa = arg_id_empresa AND nombre = 'MAX_REG_DEPARTAMENTO';
     RETURN num < num_max;
 END;
 $$ LANGUAGE plpgsql;
