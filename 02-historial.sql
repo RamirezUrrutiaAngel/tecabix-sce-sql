@@ -1814,6 +1814,7 @@ BEGIN
 	
 	INSERT INTO tecabix_sce_historial.plan_historial (id_plan, id_accion, id_usuario_modificado, descripcion) 
         VALUES(NEW.id_plan,var_insert, NEW.id_usuario_modificado, 'Se creo un nuevo registro '|| NEW.nombre );
+    REFRESH MATERIALIZED VIEW tecabix_sce.numero_maximo_registro;
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
@@ -1851,7 +1852,7 @@ BEGIN
         INSERT INTO tecabix_sce_historial.plan_historial (id_plan, id_accion, id_usuario_modificado, descripcion) 
         VALUES(NEW.id_plan,var_update, NEW.id_usuario_modificado, 'Se actualizo el PRECIO DE '|| OLD.precio || ' a ' || NEW.precio);
     END IF;
-
+    REFRESH MATERIALIZED VIEW tecabix_sce.numero_maximo_registro;
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
@@ -1874,7 +1875,7 @@ BEGIN
 	
     INSERT INTO tecabix_sce_historial.plan_historial (id_plan, id_accion, id_usuario_modificado, descripcion) 
         VALUES(OLD.id_plan,var_delete, OLD.id_usuario_modificado, 'Se elimino el registro');
-
+    REFRESH MATERIALIZED VIEW tecabix_sce.numero_maximo_registro;
     RETURN OLD;
 END;
 $$ LANGUAGE plpgsql;

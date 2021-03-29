@@ -94,6 +94,25 @@ BEGIN
 	
 	INSERT INTO tecabix_sce.plan_servicio(id_plan, id_servicio, numero_licencias, id_usuario_modificado, id_estatus)VALUES (id_aux_3, id_aux_1, 15, VAR_USR_CREA, VAR_ACTIVO);
 	INSERT INTO tecabix_sce.plan_servicio(id_plan, id_servicio, numero_licencias, id_usuario_modificado, id_estatus)VALUES (id_aux_3, id_aux_2, 1, VAR_USR_CREA, VAR_ACTIVO);
+
+	INSERT INTO tecabix_sce.catalogo_tipo (nombre, descripcion, id_usuario_modificado, id_estatus) VALUES ('CONFIGURACION_PLAN', 'CONFIGURACION DEL PLAN', VAR_USR_CREA, VAR_ACTIVO);
+	SELECT id_catalogo_tipo INTO id_aux_1 FROM tecabix_sce.catalogo_tipo WHERE nombre = 'CONFIGURACION_PLAN';
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('MAX_DEPARTAMENTO','NUMERO MÁXIMO DE DEPARTAMENTOS', 'NUMERO DE DEPARTAMENTOS MÁXIMO QUE SE PUEDEN GUARDAR', 1, id_aux_1, VAR_USR_CREA, VAR_ACTIVO) RETURNING id_catalogo INTO id_aux_2;
+		INSERT INTO tecabix_sce.configuracion(id_tipo, valor, id_usuario_modificado, id_estatus)VALUES (id_aux_2, '100', VAR_USR_CREA, VAR_ACTIVO) RETURNING id_configuracion INTO id_aux_2;
+			INSERT INTO tecabix_sce.plan_configuracion(id_plan, id_configuracion)VALUES (id_aux_3, id_aux_2);
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('MAX_PUESTO','NUMERO MÁXIMO DE PUESTOS', 'NUMERO MÁXIMO DE PUESTOS QUE SE PUEDEN GUARDAR', 2, id_aux_1, VAR_USR_CREA, VAR_ACTIVO) RETURNING id_catalogo INTO id_aux_2;
+		INSERT INTO tecabix_sce.configuracion(id_tipo, valor, id_usuario_modificado, id_estatus)VALUES (id_aux_2, '100', VAR_USR_CREA, VAR_ACTIVO) RETURNING id_configuracion INTO id_aux_2;
+			INSERT INTO tecabix_sce.plan_configuracion(id_plan, id_configuracion)VALUES (id_aux_3, id_aux_2);
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('MAX_PLANTEL','NUMERO MÁXIMO DE PLANTELES', 'NUMERO MÁXIMO DE PLANTELES QUE SE PUEDEN GUARDAR', 3, id_aux_1, VAR_USR_CREA, VAR_ACTIVO) RETURNING id_catalogo INTO id_aux_2;
+		INSERT INTO tecabix_sce.configuracion(id_tipo, valor, id_usuario_modificado, id_estatus)VALUES (id_aux_2, '100', VAR_USR_CREA, VAR_ACTIVO) RETURNING id_configuracion INTO id_aux_2;
+			INSERT INTO tecabix_sce.plan_configuracion(id_plan, id_configuracion)VALUES (id_aux_3, id_aux_2);
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('MAX_PERFIL','NUMERO MÁXIMO DE PERFILES', 'NUMERO MÁXIMO DE PERFILES QUE SE PUEDEN GUARDAR', 4, id_aux_1, VAR_USR_CREA, VAR_ACTIVO) RETURNING id_catalogo INTO id_aux_2;
+		INSERT INTO tecabix_sce.configuracion(id_tipo, valor, id_usuario_modificado, id_estatus)VALUES (id_aux_2, '100', VAR_USR_CREA, VAR_ACTIVO) RETURNING id_configuracion INTO id_aux_2;
+			INSERT INTO tecabix_sce.plan_configuracion(id_plan, id_configuracion)VALUES (id_aux_3, id_aux_2);
+
+
+
+	REFRESH MATERIALIZED VIEW tecabix_sce.numero_maximo_registro;
 	/**************************** CATALOGO ****************************/
 
 	INSERT INTO tecabix_sce.catalogo_tipo (nombre, descripcion, id_usuario_modificado, id_estatus) VALUES ('TIPO_DE_PAGO', 'TIPO DE PAGO', VAR_USR_CREA, VAR_ACTIVO);
@@ -202,8 +221,8 @@ BEGIN
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('MASIVO','MASIVO', 'MENSAJES MASIVOS', 3, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('CORPORATIVO','CORPORATIVO', 'CORREO CORPORATIVO', 4, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 
-	INSERT INTO tecabix_sce.catalogo_tipo (nombre, descripcion, id_usuario_modificado, id_estatus) VALUES ('CONFIGURACION', 'CONFIGURACION', VAR_USR_CREA, VAR_ACTIVO);
 		
+
 	/**************************** AUTHORITY ****************************/
 
 	INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('ADMINISTRADOR_ROOT', 'SUPER USUARIOS', NULL, VAR_USR_CREA, VAR_ACTIVO);
@@ -250,18 +269,6 @@ BEGIN
 			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('PERFIL_EDITAR', 'EDITAR PERFIL', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('PERFIL_ELIMINAR', 'ELIMANR PERFIL', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 
-	SELECT id_authority INTO id_aux_1 FROM tecabix_sce.authority WHERE nombre = 'AUTENTIFICADOS';
-		INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('CONFIGURACION', 'CONFIGURACION', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
-		SELECT id_authority INTO id_aux_1 FROM tecabix_sce.authority WHERE nombre = 'CONFIGURACION';
-			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('CONFIGURACION_EDITAR', 'EDITAR EL VALOR DE LA CONFIGURACION', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
-
-	SELECT id_authority INTO id_aux_1 FROM tecabix_sce.authority WHERE nombre = 'ADMINISTRADOR_ROOT';
-		INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('ROOT_CONFIGURACION', 'TODAS LAS CONFIGURACIONES', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
-		SELECT id_authority INTO id_aux_1 FROM tecabix_sce.authority WHERE nombre = 'ROOT_CONFIGURACION';
-			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('ROOT_CONFIGURACION_CREAR', 'CREAR UNA NUEVA CONFIGURACION Y APLICARLA A TODOS LOS CLIENTES CON UN VALOR PREDETERMINADO', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
-			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('ROOT_CONFIGURACION_EDITAR', 'EDITAR UNA CONFIGURACION EN ESPESIFICO Y APLICARLA A TODOS LOS CLIENTES', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
-			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('ROOT_CONFIGURACION_ELIMINAR', 'ELIMNAR UNA CONFIGURACION EN ESPESIFICO Y APLICARLA A TODOS LOS CLIENTES', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
-
 	SELECT id_authority INTO id_aux_1 FROM tecabix_sce.authority WHERE nombre = 'ADMINISTRADOR_ROOT';
 		INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('ROOT_BANCO', 'INFORMACION DE LISTAS DE ENTIDADES BANCARIAS', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 		SELECT id_authority INTO id_aux_1 FROM tecabix_sce.authority WHERE nombre = 'ROOT_BANCO';
@@ -298,15 +305,15 @@ BEGIN
 			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('ROOT_LICENCIA_CREAR', 'PERMISOS ROOT DE CREAR LICENCIA', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('ROOT_LICENCIA_EDITAR', 'PERMISOS ROOT DE EDITAR LICENCIA', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('ROOT_LICENCIA_ELIMINAR', 'PERMISOS ROOT DE ELIMINAR LICENCIA', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
-	
-	SELECT id_authority INTO id_aux_1 FROM tecabix_sce.authority WHERE nombre = 'AUTENTIFICADOS';
-		INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('PLAN', 'PLAN', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+
 
 	SELECT id_authority INTO id_aux_1 FROM tecabix_sce.authority WHERE nombre = 'ADMINISTRADOR_ROOT';
-		INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('ROOT_PLAN', 'PERMISOS ROOT DEL PLAN', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
-		SELECT id_authority INTO id_aux_1 FROM tecabix_sce.authority WHERE nombre = 'ROOT_PLAN';
-			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('ROOT_PLAN_CREAR', 'PERMISOS ROOT DE CREAR PLAN', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
-			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('ROOT_PLAN_EDITAR', 'PERMISOS ROOT DE EDITAR PLAN', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+		INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('PLAN', 'PERMISOS DEL PLAN', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+		SELECT id_authority INTO id_aux_1 FROM tecabix_sce.authority WHERE nombre = 'PLAN';
+			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('PLAN_CREAR', 'PERMISOS DE CREAR PLAN', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('PLAN_EDITAR', 'PERMISOS DE EDITAR PLAN', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('PLAN_ELIMINAR', 'PERMISOS DE ELIMINAR PLAN', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+			
 
 	SELECT id_authority INTO id_aux_1 FROM tecabix_sce.authority WHERE nombre = 'AUTENTIFICADOS';
 		INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('PLANTEL', 'PLANTEL', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);

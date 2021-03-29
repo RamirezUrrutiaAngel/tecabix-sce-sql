@@ -35,7 +35,9 @@ CREATE TABLE tecabix_sce.catalogo_tipo(
 	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
 	id_estatus integer,
     clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
-CONSTRAINT pk_catalogo_tipo_id_catalogo_tipo PRIMARY KEY (id_catalogo_tipo)
+CONSTRAINT pk_catalogo_tipo_id_catalogo_tipo PRIMARY KEY (id_catalogo_tipo),
+CONSTRAINT uq_catalogo_tipo_nombre UNIQUE (nombre),
+CONSTRAINT uq_catalogo_tipo_clave UNIQUE (clave)
 );
 COMMENT ON TABLE tecabix_sce.catalogo_tipo IS 'TIPO DE CATALOGO';
 COMMENT ON COLUMN tecabix_sce.catalogo_tipo.id_catalogo_tipo IS 'IDENTIFICADOR UNICO DEL TIPO DE CATALOGO';
@@ -67,7 +69,8 @@ CREATE TABLE tecabix_sce.catalogo(
 	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
 	id_estatus integer,
     clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
-CONSTRAINT pk_catalogo_id_catalogo PRIMARY KEY (id_catalogo)
+CONSTRAINT pk_catalogo_id_catalogo PRIMARY KEY (id_catalogo),
+CONSTRAINT uq_catalogo_clave UNIQUE (clave)
 );
 COMMENT ON TABLE tecabix_sce.catalogo IS 'CATALOGO';
 COMMENT ON COLUMN tecabix_sce.catalogo.id_catalogo IS 'IDENTIFICADOR UNICO DEL CATALOGO';
@@ -84,6 +87,11 @@ COMMENT ON COLUMN tecabix_sce.catalogo.id_estatus IS 'STATUS DEL REGISTRO, CATAL
 ALTER TABLE tecabix_sce.catalogo ADD CONSTRAINT fk_catalogo_id_catalogo_tipo FOREIGN KEY (id_catalogo_tipo)
 REFERENCES tecabix_sce.catalogo_tipo(id_catalogo_tipo) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+CREATE INDEX indx_catalogo_nombre
+    ON tecabix_sce.catalogo USING btree
+    (nombre COLLATE pg_catalog."default")
+    TABLESPACE pg_default;
 
 
 CREATE SEQUENCE tecabix_sce.estado_seq
@@ -883,18 +891,17 @@ CREATE SEQUENCE tecabix_sce.configuracion_seq
 
 CREATE TABLE tecabix_sce.configuracion(
 	id_configuracion bigint NOT NULL DEFAULT nextval('tecabix_sce.configuracion_seq'::regclass),
-	id_empresa bigint NOT NULL,
     id_tipo integer NOT NULL,
-	valor character varying(250) NOT NULL,
+	valor character varying(500) NOT NULL,
 	id_usuario_modificado bigint NOT NULL,
 	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
 	id_estatus integer NOT NULL,
     clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
 CONSTRAINT pk_configuracion_id_configuracion PRIMARY KEY (id_configuracion)
 );
-COMMENT ON TABLE tecabix_sce.configuracion IS 'TIPO DE CONFIGURACION';
+COMMENT ON TABLE tecabix_sce.configuracion IS 'CONFIGURACION';
 COMMENT ON COLUMN tecabix_sce.configuracion.id_configuracion IS 'IDENTIFICADOR UNICO DE CONFIGURACION';
-COMMENT ON COLUMN tecabix_sce.configuracion.id_tipo IS 'TIPO DE LA CONFIGURACION, CATALOGO_TIPO = CONFIGURACION';
+COMMENT ON COLUMN tecabix_sce.configuracion.id_tipo IS 'TIPO DE LA CONFIGURACION, CATALOGO_TIPO = CONFIGURACION_<TABLA>';
 COMMENT ON COLUMN tecabix_sce.configuracion.valor IS 'VALOR DE LA CONFIGURACION';
 COMMENT ON COLUMN tecabix_sce.configuracion.id_usuario_modificado IS 'ULTIMO USUARIO QUE MODIFICO EL REGISTRO';
 COMMENT ON COLUMN tecabix_sce.configuracion.fecha_modificado IS 'ULTIMA FECHA QUE SE MODIFICO EL REGISTRO';
@@ -902,10 +909,6 @@ COMMENT ON COLUMN tecabix_sce.configuracion.id_estatus IS 'STATUS DEL REGISTRO, 
 
 ALTER TABLE tecabix_sce.configuracion ADD CONSTRAINT fk_configuracion_id_tipo FOREIGN KEY (id_tipo)
 REFERENCES tecabix_sce.catalogo(id_catalogo) MATCH SIMPLE
-ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
-
-ALTER TABLE tecabix_sce.configuracion ADD CONSTRAINT fk_configuracion_id_empresa FOREIGN KEY (id_empresa)
-REFERENCES tecabix_sce.persona_moral(id_persona_moral) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
 ALTER TABLE tecabix_sce.configuracion ADD CONSTRAINT fk_trabajador_id_estatus FOREIGN KEY (id_estatus)
@@ -1048,6 +1051,36 @@ ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
 ALTER TABLE tecabix_sce.plan_servicio ADD CONSTRAINT fk_plan_servicio_id_servicio FOREIGN KEY (id_servicio)
 REFERENCES tecabix_sce.servicio(id_servicio) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+
+
+CREATE SEQUENCE tecabix_sce.plan_configuracion_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;
+    ALTER SEQUENCE tecabix_sce.plan_configuracion_seq
+    OWNER TO postgres;
+
+CREATE TABLE tecabix_sce.plan_configuracion(
+	id_plan_configuracion integer NOT NULL DEFAULT nextval('tecabix_sce.plan_configuracion_seq'::regclass),
+	id_plan integer NOT NULL,
+	id_configuracion bigint NOT NULL,
+CONSTRAINT pk_plan_configuracion_id_plan_configuracion PRIMARY KEY (id_plan_configuracion)
+);
+COMMENT ON TABLE tecabix_sce.plan_configuracion IS 'RELACION DE PLAN Y CONFIGURACION';
+COMMENT ON COLUMN tecabix_sce.plan_configuracion.id_plan_configuracion IS 'IDENTIFICADOR UNICO DEL CONFIGURACION DEL PLAN';
+COMMENT ON COLUMN tecabix_sce.plan_configuracion.id_plan IS 'LLAVE FORANEA DEL PLAN';
+COMMENT ON COLUMN tecabix_sce.plan_configuracion.id_configuracion IS 'LLAVE FORANEA DE LA CONFIGURACION';
+
+ALTER TABLE tecabix_sce.plan_configuracion ADD CONSTRAINT fk_plan_configuracion_id_plan FOREIGN KEY (id_plan)
+REFERENCES tecabix_sce.plan(id_plan) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+ALTER TABLE tecabix_sce.plan_configuracion ADD CONSTRAINT fk_plan_configuracion_id_configuracion FOREIGN KEY (id_configuracion)
+REFERENCES tecabix_sce.configuracion(id_configuracion) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
 
@@ -1255,7 +1288,7 @@ CREATE SEQUENCE tecabix_sce.soporte_msj_seq
 CREATE TABLE tecabix_sce.soporte_msj(
 	id_soporte_msj bigint NOT NULL DEFAULT nextval('tecabix_sce.soporte_msj_seq'::regclass),
     id_soporte bigint NOT NULL,
-	contenido character varying(250) NOT NULL,
+	contenido character varying(500) NOT NULL,
 	id_usuario_modificado bigint NOT NULL,
 	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
 	id_estatus integer NOT NULL,
@@ -2012,4 +2045,16 @@ ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 ALTER TABLE tecabix_sce.calificacion ADD CONSTRAINT fk_calificacion_id_materia FOREIGN KEY (id_materia)
 REFERENCES tecabix_sce.materia(id_materia) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+
+
+
+CREATE MATERIALIZED VIEW tecabix_sce.numero_maximo_registro AS 
+	SELECT s.id_empresa, a.nombre, CAST (o.valor AS INTEGER)
+		FROM tecabix_sce.suscripcion s 
+		JOIN tecabix_sce.plan p ON (s.id_plan = p.id_plan) 
+		JOIN tecabix_sce.plan_configuracion c ON (p.id_plan = c.id_plan) 
+		JOIN tecabix_sce.configuracion o ON (c.id_configuracion = o.id_configuracion)
+		JOIN tecabix_sce.catalogo a ON (o.id_tipo = a.id_catalogo)
+		WHERE a.nombre LIKE 'MAX_%';
 
