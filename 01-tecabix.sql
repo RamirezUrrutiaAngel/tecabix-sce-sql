@@ -919,48 +919,6 @@ ALTER TABLE tecabix_sce.configuracion ADD CONSTRAINT fk_trabajador_id_usuario_mo
 REFERENCES tecabix_sce.usuario(id_usuario) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
-CREATE SEQUENCE tecabix_sce.servicio_seq
-    INCREMENT 1
-    START 1
-    MINVALUE 1
-    MAXVALUE 9223372036854775807
-    CACHE 1;
-    ALTER SEQUENCE tecabix_sce.servicio_seq
-    OWNER TO postgres;
-
-CREATE TABLE tecabix_sce.servicio(
-	id_servicio integer NOT NULL DEFAULT nextval('tecabix_sce.servicio_seq'::regclass),
-	nombre character varying(50) NOT NULL,
-	descripcion character varying(500) NOT NULL,
-    id_tipo integer NOT NULL,
-    peticiones integer NOT NULL DEFAULT 0,
-    id_usuario_modificado bigint NOT NULL,
-	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
-	id_estatus integer NOT NULL,
-    clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
-CONSTRAINT pk_servicio_id_servicio PRIMARY KEY (id_servicio)
-);
-COMMENT ON TABLE tecabix_sce.servicio IS 'SERVICIOS QUE BRINDA EL SISTEMA';
-COMMENT ON COLUMN tecabix_sce.servicio.id_servicio IS 'IDENTIFICADOR UNICO DEL SERVICIO';
-COMMENT ON COLUMN tecabix_sce.servicio.nombre IS 'NOMBRE DEL SERVICIO';
-COMMENT ON COLUMN tecabix_sce.servicio.descripcion IS 'DESCRIPCION DEL SERVICIO';
-COMMENT ON COLUMN tecabix_sce.servicio.id_tipo IS 'TIPO DE SERVICIO, CATALOGO_TIPO = TIPO_DE_SERVICIO';
-COMMENT ON COLUMN tecabix_sce.servicio.peticiones IS 'PETICIONES POR DIA';
-COMMENT ON COLUMN tecabix_sce.servicio.id_usuario_modificado IS 'ULTIMO USUARIO QUE MODIFICO EL REGISTRO';
-COMMENT ON COLUMN tecabix_sce.servicio.fecha_modificado IS 'ULTIMA FECHA QUE SE MODIFICO EL REGISTRO';
-COMMENT ON COLUMN tecabix_sce.servicio.id_estatus IS 'STATUS DEL REGISTRO, CATALOGO_TIPO = ESTATUS';
-
-ALTER TABLE tecabix_sce.servicio ADD CONSTRAINT fk_servicio_id_estatus FOREIGN KEY (id_estatus)
-REFERENCES tecabix_sce.catalogo(id_catalogo) MATCH SIMPLE
-ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
-
-ALTER TABLE tecabix_sce.servicio ADD CONSTRAINT fk_servicio_id_usuario_modificado FOREIGN KEY (id_usuario_modificado)
-REFERENCES tecabix_sce.usuario(id_usuario) MATCH SIMPLE
-ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
-
-ALTER TABLE tecabix_sce.servicio ADD CONSTRAINT fk_servicio_id_tipo FOREIGN KEY (id_tipo)
-REFERENCES tecabix_sce.catalogo(id_catalogo) MATCH SIMPLE
-ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
 
 CREATE SEQUENCE tecabix_sce.plan_seq
@@ -1008,49 +966,55 @@ CREATE INDEX indx_plan_nombre
 
 
 
-CREATE SEQUENCE tecabix_sce.plan_servicio_seq
+CREATE SEQUENCE tecabix_sce.servicio_seq
     INCREMENT 1
     START 1
     MINVALUE 1
     MAXVALUE 9223372036854775807
     CACHE 1;
-    ALTER SEQUENCE tecabix_sce.plan_servicio_seq
+    ALTER SEQUENCE tecabix_sce.servicio_seq
     OWNER TO postgres;
 
-CREATE TABLE tecabix_sce.plan_servicio(
-	id_plan_servicio integer NOT NULL DEFAULT nextval('tecabix_sce.plan_servicio_seq'::regclass),
-	id_plan integer NOT NULL,
-	id_servicio integer NOT NULL,
-	numero_licencias integer NOT NULL,
+CREATE TABLE tecabix_sce.servicio(
+	id_servicio integer NOT NULL DEFAULT nextval('tecabix_sce.servicio_seq'::regclass),
+    id_plan integer NOT NULL,
+	nombre character varying(50) NOT NULL,
+	descripcion character varying(500) NOT NULL,
+    id_tipo integer NOT NULL,
+    peticiones integer NOT NULL DEFAULT 0,
+    numero_licencias integer NOT NULL,
     id_usuario_modificado bigint NOT NULL,
 	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
 	id_estatus integer NOT NULL,
     clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
-CONSTRAINT pk_plan_servicio_id_plan_servicio PRIMARY KEY (id_plan_servicio)
+CONSTRAINT pk_servicio_id_servicio PRIMARY KEY (id_servicio)
 );
-COMMENT ON TABLE tecabix_sce.plan_servicio IS 'RELACION DE PLAN Y SERVICIO';
-COMMENT ON COLUMN tecabix_sce.plan_servicio.id_plan_servicio IS 'IDENTIFICADOR UNICO DEL PLAN SERVICIO';
-COMMENT ON COLUMN tecabix_sce.plan_servicio.id_plan IS 'LLAVE FORANEA DEL PLAN';
-COMMENT ON COLUMN tecabix_sce.plan_servicio.id_servicio IS 'LLAVE FORANEA DEL SERVICIO';
-COMMENT ON COLUMN tecabix_sce.plan_servicio.numero_licencias IS 'NUMERO DE LICENCIAS';
-COMMENT ON COLUMN tecabix_sce.plan_servicio.id_usuario_modificado IS 'ULTIMO USUARIO QUE MODIFICO EL REGISTRO';
-COMMENT ON COLUMN tecabix_sce.plan_servicio.fecha_modificado IS 'ULTIMA FECHA QUE SE MODIFICO EL REGISTRO';
-COMMENT ON COLUMN tecabix_sce.plan_servicio.id_estatus IS 'STATUS DEL REGISTRO, CATALOGO_TIPO = ESTATUS';
+COMMENT ON TABLE tecabix_sce.servicio IS 'SERVICIOS QUE BRINDA EL SISTEMA';
+COMMENT ON COLUMN tecabix_sce.servicio.id_servicio IS 'IDENTIFICADOR UNICO DEL SERVICIO';
+COMMENT ON COLUMN tecabix_sce.servicio.id_plan IS 'IDENTIFICADOR UNICO DEL PLAN';
+COMMENT ON COLUMN tecabix_sce.servicio.nombre IS 'NOMBRE DEL SERVICIO';
+COMMENT ON COLUMN tecabix_sce.servicio.descripcion IS 'DESCRIPCION DEL SERVICIO';
+COMMENT ON COLUMN tecabix_sce.servicio.id_tipo IS 'TIPO DE SERVICIO, CATALOGO_TIPO = TIPO_DE_SERVICIO';
+COMMENT ON COLUMN tecabix_sce.servicio.peticiones IS 'PETICIONES POR DIA';
+COMMENT ON COLUMN tecabix_sce.servicio.numero_licencias IS 'NUMERO DE LICENCIAS';
+COMMENT ON COLUMN tecabix_sce.servicio.id_usuario_modificado IS 'ULTIMO USUARIO QUE MODIFICO EL REGISTRO';
+COMMENT ON COLUMN tecabix_sce.servicio.fecha_modificado IS 'ULTIMA FECHA QUE SE MODIFICO EL REGISTRO';
+COMMENT ON COLUMN tecabix_sce.servicio.id_estatus IS 'STATUS DEL REGISTRO, CATALOGO_TIPO = ESTATUS';
 
-ALTER TABLE tecabix_sce.plan_servicio ADD CONSTRAINT fk_plan_servicio_id_estatus FOREIGN KEY (id_estatus)
+ALTER TABLE tecabix_sce.servicio ADD CONSTRAINT fk_servicio_id_estatus FOREIGN KEY (id_estatus)
 REFERENCES tecabix_sce.catalogo(id_catalogo) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
-ALTER TABLE tecabix_sce.plan_servicio ADD CONSTRAINT fk_plan_servicio_id_usuario_modificado FOREIGN KEY (id_usuario_modificado)
+ALTER TABLE tecabix_sce.servicio ADD CONSTRAINT fk_servicio_id_usuario_modificado FOREIGN KEY (id_usuario_modificado)
 REFERENCES tecabix_sce.usuario(id_usuario) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
-ALTER TABLE tecabix_sce.plan_servicio ADD CONSTRAINT fk_plan_servicio_id_plan FOREIGN KEY (id_plan)
-REFERENCES tecabix_sce.plan(id_plan) MATCH SIMPLE
+ALTER TABLE tecabix_sce.servicio ADD CONSTRAINT fk_servicio_id_tipo FOREIGN KEY (id_tipo)
+REFERENCES tecabix_sce.catalogo(id_catalogo) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
-ALTER TABLE tecabix_sce.plan_servicio ADD CONSTRAINT fk_plan_servicio_id_servicio FOREIGN KEY (id_servicio)
-REFERENCES tecabix_sce.servicio(id_servicio) MATCH SIMPLE
+ALTER TABLE tecabix_sce.servicio ADD CONSTRAINT fk_servicio_id_plan FOREIGN KEY (id_plan)
+REFERENCES tecabix_sce.plan(id_plan) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
 

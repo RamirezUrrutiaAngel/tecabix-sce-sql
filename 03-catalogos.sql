@@ -18,26 +18,24 @@
 
 DO $$
 DECLARE 
-	USUARIO_ROOT	TEXT := 'root';
-	EMAIL_ROOT		TEXT := 'tecabix@gmail.com';
-    id_aux_1		bigint;
-	id_aux_2		bigint;
-	id_aux_3		bigint;
-	VAR_ACTIVO		bigint;
-	VAR_USR_CREA	bigint;
-	item_aux        RECORD;
+	USUARIO_ROOT		TEXT := 'root';
+	EMAIL_ROOT			TEXT := 'tecabix@gmail.com';
+	id_aux_1			bigint;
+	id_aux_2			bigint;
+	id_aux_3			bigint;
+	id_aux_4			bigint;
+	VAR_ACTIVO			bigint;
+	VAR_USR_CREA		bigint;
+	ADMINISTRADOR_ROOT	bigint;
+	AUTENTIFICADOS 		bigint;
+	item_aux        	RECORD;
 BEGIN
 	
-	INSERT INTO tecabix_sce.usuario (nombre, psw, correo) VALUES (USUARIO_ROOT, '$2a$10$TI.Gb25P1MemRCU3VtNrj.1ZP3DAY9pSS.N86be2v/HUS8Jc8dOay', EMAIL_ROOT);
-
-	INSERT INTO tecabix_sce.catalogo_tipo (nombre, descripcion) VALUES ('ESTATUS', 'ESTATUS DE UN REGISTRO');
-	SELECT id_catalogo_tipo INTO id_aux_1 FROM tecabix_sce.catalogo_tipo WHERE nombre = 'ESTATUS';
-	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo) VALUES ('ACTIVO', 'ACTIVO', 'REGISTRO ACTIVO', 1, id_aux_1);
+	INSERT INTO tecabix_sce.usuario (nombre, psw, correo) VALUES (USUARIO_ROOT, '$2a$10$TI.Gb25P1MemRCU3VtNrj.1ZP3DAY9pSS.N86be2v/HUS8Jc8dOay', EMAIL_ROOT) RETURNING id_usuario INTO VAR_USR_CREA;
+	INSERT INTO tecabix_sce.catalogo_tipo (nombre, descripcion) VALUES ('ESTATUS', 'ESTATUS DE UN REGISTRO') RETURNING id_catalogo_tipo INTO id_aux_1;
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo) VALUES ('ACTIVO', 'ACTIVO', 'REGISTRO ACTIVO', 1, id_aux_1) RETURNING id_catalogo INTO VAR_ACTIVO;
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo) VALUES ('ELIMINADO', 'ELIMINADO', 'REGISTRO ELIMINADO', 2, id_aux_1);
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo) VALUES ('PENDIENTE', 'PENDIENTE', 'REGISTRO PENDIENTE A REVISION', 3, id_aux_1);
-
-	SELECT id_catalogo INTO VAR_ACTIVO FROM tecabix_sce.catalogo WHERE nombre = 'ACTIVO' AND id_catalogo_tipo IN (SELECT id_catalogo_tipo FROM tecabix_sce.catalogo_tipo WHERE nombre = 'ESTATUS');
-	SELECT id_usuario INTO VAR_USR_CREA FROM tecabix_sce.usuario WHERE nombre = USUARIO_ROOT;
 	
 	UPDATE tecabix_sce.usuario SET id_usuario_modificado = VAR_USR_CREA, id_estatus = VAR_ACTIVO;
 	ALTER TABLE tecabix_sce.usuario ALTER COLUMN id_usuario_modificado SET NOT NULL;
@@ -75,44 +73,45 @@ BEGIN
 	REFERENCES tecabix_sce.usuario(id_usuario) MATCH SIMPLE
 	ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
-	INSERT INTO tecabix_sce.catalogo_tipo (nombre, descripcion, id_usuario_modificado, id_estatus) VALUES ('CRUD', 'TIPO DE ACCION EN LOS REGISTRO', VAR_USR_CREA, VAR_ACTIVO);
-	SELECT id_catalogo_tipo INTO id_aux_1 FROM tecabix_sce.catalogo_tipo WHERE nombre = 'CRUD';
+	INSERT INTO tecabix_sce.catalogo_tipo (nombre, descripcion, id_usuario_modificado, id_estatus) VALUES ('CRUD', 'TIPO DE ACCION EN LOS REGISTRO', VAR_USR_CREA, VAR_ACTIVO) RETURNING id_catalogo_tipo INTO id_aux_1;
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('CREAR', 'CREAR', 'CREAR', 1, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('ACTUALIZAR', 'ACTUALIZAR', 'ACTUALIZAR', 2, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('ELIMINAR', 'ELIMINAR', 'ELIMINAR', 3, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 
-	INSERT INTO tecabix_sce.catalogo_tipo (nombre, descripcion, id_usuario_modificado, id_estatus) VALUES ('TIPO_DE_SERVICIO', 'TIPO DE SERVICIO', VAR_USR_CREA, VAR_ACTIVO);
-	SELECT id_catalogo_tipo INTO id_aux_3 FROM tecabix_sce.catalogo_tipo WHERE nombre = 'TIPO_DE_SERVICIO';
-	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('DISPOSITIVO', 'LICENCIA DE DISPOSITIVO', 'LICENCIA DE DISPOSITIVO', 1, id_aux_3, VAR_USR_CREA, VAR_ACTIVO) RETURNING id_catalogo INTO id_aux_1;
-	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('WEB', 'LICENCIA PARA APLICACIONES WEB', 'LICENCIA PARA APLICACIONES WEB', 2, id_aux_3, VAR_USR_CREA, VAR_ACTIVO) RETURNING id_catalogo INTO id_aux_2;
-
-	/**************************** PLAN Y SERVICIO ****************************/
-	INSERT INTO tecabix_sce.servicio(nombre, descripcion, id_tipo, peticiones, id_usuario_modificado, id_estatus)VALUES ('TCE','TERMINAL DE CONTROL ESCOLAR',id_aux_1,6000, VAR_USR_CREA, VAR_ACTIVO) RETURNING id_servicio INTO id_aux_1;
-	INSERT INTO tecabix_sce.servicio(nombre, descripcion, id_tipo, peticiones, id_usuario_modificado, id_estatus)VALUES ('WEB','SERVICIOS PARA APLICACIONES Y PAGINAS WEB PERSONALIZADOS',id_aux_2,1800, VAR_USR_CREA, VAR_ACTIVO) RETURNING id_servicio INTO id_aux_2;
-
-	INSERT INTO tecabix_sce.plan(nombre, descripcion, precio, id_usuario_modificado, id_estatus)VALUES ('BASICO', 'PLAN BASICO', 350, VAR_USR_CREA, VAR_ACTIVO) RETURNING id_plan INTO id_aux_3;
 	
-	INSERT INTO tecabix_sce.plan_servicio(id_plan, id_servicio, numero_licencias, id_usuario_modificado, id_estatus)VALUES (id_aux_3, id_aux_1, 15, VAR_USR_CREA, VAR_ACTIVO);
-	INSERT INTO tecabix_sce.plan_servicio(id_plan, id_servicio, numero_licencias, id_usuario_modificado, id_estatus)VALUES (id_aux_3, id_aux_2, 1, VAR_USR_CREA, VAR_ACTIVO);
+	/**************************** PLAN Y SERVICIO ****************************/
+	INSERT INTO tecabix_sce.catalogo_tipo (nombre, descripcion, id_usuario_modificado, id_estatus) VALUES ('TIPO_DE_SERVICIO', 'TIPO DE SERVICIO', VAR_USR_CREA, VAR_ACTIVO) RETURNING id_catalogo_tipo INTO id_aux_3;
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('DISPOSITIVO', 'LICENCIA DE DISPOSITIVO', 'LICENCIA DE DISPOSITIVO', 1, id_aux_3, VAR_USR_CREA, VAR_ACTIVO) RETURNING id_catalogo INTO id_aux_1;
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('MULTIUSUARIO', 'LICENCIA PARA APLICACIONES', 'LICENCIA PARA APLICACIONES', 2, id_aux_3, VAR_USR_CREA, VAR_ACTIVO) RETURNING id_catalogo INTO id_aux_2;
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('MONOUSUARIO', 'LICENCIA PARA APLICACIONES', 'LICENCIA PARA APLICACIONES', 3, id_aux_3, VAR_USR_CREA, VAR_ACTIVO) RETURNING id_catalogo INTO id_aux_4;
 
-	INSERT INTO tecabix_sce.catalogo_tipo (nombre, descripcion, id_usuario_modificado, id_estatus) VALUES ('CONFIGURACION_PLAN', 'CONFIGURACION DEL PLAN', VAR_USR_CREA, VAR_ACTIVO);
-	SELECT id_catalogo_tipo INTO id_aux_1 FROM tecabix_sce.catalogo_tipo WHERE nombre = 'CONFIGURACION_PLAN';
+	
+	INSERT INTO tecabix_sce.plan(nombre, descripcion, precio, id_usuario_modificado, id_estatus)VALUES ('BASICO', 'PLAN BASICO', 480, VAR_USR_CREA, VAR_ACTIVO) RETURNING id_plan INTO id_aux_3;
+	
+	INSERT INTO tecabix_sce.servicio(id_plan, nombre, descripcion, numero_licencias, id_tipo, peticiones, id_usuario_modificado, id_estatus)VALUES (id_aux_3, 'TCE','TERMINAL DE CONTROL ESCOLAR', 6,id_aux_1,32400, VAR_USR_CREA, VAR_ACTIVO);
+	INSERT INTO tecabix_sce.servicio(id_plan, nombre, descripcion, numero_licencias, id_tipo, peticiones, id_usuario_modificado, id_estatus)VALUES (id_aux_3, 'MULTIUSUARIO','SERVICIOS PARA APLICACIONES Y PAGINAS WEB PERSONALIZADOS', 1, id_aux_2,1800, VAR_USR_CREA, VAR_ACTIVO);
+	INSERT INTO tecabix_sce.servicio(id_plan, nombre, descripcion, numero_licencias, id_tipo, peticiones, id_usuario_modificado, id_estatus)VALUES (id_aux_3, 'MONOUSUARIO','SERVICIOS PARA APLICACIONES Y PAGINAS WEB PERSONALIZADOS', 1, id_aux_4,32400, VAR_USR_CREA, VAR_ACTIVO);
+	
+
+	INSERT INTO tecabix_sce.catalogo_tipo (nombre, descripcion, id_usuario_modificado, id_estatus) VALUES ('CONFIGURACION_PLAN', 'CONFIGURACION DEL PLAN', VAR_USR_CREA, VAR_ACTIVO) RETURNING id_catalogo_tipo INTO id_aux_1;
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('MAX_REG_DEPARTAMENTO','NUMERO MÁXIMO DE REGISTROS DE DEPARTAMENTOS', 'NUMERO DE DEPARTAMENTOS MÁXIMO QUE SE PUEDEN GUARDAR', 1, id_aux_1, VAR_USR_CREA, VAR_ACTIVO) RETURNING id_catalogo INTO id_aux_2;
-		INSERT INTO tecabix_sce.configuracion(id_tipo, valor, id_usuario_modificado, id_estatus)VALUES (id_aux_2, '100', VAR_USR_CREA, VAR_ACTIVO) RETURNING id_configuracion INTO id_aux_2;
+		INSERT INTO tecabix_sce.configuracion(id_tipo, valor, id_usuario_modificado, id_estatus)VALUES (id_aux_2, '3', VAR_USR_CREA, VAR_ACTIVO) RETURNING id_configuracion INTO id_aux_2;
 			INSERT INTO tecabix_sce.plan_configuracion(id_plan, id_configuracion)VALUES (id_aux_3, id_aux_2);
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('MAX_REG_PUESTO','NUMERO MÁXIMO DE REGISTROS DE PUESTOS', 'NUMERO MÁXIMO DE REGISTROS DE PUESTOS QUE SE PUEDEN GUARDAR', 2, id_aux_1, VAR_USR_CREA, VAR_ACTIVO) RETURNING id_catalogo INTO id_aux_2;
-		INSERT INTO tecabix_sce.configuracion(id_tipo, valor, id_usuario_modificado, id_estatus)VALUES (id_aux_2, '100', VAR_USR_CREA, VAR_ACTIVO) RETURNING id_configuracion INTO id_aux_2;
+		INSERT INTO tecabix_sce.configuracion(id_tipo, valor, id_usuario_modificado, id_estatus)VALUES (id_aux_2, '6', VAR_USR_CREA, VAR_ACTIVO) RETURNING id_configuracion INTO id_aux_2;
 			INSERT INTO tecabix_sce.plan_configuracion(id_plan, id_configuracion)VALUES (id_aux_3, id_aux_2);
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('MAX_REG_PLANTEL','NUMERO MÁXIMO DE REGISTROS DE PLANTELES', 'NUMERO MÁXIMO DE REGISTROS DE PLANTELES QUE SE PUEDEN GUARDAR', 3, id_aux_1, VAR_USR_CREA, VAR_ACTIVO) RETURNING id_catalogo INTO id_aux_2;
-		INSERT INTO tecabix_sce.configuracion(id_tipo, valor, id_usuario_modificado, id_estatus)VALUES (id_aux_2, '100', VAR_USR_CREA, VAR_ACTIVO) RETURNING id_configuracion INTO id_aux_2;
+		INSERT INTO tecabix_sce.configuracion(id_tipo, valor, id_usuario_modificado, id_estatus)VALUES (id_aux_2, '2', VAR_USR_CREA, VAR_ACTIVO) RETURNING id_configuracion INTO id_aux_2;
 			INSERT INTO tecabix_sce.plan_configuracion(id_plan, id_configuracion)VALUES (id_aux_3, id_aux_2);
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('MAX_REG_PERFIL','NUMERO MÁXIMO DE REGISTROS DE PERFILES', 'NUMERO MÁXIMO DE REGISTROS DE PERFILES QUE SE PUEDEN GUARDAR', 4, id_aux_1, VAR_USR_CREA, VAR_ACTIVO) RETURNING id_catalogo INTO id_aux_2;
-		INSERT INTO tecabix_sce.configuracion(id_tipo, valor, id_usuario_modificado, id_estatus)VALUES (id_aux_2, '100', VAR_USR_CREA, VAR_ACTIVO) RETURNING id_configuracion INTO id_aux_2;
+		INSERT INTO tecabix_sce.configuracion(id_tipo, valor, id_usuario_modificado, id_estatus)VALUES (id_aux_2, '6', VAR_USR_CREA, VAR_ACTIVO) RETURNING id_configuracion INTO id_aux_2;
+			INSERT INTO tecabix_sce.plan_configuracion(id_plan, id_configuracion)VALUES (id_aux_3, id_aux_2);
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('MAX_REG_TRABAJADOR','NUMERO MÁXIMO DE REGISTROS DE TRABAJADORES', 'NUMERO MÁXIMO DE REGISTROS DE TRABAJADORES QUE SE PUEDEN GUARDAR', 5, id_aux_1, VAR_USR_CREA, VAR_ACTIVO) RETURNING id_catalogo INTO id_aux_2;
+		INSERT INTO tecabix_sce.configuracion(id_tipo, valor, id_usuario_modificado, id_estatus)VALUES (id_aux_2, '36', VAR_USR_CREA, VAR_ACTIVO) RETURNING id_configuracion INTO id_aux_2;
 			INSERT INTO tecabix_sce.plan_configuracion(id_plan, id_configuracion)VALUES (id_aux_3, id_aux_2);
 
 
-
-	REFRESH MATERIALIZED VIEW tecabix_sce.numero_maximo_registro;
+	
 	/**************************** CATALOGO ****************************/
 
 	INSERT INTO tecabix_sce.catalogo_tipo (nombre, descripcion, id_usuario_modificado, id_estatus) VALUES ('TIPO_DE_PAGO', 'TIPO DE PAGO', VAR_USR_CREA, VAR_ACTIVO);
@@ -125,46 +124,38 @@ BEGIN
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('PAYPAL', 'PAGO CON PAYPAL', 'PAGO CON PAYPAL', 0, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('DEPOSITO', 'PAGO POR DEPOSITO', 'PAGO POR DEPOSITO', 0, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 
-	INSERT INTO tecabix_sce.catalogo_tipo (nombre, descripcion, id_usuario_modificado, id_estatus) VALUES ('SEXO', 'GENERO O SEXO DE NACIMIENTO', VAR_USR_CREA, VAR_ACTIVO);
-	SELECT id_catalogo_tipo INTO id_aux_1 FROM tecabix_sce.catalogo_tipo WHERE nombre = 'SEXO';
+	INSERT INTO tecabix_sce.catalogo_tipo (nombre, descripcion, id_usuario_modificado, id_estatus) VALUES ('SEXO', 'GENERO O SEXO DE NACIMIENTO', VAR_USR_CREA, VAR_ACTIVO) RETURNING id_catalogo_tipo INTO id_aux_1;
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('MASCULINO', 'HOMBRE', 'MASCULINO', 1, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('FEMENINO', 'MUJER', 'MASCULINO', 2, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 
-	INSERT INTO tecabix_sce.catalogo_tipo (nombre, descripcion, id_usuario_modificado, id_estatus) VALUES ('UNIDAD_DE_MEDIDA', 'UNIDADES DE MEDIDAS', VAR_USR_CREA, VAR_ACTIVO);
-	SELECT id_catalogo_tipo INTO id_aux_1 FROM tecabix_sce.catalogo_tipo WHERE nombre = 'UNIDAD_DE_MEDIDA';
+	INSERT INTO tecabix_sce.catalogo_tipo (nombre, descripcion, id_usuario_modificado, id_estatus) VALUES ('UNIDAD_DE_MEDIDA', 'UNIDADES DE MEDIDAS', VAR_USR_CREA, VAR_ACTIVO) RETURNING id_catalogo_tipo INTO id_aux_1;
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('PZA', 'PIEZA', 'PIEZA', 1, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('KG', 'KILOGRAMO', 'KILOGRAMO', 2, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('S/U', 'SIN UNIDAD', 'NO UTILIZA INVENTARIO', 3, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('LT', 'LITRO', 'LITRO', 0, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 
-	INSERT INTO tecabix_sce.catalogo_tipo (nombre, descripcion, id_usuario_modificado, id_estatus) VALUES ('PRODUCTO_O_SERVICIO', 'PRODUCTO O SERVICIO', VAR_USR_CREA, VAR_ACTIVO);
-	SELECT id_catalogo_tipo INTO id_aux_1 FROM tecabix_sce.catalogo_tipo WHERE nombre = 'PRODUCTO_O_SERVICIO';
+	INSERT INTO tecabix_sce.catalogo_tipo (nombre, descripcion, id_usuario_modificado, id_estatus) VALUES ('PRODUCTO_O_SERVICIO', 'PRODUCTO O SERVICIO', VAR_USR_CREA, VAR_ACTIVO) RETURNING id_catalogo_tipo INTO id_aux_1;
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('PRODUCTO', 'PRODUCTO', 'PRODUCTO', 1, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('SERVICIO', 'SERVICIO', 'SERVICIO', 2, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 
-	INSERT INTO tecabix_sce.catalogo_tipo (nombre, descripcion, id_usuario_modificado, id_estatus) VALUES ('TIPO_CONTACTO', 'MEDIO EN QUE SE PUEDE COMUINICAR CON UNA PERSONA FISICA O MORAL', VAR_USR_CREA, VAR_ACTIVO);
-	SELECT id_catalogo_tipo INTO id_aux_1 FROM tecabix_sce.catalogo_tipo WHERE nombre = 'TIPO_CONTACTO';
+	INSERT INTO tecabix_sce.catalogo_tipo (nombre, descripcion, id_usuario_modificado, id_estatus) VALUES ('TIPO_CONTACTO', 'MEDIO EN QUE SE PUEDE COMUINICAR CON UNA PERSONA FISICA O MORAL', VAR_USR_CREA, VAR_ACTIVO) RETURNING id_catalogo_tipo INTO id_aux_1;
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('E-MAIL', 'CORREO', 'CORREO ELECTRONICO', 1, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('TEL', 'TELEFONO', 'TELEFONO', 2, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('CEL', 'CELULAR', 'TELEFONO CELULAR', 3, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 
-	INSERT INTO tecabix_sce.catalogo_tipo (nombre, descripcion, id_usuario_modificado, id_estatus) VALUES ('TIPO_SOPORTE', 'TIPO DEL QUE SE VA A DAR SOPORTE', VAR_USR_CREA, VAR_ACTIVO);
-	SELECT id_catalogo_tipo INTO id_aux_1 FROM tecabix_sce.catalogo_tipo WHERE nombre = 'TIPO_SOPORTE';
+	INSERT INTO tecabix_sce.catalogo_tipo (nombre, descripcion, id_usuario_modificado, id_estatus) VALUES ('TIPO_SOPORTE', 'TIPO DEL QUE SE VA A DAR SOPORTE', VAR_USR_CREA, VAR_ACTIVO) RETURNING id_catalogo_tipo INTO id_aux_1;
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('SOPORTE_TECNICO', 'TECNICO', 'SOPORTE TECNICO', 1, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('SOPORTE_FINANCIERO', 'FINANCIERO', 'SOPORTE FINANCIERO', 2, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 	
-	INSERT INTO tecabix_sce.catalogo_tipo (nombre, descripcion, id_usuario_modificado, id_estatus) VALUES ('CONTROL_TABLA', 'CONTROL DE CAMBIOS DE LAS TABLAS', VAR_USR_CREA, VAR_ACTIVO);
-	SELECT id_catalogo_tipo INTO id_aux_1 FROM tecabix_sce.catalogo_tipo WHERE nombre = 'CONTROL_TABLA';
+	INSERT INTO tecabix_sce.catalogo_tipo (nombre, descripcion, id_usuario_modificado, id_estatus) VALUES ('CONTROL_TABLA', 'CONTROL DE CAMBIOS DE LAS TABLAS', VAR_USR_CREA, VAR_ACTIVO) RETURNING id_catalogo_tipo INTO id_aux_1;
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('PRODUCTO', 'PRODUCTO', 'PRODUCTO', 1, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 
-	INSERT INTO tecabix_sce.catalogo_tipo (nombre, descripcion, id_usuario_modificado, id_estatus) VALUES ('TIPO_DE_PERSONA', 'TIPO DE PERSONA', VAR_USR_CREA, VAR_ACTIVO);
-	SELECT id_catalogo_tipo INTO id_aux_1 FROM tecabix_sce.catalogo_tipo WHERE nombre = 'TIPO_DE_PERSONA';
+	INSERT INTO tecabix_sce.catalogo_tipo (nombre, descripcion, id_usuario_modificado, id_estatus) VALUES ('TIPO_DE_PERSONA', 'TIPO DE PERSONA', VAR_USR_CREA, VAR_ACTIVO) RETURNING id_catalogo_tipo INTO id_aux_1;
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('FISICA', 'PERSONA FISICA', 'PERSONA FISICA', 1, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('MORAL', 'PERSONA MORAL', 'PERSONA MORAL', 2, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('EMPRESARIAL', 'PERSONA FISICA CON ACTIVIDAD EMPRESARIAL', 'PERSONA FISICA CON ACTIVIDAD EMPRESARIAL', 3, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);	
 
-	INSERT INTO tecabix_sce.catalogo_tipo (nombre, descripcion, id_usuario_modificado, id_estatus) VALUES ('FACULTAD_UNIVERSITARIA', 'FACULTAD UNIVERSITARIA', VAR_USR_CREA, VAR_ACTIVO);
-	SELECT id_catalogo_tipo INTO id_aux_1 FROM tecabix_sce.catalogo_tipo WHERE nombre = 'FACULTAD_UNIVERSITARIA';
+	INSERT INTO tecabix_sce.catalogo_tipo (nombre, descripcion, id_usuario_modificado, id_estatus) VALUES ('FACULTAD_UNIVERSITARIA', 'FACULTAD UNIVERSITARIA', VAR_USR_CREA, VAR_ACTIVO) RETURNING id_catalogo_tipo INTO id_aux_1;
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('AGRONOMÍA', 'FACULTAD DE AGRONOMÍA', '', 1, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('ARQUITECTURA', 'FACULTAD DE ARQUITECTURA', 'FACULTAD DE ARQUITECTURA', 2, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('CIENCIAS DE LA EDUCACIÓN', 'FACULTAD DE CIENCIAS DE LA EDUCACIÓN', 'FACULTAD DE CIENCIAS DE LA EDUCACIÓN', 3, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
@@ -187,19 +178,16 @@ BEGIN
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('VETERINARIA', 'FACULTAD DE VETERINARIA', 'FACULTAD DE VETERINARIA', 20, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('QUÍMICA', 'FACULTAD DE QUÍMICA', 'FACULTAD DE QUÍMICA', 21, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 
-	INSERT INTO tecabix_sce.catalogo_tipo (nombre, descripcion, id_usuario_modificado, id_estatus) VALUES ('TURNO', 'TURNO U HORARIO', VAR_USR_CREA, VAR_ACTIVO);
-	SELECT id_catalogo_tipo INTO id_aux_1 FROM tecabix_sce.catalogo_tipo WHERE nombre = 'TURNO';
+	INSERT INTO tecabix_sce.catalogo_tipo (nombre, descripcion, id_usuario_modificado, id_estatus) VALUES ('TURNO', 'TURNO U HORARIO', VAR_USR_CREA, VAR_ACTIVO) RETURNING id_catalogo_tipo INTO id_aux_1;
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('MATUTINO', 'MATUTINO', 'MATUTINO', 1, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('VESPERTINO', 'VESPERTINO', 'VESPERTINO', 2, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 
-	INSERT INTO tecabix_sce.catalogo_tipo (nombre, descripcion, id_usuario_modificado, id_estatus) VALUES ('PERIODO_ACADEMICO', 'PERIODO ACADEMICO', VAR_USR_CREA, VAR_ACTIVO);
-	SELECT id_catalogo_tipo INTO id_aux_1 FROM tecabix_sce.catalogo_tipo WHERE nombre = 'PERIODO_ACADEMICO';
+	INSERT INTO tecabix_sce.catalogo_tipo (nombre, descripcion, id_usuario_modificado, id_estatus) VALUES ('PERIODO_ACADEMICO', 'PERIODO ACADEMICO', VAR_USR_CREA, VAR_ACTIVO) RETURNING id_catalogo_tipo INTO id_aux_1;
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('TRIMESTRE', 'MATUTINO', 'MATUTINO', 1, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('CUATRIMESTRE', 'CUATRIMESTRE', 'CUATRIMESTRE', 2, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('SEMESTRE', 'SEMESTRE', 'SEMESTRE', 3, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 
-	INSERT INTO tecabix_sce.catalogo_tipo (nombre, descripcion, id_usuario_modificado, id_estatus) VALUES ('DIA_DE_LA_SEMANA', 'DIA DE LA SEMANA', VAR_USR_CREA, VAR_ACTIVO);
-	SELECT id_catalogo_tipo INTO id_aux_1 FROM tecabix_sce.catalogo_tipo WHERE nombre = 'DIA_DE_LA_SEMANA';
+	INSERT INTO tecabix_sce.catalogo_tipo (nombre, descripcion, id_usuario_modificado, id_estatus) VALUES ('DIA_DE_LA_SEMANA', 'DIA DE LA SEMANA', VAR_USR_CREA, VAR_ACTIVO) RETURNING id_catalogo_tipo INTO id_aux_1;
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('LUNES', 'LUNES', 'LUNES', 1, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('MARTES', 'MARTES', 'MARTES', 2, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('MIERCOLES', 'MIERCOLES', 'MIERCOLES', 3, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
@@ -208,14 +196,12 @@ BEGIN
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('SABADO', 'SABADO', 'SABADO', 6, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('DOMINGO', 'DOMINGO', 'DOMINGO', 7, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 
-	INSERT INTO tecabix_sce.catalogo_tipo (nombre, descripcion, id_usuario_modificado, id_estatus) VALUES ('TIPO_CALIFICACION', 'TIPO DE CALIFICACION', VAR_USR_CREA, VAR_ACTIVO);
-	SELECT id_catalogo_tipo INTO id_aux_1 FROM tecabix_sce.catalogo_tipo WHERE nombre = 'TIPO_CALIFICACION';
+	INSERT INTO tecabix_sce.catalogo_tipo (nombre, descripcion, id_usuario_modificado, id_estatus) VALUES ('TIPO_CALIFICACION', 'TIPO DE CALIFICACION', VAR_USR_CREA, VAR_ACTIVO) RETURNING id_catalogo_tipo INTO id_aux_1;
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('ORDINARIO','ORDINARIO', 'SE EVALUO LOS PARCIALES MAS EL EXAMEN ORDINARIO', 1, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('EXTRAORDINARIO', 'EXTRAORDINARIO', 'SE EVALUA PROYECTO MÁS EXAMEN EXTRAORDINARIO', 2, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('TITULO', 'TITULO DE SUFICIENCIA', 'SE EVALUA PROYECTO MÁS EXAMEN TITULO DE SUFICIENCIA', 3, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 
-	INSERT INTO tecabix_sce.catalogo_tipo (nombre, descripcion, id_usuario_modificado, id_estatus) VALUES ('TIPO_DE_CORREO', 'TIPO DE CORREO', VAR_USR_CREA, VAR_ACTIVO);
-	SELECT id_catalogo_tipo INTO id_aux_1 FROM tecabix_sce.catalogo_tipo WHERE nombre = 'TIPO_DE_CORREO';
+	INSERT INTO tecabix_sce.catalogo_tipo (nombre, descripcion, id_usuario_modificado, id_estatus) VALUES ('TIPO_DE_CORREO', 'TIPO DE CORREO', VAR_USR_CREA, VAR_ACTIVO) RETURNING id_catalogo_tipo INTO id_aux_1;
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('CONFIRMAR_CORREO','CONFIRMAR CORREO', 'VALIDA LOS CORREOS MANDANDO UN CÓDIGO PARA AUTENTIFICAR SU VERACIDAD', 1, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('INFORMATIVO','INFORMATIVO', 'MENSAJES QUE SON INFORMATIVOS PARA EL CLIENTE', 2, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('MASIVO','MASIVO', 'MENSAJES MASIVOS', 3, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
@@ -225,106 +211,73 @@ BEGIN
 
 	/**************************** AUTHORITY ****************************/
 
-	INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('ADMINISTRADOR_ROOT', 'SUPER USUARIOS', NULL, VAR_USR_CREA, VAR_ACTIVO);
-	INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('AUTENTIFICADOS', 'USUARIOS AUTENTIFICADOS', NULL, VAR_USR_CREA, VAR_ACTIVO);
+	INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('ADMINISTRADOR_ROOT', 'SUPER USUARIOS', NULL, VAR_USR_CREA, VAR_ACTIVO) RETURNING id_authority INTO ADMINISTRADOR_ROOT;
+	INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('AUTENTIFICADOS', 'USUARIOS AUTENTIFICADOS', NULL, VAR_USR_CREA, VAR_ACTIVO) RETURNING id_authority INTO AUTENTIFICADOS;
 
-	SELECT id_authority INTO id_aux_1 FROM tecabix_sce.authority WHERE nombre = 'ADMINISTRADOR_ROOT';
-		INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('ROOT', 'SUPER USUARIO', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+		INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('ROOT', 'SUPER USUARIO', ADMINISTRADOR_ROOT, VAR_USR_CREA, VAR_ACTIVO);
 
-	SELECT id_authority INTO id_aux_1 FROM tecabix_sce.authority WHERE nombre = 'ADMINISTRADOR_ROOT';
-		INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('AUTHORITY', 'AUTHORITY', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+		INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('AUTHORITY', 'AUTHORITY', ADMINISTRADOR_ROOT, VAR_USR_CREA, VAR_ACTIVO);
 
-	SELECT id_authority INTO id_aux_1 FROM tecabix_sce.authority WHERE nombre = 'ADMINISTRADOR_ROOT';
-		INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('CATALOGO', 'CATALOGO', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+		INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('CATALOGO', 'CATALOGO', ADMINISTRADOR_ROOT, VAR_USR_CREA, VAR_ACTIVO);
 
-	SELECT id_authority INTO id_aux_1 FROM tecabix_sce.authority WHERE nombre = 'AUTENTIFICADOS';
-		INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('USUARIO', 'USUARIOS', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
-		SELECT id_authority INTO id_aux_1 FROM tecabix_sce.authority WHERE nombre = 'USUARIO';
+		INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('USUARIO', 'USUARIOS', AUTENTIFICADOS, VAR_USR_CREA, VAR_ACTIVO) RETURNING id_authority INTO id_aux_1;
 			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('USUARIO_CREAR', 'CREAR USUARIOS', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('USUARIO_EDITAR', 'EDITAR LOS USUARIOS', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('USUARIO_ELIMINAR', 'ELIMINAR LOS USUARIOS', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 
-	SELECT id_authority INTO id_aux_1 FROM tecabix_sce.authority WHERE nombre = 'AUTENTIFICADOS';
-		INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('SESION', 'SESION', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
-		SELECT id_authority INTO id_aux_1 FROM tecabix_sce.authority WHERE nombre = 'SESION';
+		INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('SESION', 'SESION', AUTENTIFICADOS, VAR_USR_CREA, VAR_ACTIVO) RETURNING id_authority INTO id_aux_1;
 			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('SESION_ELIMINAR', 'ELIMINAR OTRAS SESIONES', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 
 
-	SELECT id_authority INTO id_aux_1 FROM tecabix_sce.authority WHERE nombre = 'ADMINISTRADOR_ROOT';
-		INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('ROOT_SESION', 'SESION EN ROOT', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
-		SELECT id_authority INTO id_aux_1 FROM tecabix_sce.authority WHERE nombre = 'ROOT_SESION';
+		INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('ROOT_SESION', 'SESION EN ROOT', ADMINISTRADOR_ROOT, VAR_USR_CREA, VAR_ACTIVO) RETURNING id_authority INTO id_aux_1;
 			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('ROOT_SESION_ELIMINAR', 'ELIMINAR OTRAS SESIONES DE CUALQUIER EMPRESA', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 
-	SELECT id_authority INTO id_aux_1 FROM tecabix_sce.authority WHERE nombre = 'AUTENTIFICADOS';
-		INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('TRABAJADOR', 'TRABAJADOR', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
-		SELECT id_authority INTO id_aux_1 FROM tecabix_sce.authority WHERE nombre = 'TRABAJADOR';
+		INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('TRABAJADOR', 'TRABAJADOR', AUTENTIFICADOS, VAR_USR_CREA, VAR_ACTIVO) RETURNING id_authority INTO id_aux_1;
 			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('TRABAJADOR_CREAR', 'CREAR TRABAJADOR EN ESTSTUS PENDIENTE', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('TRABAJADOR_EDITAR', 'EDITAR TRABAJADOR', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('TRABAJADOR_ELIMINAR', 'ELIMINAR TRABAJADOR', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 	
-	SELECT id_authority INTO id_aux_1 FROM tecabix_sce.authority WHERE nombre = 'AUTENTIFICADOS';
-		INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('PERFIL', 'PERFIL', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
-		SELECT id_authority INTO id_aux_1 FROM tecabix_sce.authority WHERE nombre = 'PERFIL';
+		INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('PERFIL', 'PERFIL', AUTENTIFICADOS, VAR_USR_CREA, VAR_ACTIVO) RETURNING id_authority INTO id_aux_1;
 			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('PERFIL_CREAR', 'CREAR PERFIL', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('PERFIL_EDITAR', 'EDITAR PERFIL', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('PERFIL_ELIMINAR', 'ELIMANR PERFIL', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 
-	SELECT id_authority INTO id_aux_1 FROM tecabix_sce.authority WHERE nombre = 'ADMINISTRADOR_ROOT';
-		INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('ROOT_BANCO', 'INFORMACION DE LISTAS DE ENTIDADES BANCARIAS', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
-		SELECT id_authority INTO id_aux_1 FROM tecabix_sce.authority WHERE nombre = 'ROOT_BANCO';
+		INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('ROOT_BANCO', 'INFORMACION DE LISTAS DE ENTIDADES BANCARIAS', ADMINISTRADOR_ROOT, VAR_USR_CREA, VAR_ACTIVO) RETURNING id_authority INTO id_aux_1;
 			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('ROOT_BANCO_CREAR', 'CREAR INFORMACION DE UNA ENTIDAD BANCARIA', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('ROOT_BANCO_EDITAR', 'EDITAR UNA INFORMACION DE UNA ENTIDAD BANCARIA', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('ROOT_BANCO_ELIMINAR', 'ELIMNAR UNA INFORMACION DE UNA ENTIDAD BANCARIA', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 
-	SELECT id_authority INTO id_aux_1 FROM tecabix_sce.authority WHERE nombre = 'AUTENTIFICADOS';
-		INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('BANCO', 'INFORMACION DE LISTAS DE ENTIDADES BANCARIAS', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+		INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('BANCO', 'INFORMACION DE LISTAS DE ENTIDADES BANCARIAS', AUTENTIFICADOS, VAR_USR_CREA, VAR_ACTIVO);
 
-	SELECT id_authority INTO id_aux_1 FROM tecabix_sce.authority WHERE nombre = 'ADMINISTRADOR_ROOT';
-		INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('ROOT_EMPRESA', 'INFORMACION DE LISTAS DE ENTIDADES EDUCATIVAS', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
-		SELECT id_authority INTO id_aux_1 FROM tecabix_sce.authority WHERE nombre = 'ROOT_EMPRESA';
+		INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('ROOT_EMPRESA', 'INFORMACION DE LISTAS DE ENTIDADES EDUCATIVAS', ADMINISTRADOR_ROOT, VAR_USR_CREA, VAR_ACTIVO) RETURNING id_authority INTO id_aux_1;
 			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('ROOT_EMPRESA_CREAR', 'CREAR INFORMACION DE UNA ENTIDAD EDUCATIVA', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 
-	SELECT id_authority INTO id_aux_1 FROM tecabix_sce.authority WHERE nombre = 'AUTENTIFICADOS';
-		INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('DEPARTAMENTO', 'DEPARTAMENTO', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
-		SELECT id_authority INTO id_aux_1 FROM tecabix_sce.authority WHERE nombre = 'DEPARTAMENTO';
+		INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('DEPARTAMENTO', 'DEPARTAMENTO', AUTENTIFICADOS, VAR_USR_CREA, VAR_ACTIVO) RETURNING id_authority INTO id_aux_1;
 			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('DEPARTAMENTO_CREAR', 'CREAR DEPARTAMENTO', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('DEPARTAMENTO_EDITAR', 'EDITAR DEPARTAMENTO', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('DEPARTAMENTO_ELIMINAR', 'ELIMANR DEPARTAMENTO', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 	
-	SELECT id_authority INTO id_aux_1 FROM tecabix_sce.authority WHERE nombre = 'AUTENTIFICADOS';
-		INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('LICENCIA', 'LICENCIA', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
-		SELECT id_authority INTO id_aux_1 FROM tecabix_sce.authority WHERE nombre = 'LICENCIA';
+		INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('LICENCIA', 'LICENCIA', AUTENTIFICADOS, VAR_USR_CREA, VAR_ACTIVO) RETURNING id_authority INTO id_aux_1;
 			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('LICENCIA_CREAR', 'CREAR LICENCIA', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('LICENCIA_EDITAR', 'EDITAR LICENCIA', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('LICENCIA_ELIMINAR', 'ELIMINAR LICENCIA', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 
-
-	SELECT id_authority INTO id_aux_1 FROM tecabix_sce.authority WHERE nombre = 'ADMINISTRADOR_ROOT';
-		INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('ROOT_LICENCIA', 'PERMISOS ROOT DE LICENCIA', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
-		SELECT id_authority INTO id_aux_1 FROM tecabix_sce.authority WHERE nombre = 'ROOT_LICENCIA';
+		INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('ROOT_LICENCIA', 'PERMISOS ROOT DE LICENCIA', ADMINISTRADOR_ROOT, VAR_USR_CREA, VAR_ACTIVO) RETURNING id_authority INTO id_aux_1;
 			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('ROOT_LICENCIA_CREAR', 'PERMISOS ROOT DE CREAR LICENCIA', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('ROOT_LICENCIA_EDITAR', 'PERMISOS ROOT DE EDITAR LICENCIA', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('ROOT_LICENCIA_ELIMINAR', 'PERMISOS ROOT DE ELIMINAR LICENCIA', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 
-
-	SELECT id_authority INTO id_aux_1 FROM tecabix_sce.authority WHERE nombre = 'ADMINISTRADOR_ROOT';
-		INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('PLAN', 'PERMISOS DEL PLAN', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
-		SELECT id_authority INTO id_aux_1 FROM tecabix_sce.authority WHERE nombre = 'PLAN';
+		INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('PLAN', 'PERMISOS DEL PLAN', ADMINISTRADOR_ROOT, VAR_USR_CREA, VAR_ACTIVO) RETURNING id_authority INTO id_aux_1;
 			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('PLAN_CREAR', 'PERMISOS DE CREAR PLAN', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('PLAN_EDITAR', 'PERMISOS DE EDITAR PLAN', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('PLAN_ELIMINAR', 'PERMISOS DE ELIMINAR PLAN', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 			
-
-	SELECT id_authority INTO id_aux_1 FROM tecabix_sce.authority WHERE nombre = 'AUTENTIFICADOS';
-		INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('PLANTEL', 'PLANTEL', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
-		SELECT id_authority INTO id_aux_1 FROM tecabix_sce.authority WHERE nombre = 'PLANTEL';
+		INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('PLANTEL', 'PLANTEL', AUTENTIFICADOS, VAR_USR_CREA, VAR_ACTIVO) RETURNING id_authority INTO id_aux_1;
 			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('PLANTEL_CREAR', 'CREAR PLANTEL', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('PLANTEL_EDITAR', 'EDITAR PLANTEL', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('PLANTEL_ELIMINAR', 'ELIMINAR PLANTEL', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 
-	SELECT id_authority INTO id_aux_1 FROM tecabix_sce.authority WHERE nombre = 'AUTENTIFICADOS';
-		INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('PUESTO', 'PUESTO', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
-		SELECT id_authority INTO id_aux_1 FROM tecabix_sce.authority WHERE nombre = 'PUESTO';
+		INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('PUESTO', 'PUESTO', AUTENTIFICADOS, VAR_USR_CREA, VAR_ACTIVO) RETURNING id_authority INTO id_aux_1;
 			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('PUESTO_CREAR', 'CREAR PUESTO', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('PUESTOS_EDITAR', 'EDITAR PUESTO', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('PUESTOS_ELIMINAR', 'ELIMINAR PUESTO', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
