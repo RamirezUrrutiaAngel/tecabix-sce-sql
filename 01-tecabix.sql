@@ -47,6 +47,11 @@ COMMENT ON COLUMN tecabix_sce.catalogo_tipo.id_usuario_modificado IS 'ULTIMO USU
 COMMENT ON COLUMN tecabix_sce.catalogo_tipo.fecha_modificado IS 'ULTIMA FECHA QUE SE MODIFICO EL REGISTRO';
 COMMENT ON COLUMN tecabix_sce.catalogo_tipo.id_estatus IS 'STATUS DEL REGISTRO, CATALOGO_TIPO = ESTATUS';
 
+CREATE INDEX indx_catalogo_tipo_nombre
+    ON tecabix_sce.catalogo_tipo USING btree
+    (nombre COLLATE pg_catalog."default")
+    TABLESPACE pg_default;
+
 
 
 CREATE SEQUENCE tecabix_sce.catalogo_seq
@@ -111,7 +116,8 @@ CREATE TABLE tecabix_sce.estado(
 	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
 	id_estatus integer NOT NULL,
     clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
-CONSTRAINT pk_estado_id_estado PRIMARY KEY (id_estado)
+CONSTRAINT pk_estado_id_estado PRIMARY KEY (id_estado),
+CONSTRAINT uq_estado_clave UNIQUE (clave)
 );
 COMMENT ON TABLE tecabix_sce.estado IS 'ENTIDAD FEDERATIVA';
 COMMENT ON COLUMN tecabix_sce.estado.id_estado IS 'IDENTIFICADOR UNICO DE LA ENTIDAD FEDERATIVA';
@@ -157,7 +163,8 @@ CREATE TABLE tecabix_sce.municipio(
 	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
 	id_estatus integer NOT NULL,
     clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
-CONSTRAINT pk_municipio_id_municipio PRIMARY KEY (id_municipio)
+CONSTRAINT pk_municipio_id_municipio PRIMARY KEY (id_municipio),
+CONSTRAINT uq_municipio_clave UNIQUE (clave)
 );
 COMMENT ON TABLE tecabix_sce.municipio IS 'MUNICIPIO';
 COMMENT ON COLUMN tecabix_sce.municipio.id_estado IS 'IDENTIFICADOR UNICO DEL MUNICIPIO';
@@ -195,7 +202,8 @@ CREATE TABLE tecabix_sce.perfil(
 	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
     id_estatus integer NOT NULL,
     clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
-CONSTRAINT pk_perfil_id_perfil PRIMARY KEY (id_perfil)
+CONSTRAINT pk_perfil_id_perfil PRIMARY KEY (id_perfil),
+CONSTRAINT uq_perfil_clave UNIQUE (clave)
 );
 COMMENT ON TABLE tecabix_sce.perfil IS 'PERFIL';
 COMMENT ON COLUMN tecabix_sce.perfil.id_perfil IS 'IDENTIFICADOR UNICO DEL PERFIL';
@@ -229,7 +237,8 @@ CREATE TABLE tecabix_sce.authority(
 	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
 	id_estatus integer NOT NULL,
     clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
-CONSTRAINT pk_authority_id_authority PRIMARY KEY (id_authority)
+CONSTRAINT pk_authority_id_authority PRIMARY KEY (id_authority),
+CONSTRAINT uq_authority_clave UNIQUE (clave)
 );
 COMMENT ON TABLE tecabix_sce.authority IS 'PERMISOS DEL PERFIL';
 COMMENT ON COLUMN tecabix_sce.authority.id_authority IS 'IDENTIFICADOR UNICO DEL PERMISO';
@@ -305,7 +314,9 @@ CREATE TABLE tecabix_sce.usuario(
 	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
 	id_estatus integer,
     clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
-CONSTRAINT pk_usuario_id_usuario PRIMARY KEY (id_usuario)
+CONSTRAINT pk_usuario_id_usuario PRIMARY KEY (id_usuario),
+CONSTRAINT uq_usuario_nombre UNIQUE (nombre),
+CONSTRAINT uq_usuario_clave UNIQUE (clave)
 );
 COMMENT ON TABLE tecabix_sce.usuario IS 'USUARIO';
 COMMENT ON COLUMN tecabix_sce.usuario.id_usuario IS 'IDENTIFICADOR UNICO DEL USUARIO';
@@ -369,7 +380,8 @@ CREATE TABLE tecabix_sce.direccion(
 	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
 	id_estatus integer NOT NULL,
     clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
-CONSTRAINT pk_direccion_id_direccion PRIMARY KEY (id_direccion)
+CONSTRAINT pk_direccion_id_direccion PRIMARY KEY (id_direccion),
+CONSTRAINT uq_direccion_clave UNIQUE (clave)
 );
 COMMENT ON TABLE tecabix_sce.direccion IS 'DOMICILIO DE ENTIDADES FISICAS O MORALES';
 COMMENT ON COLUMN tecabix_sce.direccion.id_direccion IS 'IDENTIFICADOR UNICO DE LA DIRECCION';
@@ -416,7 +428,8 @@ CREATE TABLE tecabix_sce.persona(
 	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
 	id_estatus integer NOT NULL,
     clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
-CONSTRAINT pk_persona_id_persona PRIMARY KEY (id_persona)
+CONSTRAINT pk_persona_id_persona PRIMARY KEY (id_persona),
+CONSTRAINT uq_persona_clave UNIQUE (clave)
 );
 COMMENT ON TABLE tecabix_sce.persona IS 'PERSONA QUE PUEDE SER FISICA O MORAL';
 COMMENT ON COLUMN tecabix_sce.persona.id_persona IS 'IDENTIFICADOR UNICO DE LA PERSONA';
@@ -457,7 +470,8 @@ CREATE TABLE tecabix_sce.usuario_persona(
     clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
 CONSTRAINT pk_usuario_persona_id_usuario_persona PRIMARY KEY (id_usuario_persona),
 CONSTRAINT uq_usuario_persona_id_usuario UNIQUE (id_usuario),
-CONSTRAINT uq_usuario_persona_id_persona UNIQUE (id_persona)
+CONSTRAINT uq_usuario_persona_id_persona UNIQUE (id_persona),
+CONSTRAINT uq_usuario_persona_clave UNIQUE (clave)
 );
 COMMENT ON TABLE tecabix_sce.usuario_persona IS 'RELACION ENTRE USUARIO Y PERSONA';
 COMMENT ON COLUMN tecabix_sce.usuario_persona.id_usuario_persona IS 'IDENTIFICADOR UNICO DE LA RELACION USUARIO Y PERSONA';
@@ -504,7 +518,8 @@ CREATE TABLE tecabix_sce.persona_moral(
 	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
 	id_estatus integer NOT NULL,
     clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
-CONSTRAINT pk_persona_moral_id_persona_moral PRIMARY KEY (id_persona_moral)
+CONSTRAINT pk_persona_moral_id_persona_moral PRIMARY KEY (id_persona_moral),
+CONSTRAINT uq_persona_moral_clave UNIQUE (clave)
 );
 COMMENT ON TABLE tecabix_sce.persona_moral IS 'EMPRESAS O PERSONA CON ACTIVIDAD EMPRESARIAL';
 COMMENT ON COLUMN tecabix_sce.persona_moral.id_persona_moral IS 'IDENTIFICADOR ÚNICO DE LA EMPRESA.';
@@ -546,6 +561,16 @@ ALTER TABLE tecabix_sce.perfil ADD CONSTRAINT fk_perfil_id_estatus FOREIGN KEY (
 REFERENCES tecabix_sce.catalogo(id_catalogo) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
+CREATE INDEX indx_persona_moral_razon_social
+    ON tecabix_sce.persona_moral USING btree
+    (razon_social COLLATE pg_catalog."default")
+    TABLESPACE pg_default;
+
+CREATE INDEX indx_persona_moral_rfc
+    ON tecabix_sce.persona_moral USING btree
+    (rfc COLLATE pg_catalog."default")
+    TABLESPACE pg_default;
+
 
 
 CREATE SEQUENCE tecabix_sce.persona_fisica_seq
@@ -570,7 +595,8 @@ CREATE TABLE tecabix_sce.persona_fisica(
 	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
 	id_estatus integer NOT NULL,
     clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
-CONSTRAINT pk_persona_fisica_id_persona_fisica PRIMARY KEY (id_persona_fisica)
+CONSTRAINT pk_persona_fisica_id_persona_fisica PRIMARY KEY (id_persona_fisica),
+CONSTRAINT uq_persona_fisica_clave UNIQUE (clave)
 );
 COMMENT ON TABLE tecabix_sce.persona_fisica IS 'PERSONAS FISICAS';
 COMMENT ON COLUMN tecabix_sce.persona_fisica.id_persona_fisica IS 'IDENTIFICADOR UNICO DE LA PERSONA FISICA';
@@ -604,6 +630,22 @@ ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 ALTER TABLE tecabix_sce.persona_fisica ADD CONSTRAINT fk_persona_fisica_id_usuario_modificado FOREIGN KEY (id_usuario_modificado)
 REFERENCES tecabix_sce.usuario(id_usuario) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+CREATE INDEX indx_persona_fisica_nombre
+    ON tecabix_sce.persona_fisica USING btree
+    (nombre COLLATE pg_catalog."default")
+    TABLESPACE pg_default;
+
+CREATE INDEX indx_persona_fisica_apellido_paterno
+    ON tecabix_sce.persona_fisica USING btree
+    (apellido_paterno COLLATE pg_catalog."default")
+    TABLESPACE pg_default;
+
+CREATE INDEX indx_persona_fisica_apellido_materno
+    ON tecabix_sce.persona_fisica USING btree
+    (apellido_materno COLLATE pg_catalog."default")
+    TABLESPACE pg_default;
+
 
 
 CREATE SEQUENCE tecabix_sce.contacto_seq
@@ -656,7 +698,8 @@ CREATE TABLE tecabix_sce.banco(
 	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
 	id_estatus integer NOT NULL,
     clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
-CONSTRAINT pk_banco_id_banco PRIMARY KEY (id_banco)
+CONSTRAINT pk_banco_id_banco PRIMARY KEY (id_banco),
+CONSTRAINT uq_banco_clave UNIQUE (clave)
 );
 COMMENT ON TABLE tecabix_sce.banco IS 'BANCO';
 COMMENT ON COLUMN tecabix_sce.banco.id_banco IS 'IDENTIFICADOR UNICO DEL BANCO';
@@ -674,6 +717,11 @@ ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 ALTER TABLE tecabix_sce.banco ADD CONSTRAINT fk_banco_id_usuario_modificado FOREIGN KEY (id_usuario_modificado)
 REFERENCES tecabix_sce.usuario(id_usuario) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+CREATE INDEX indx_banco_nombre
+    ON tecabix_sce.banco USING btree
+    (nombre COLLATE pg_catalog."default")
+    TABLESPACE pg_default;
 
 CREATE SEQUENCE tecabix_sce.departamento_seq
     INCREMENT 1
@@ -693,7 +741,8 @@ CREATE TABLE tecabix_sce.departamento(
 	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
 	id_estatus integer NOT NULL,
     clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
-CONSTRAINT pk_departamento_id_departamento PRIMARY KEY (id_departamento)
+CONSTRAINT pk_departamento_id_departamento PRIMARY KEY (id_departamento),
+CONSTRAINT uq_departamento_clave UNIQUE (clave)
 );
 COMMENT ON TABLE tecabix_sce.departamento IS 'DEPARTAMENTO DE LA EMPRESA';
 COMMENT ON COLUMN tecabix_sce.departamento.id_departamento IS 'IDENTIFICADOR UNICO DEL DEPARTAMENTO';
@@ -716,6 +765,11 @@ ALTER TABLE tecabix_sce.departamento ADD CONSTRAINT fk_departamento_id_empresa F
 REFERENCES tecabix_sce.persona_moral(id_persona_moral) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
+CREATE INDEX indx_departamento_nombre
+    ON tecabix_sce.departamento USING btree
+    (nombre COLLATE pg_catalog."default")
+    TABLESPACE pg_default;
+
 
 CREATE SEQUENCE tecabix_sce.puesto_seq
     INCREMENT 1
@@ -735,7 +789,8 @@ CREATE TABLE tecabix_sce.puesto(
 	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
 	id_estatus integer NOT NULL,
     clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
-CONSTRAINT pk_puesto_id_puesto PRIMARY KEY (id_puesto)
+CONSTRAINT pk_puesto_id_puesto PRIMARY KEY (id_puesto),
+CONSTRAINT uq_puesto_clave UNIQUE (clave)
 );
 COMMENT ON TABLE tecabix_sce.puesto IS 'PUESTO DEL TRABAJADOR';
 COMMENT ON COLUMN tecabix_sce.puesto.id_puesto IS 'IDENTIFICADOR UNICO DEL PUESTO';
@@ -757,6 +812,11 @@ ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 ALTER TABLE tecabix_sce.puesto ADD CONSTRAINT fk_puesto_id_departamento FOREIGN KEY (id_departamento)
 REFERENCES tecabix_sce.departamento(id_departamento) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+CREATE INDEX indx_puesto_nombre
+    ON tecabix_sce.puesto USING btree
+    (nombre COLLATE pg_catalog."default")
+    TABLESPACE pg_default;
 
 
 
@@ -782,7 +842,8 @@ CREATE TABLE tecabix_sce.trabajador(
 	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
 	id_estatus integer NOT NULL,
     clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
-CONSTRAINT pk_trabajador_id_trabajador PRIMARY KEY (id_trabajador)
+CONSTRAINT pk_trabajador_id_trabajador PRIMARY KEY (id_trabajador),
+CONSTRAINT uq_trabajador_clave UNIQUE (clave)
 );
 COMMENT ON TABLE tecabix_sce.trabajador IS 'TRABAJADOR';
 COMMENT ON COLUMN tecabix_sce.trabajador.id_trabajador IS 'IDENTIFICADOR DEL TRABAJADOR';
@@ -821,6 +882,12 @@ ALTER TABLE tecabix_sce.trabajador ADD CONSTRAINT fk_trabajador_id_persona_fisic
 REFERENCES tecabix_sce.persona_fisica(id_persona_fisica) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
+CREATE INDEX indx_trabajador_curp
+    ON tecabix_sce.trabajador USING btree
+    (curp COLLATE pg_catalog."default")
+    TABLESPACE pg_default;
+
+
 
 CREATE SEQUENCE tecabix_sce.plantel_seq
     INCREMENT 1
@@ -841,7 +908,8 @@ CREATE TABLE tecabix_sce.plantel(
 	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
 	id_estatus integer NOT NULL,
     clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
-CONSTRAINT pk_plantel_id_plantel PRIMARY KEY (id_plantel)
+CONSTRAINT pk_plantel_id_plantel PRIMARY KEY (id_plantel),
+CONSTRAINT uq_plantel_clave UNIQUE (clave)
 );
 COMMENT ON TABLE tecabix_sce.plantel IS 'plantel';
 COMMENT ON COLUMN tecabix_sce.plantel.id_plantel IS 'IDENTIFICADOR UNICO DE LA PLANTE';
@@ -878,6 +946,11 @@ ALTER TABLE tecabix_sce.trabajador ADD CONSTRAINT fk_trabajador_id_plantel FOREI
 REFERENCES tecabix_sce.plantel(id_plantel) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
+CREATE INDEX indx_plantel_nombre
+    ON tecabix_sce.plantel USING btree
+    (nombre COLLATE pg_catalog."default")
+    TABLESPACE pg_default;
+
 
 
 CREATE SEQUENCE tecabix_sce.configuracion_seq
@@ -897,7 +970,8 @@ CREATE TABLE tecabix_sce.configuracion(
 	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
 	id_estatus integer NOT NULL,
     clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
-CONSTRAINT pk_configuracion_id_configuracion PRIMARY KEY (id_configuracion)
+CONSTRAINT pk_configuracion_id_configuracion PRIMARY KEY (id_configuracion),
+CONSTRAINT uq_configuracion_clave UNIQUE (clave)
 );
 COMMENT ON TABLE tecabix_sce.configuracion IS 'CONFIGURACION';
 COMMENT ON COLUMN tecabix_sce.configuracion.id_configuracion IS 'IDENTIFICADOR UNICO DE CONFIGURACION';
@@ -939,7 +1013,8 @@ CREATE TABLE tecabix_sce.plan(
 	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
 	id_estatus integer NOT NULL,
     clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
-CONSTRAINT pk_plan_id_plan PRIMARY KEY (id_plan)
+CONSTRAINT pk_plan_id_plan PRIMARY KEY (id_plan),
+CONSTRAINT uq_plan_clave UNIQUE (clave)
 );
 COMMENT ON TABLE tecabix_sce.plan IS 'PLAN DE SUSCRIPCION';
 COMMENT ON COLUMN tecabix_sce.plan.id_plan IS 'IDENTIFICADOR UNICO DEL PLAN';
@@ -987,7 +1062,8 @@ CREATE TABLE tecabix_sce.servicio(
 	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
 	id_estatus integer NOT NULL,
     clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
-CONSTRAINT pk_servicio_id_servicio PRIMARY KEY (id_servicio)
+CONSTRAINT pk_servicio_id_servicio PRIMARY KEY (id_servicio),
+CONSTRAINT uq_servicio_clave UNIQUE (clave)
 );
 COMMENT ON TABLE tecabix_sce.servicio IS 'SERVICIOS QUE BRINDA EL SISTEMA';
 COMMENT ON COLUMN tecabix_sce.servicio.id_servicio IS 'IDENTIFICADOR UNICO DEL SERVICIO';
@@ -1017,6 +1093,10 @@ ALTER TABLE tecabix_sce.servicio ADD CONSTRAINT fk_servicio_id_plan FOREIGN KEY 
 REFERENCES tecabix_sce.plan(id_plan) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
+CREATE INDEX indx_servicio_nombre
+    ON tecabix_sce.servicio USING btree
+    (nombre COLLATE pg_catalog."default")
+    TABLESPACE pg_default;
 
 
 CREATE SEQUENCE tecabix_sce.plan_configuracion_seq
@@ -1067,7 +1147,8 @@ CREATE TABLE tecabix_sce.suscripcion(
 	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
 	id_estatus integer NOT NULL,
     clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
-CONSTRAINT pk_suscripcion_id_suscripcion PRIMARY KEY (id_suscripcion)
+CONSTRAINT pk_suscripcion_id_suscripcion PRIMARY KEY (id_suscripcion),
+CONSTRAINT uq_suscripcion_clave UNIQUE (clave)
 );
 COMMENT ON TABLE tecabix_sce.suscripcion IS 'SUSCRIPCION';
 COMMENT ON COLUMN tecabix_sce.suscripcion.id_suscripcion IS 'IDENTIFICADOR UNICO DE LA SUSCRIPCION';
@@ -1115,7 +1196,8 @@ CREATE TABLE tecabix_sce.licencia(
 	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
 	id_estatus integer NOT NULL,
     clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
-CONSTRAINT pk_licencia_id_licencia PRIMARY KEY (id_licencia)
+CONSTRAINT pk_licencia_id_licencia PRIMARY KEY (id_licencia),
+CONSTRAINT uq_licencia_clave UNIQUE (clave)
 );
 COMMENT ON TABLE tecabix_sce.licencia IS 'LICENCIAS DE CONEXION';
 COMMENT ON COLUMN tecabix_sce.licencia.id_licencia IS 'IDENTIFICADOR UNICO DE LA LICENCIA';
@@ -1143,6 +1225,12 @@ ALTER TABLE tecabix_sce.licencia ADD CONSTRAINT fk_licencia_id_servicio FOREIGN 
 REFERENCES tecabix_sce.servicio(id_servicio) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
+CREATE INDEX indx_licencia_nombre
+    ON tecabix_sce.licencia USING btree
+    (nombre COLLATE pg_catalog."default")
+    TABLESPACE pg_default;
+
+
 
 
 CREATE SEQUENCE tecabix_sce.sesion_seq
@@ -1164,7 +1252,8 @@ CREATE TABLE tecabix_sce.sesion(
 	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
 	id_estatus integer NOT NULL,
     clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
-CONSTRAINT pk_sesion_id_sesion PRIMARY KEY (id_sesion)
+CONSTRAINT pk_sesion_id_sesion PRIMARY KEY (id_sesion),
+CONSTRAINT uq_sesion_clave UNIQUE (clave)
 );
 COMMENT ON TABLE tecabix_sce.sesion IS 'SESIOB DE CONEXION';
 COMMENT ON COLUMN tecabix_sce.sesion.id_sesion IS 'IDENTIFICADOR UNICO DE LA SESION';
@@ -1212,7 +1301,8 @@ CREATE TABLE tecabix_sce.soporte(
 	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
 	id_estatus integer NOT NULL,
     clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
-CONSTRAINT pk_soporte_id_soporte PRIMARY KEY (id_soporte)
+CONSTRAINT pk_soporte_id_soporte PRIMARY KEY (id_soporte),
+CONSTRAINT uq_soporte_clave UNIQUE (clave)
 );
 COMMENT ON TABLE tecabix_sce.soporte IS 'SOPORTE';
 COMMENT ON COLUMN tecabix_sce.soporte.id_soporte IS 'IDENTIFICADOR UNICO DEL SOPORTE';
@@ -1240,6 +1330,13 @@ ALTER TABLE tecabix_sce.soporte ADD CONSTRAINT fk_soporte_id_empresa FOREIGN KEY
 REFERENCES tecabix_sce.persona_moral(id_persona_moral) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
+CREATE INDEX indx_soporte_asunto
+    ON tecabix_sce.soporte USING btree
+    (asunto COLLATE pg_catalog."default")
+    TABLESPACE pg_default;
+
+
+
 CREATE SEQUENCE tecabix_sce.soporte_msj_seq
     INCREMENT 1
     START 1
@@ -1257,7 +1354,8 @@ CREATE TABLE tecabix_sce.soporte_msj(
 	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
 	id_estatus integer NOT NULL,
     clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
-CONSTRAINT pk_soporte_msj_id_soporte_msj PRIMARY KEY (id_soporte_msj)
+CONSTRAINT pk_soporte_msj_id_soporte_msj PRIMARY KEY (id_soporte_msj),
+CONSTRAINT uq_soporte_msj_clave UNIQUE (clave)
 );
 COMMENT ON TABLE tecabix_sce.soporte_msj IS 'MENSAJE DE SOPORTE';
 COMMENT ON COLUMN tecabix_sce.soporte_msj.id_soporte_msj IS 'IDENTIFICADOR UNICO DEL MENSAJE';
@@ -1305,7 +1403,8 @@ CREATE TABLE tecabix_sce.correo(
 	id_estatus integer NOT NULL,
     clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
 CONSTRAINT pk_correo_id_correo PRIMARY KEY (id_correo),
-CONSTRAINT uq_correo_remitente UNIQUE (remitente)
+CONSTRAINT uq_correo_remitente UNIQUE (remitente),
+CONSTRAINT uq_correo_msj_clave UNIQUE (clave)
 );
 COMMENT ON TABLE tecabix_sce.correo IS 'CREDENCIALES DE EMAIL PARA CORREOS MASIVOS';
 COMMENT ON COLUMN tecabix_sce.correo.id_correo IS 'IDENTIFICADOR UNICO DEL CORREO';
@@ -1358,7 +1457,8 @@ CREATE TABLE tecabix_sce.carrera(
 	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
 	id_estatus integer NOT NULL,
     clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
-CONSTRAINT pk_carrera_id_carrera PRIMARY KEY (id_carrera)
+CONSTRAINT pk_carrera_id_carrera PRIMARY KEY (id_carrera),
+CONSTRAINT uq_carrera_msj_clave UNIQUE (clave)
 );
 COMMENT ON TABLE tecabix_sce.carrera IS 'CARRERA';
 COMMENT ON COLUMN tecabix_sce.carrera.id_carrera IS 'IDENTIFICADOR UNICO DE LA CARRERA';
@@ -1386,6 +1486,12 @@ ALTER TABLE tecabix_sce.carrera ADD CONSTRAINT fk_carrera_id_empresa FOREIGN KEY
 REFERENCES tecabix_sce.persona_moral(id_persona_moral) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
+CREATE INDEX indx_carrera_nombre
+    ON tecabix_sce.carrera USING btree
+    (nombre COLLATE pg_catalog."default")
+    TABLESPACE pg_default;
+
+
 
 CREATE SEQUENCE tecabix_sce.plan_estudio_seq
     INCREMENT 1
@@ -1408,7 +1514,8 @@ CREATE TABLE tecabix_sce.plan_estudio(
 	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
 	id_estatus integer NOT NULL,
     clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
-CONSTRAINT pk_plan_estudio_plan_estudio PRIMARY KEY (id_plan_estudio)
+CONSTRAINT pk_plan_estudio_plan_estudio PRIMARY KEY (id_plan_estudio),
+CONSTRAINT uq_plan_estudio_msj_clave UNIQUE (clave)
 );
 COMMENT ON TABLE tecabix_sce.plan_estudio IS 'PLAN DE ESTUDIO';
 COMMENT ON COLUMN tecabix_sce.plan_estudio.id_plan_estudio IS 'IDENTIFICADOR UNICO DEL PLAN DE ESTUDIO';
@@ -1436,6 +1543,11 @@ ALTER TABLE tecabix_sce.plan_estudio ADD CONSTRAINT fk_plan_estudio_id_tipo FORE
 REFERENCES tecabix_sce.catalogo(id_catalogo) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
+CREATE INDEX indx_plan_estudio_nombre
+    ON tecabix_sce.plan_estudio USING btree
+    (nombre COLLATE pg_catalog."default")
+    TABLESPACE pg_default;
+
 
 
 CREATE SEQUENCE tecabix_sce.periodo_academico_seq
@@ -1458,7 +1570,8 @@ CREATE TABLE tecabix_sce.periodo_academico(
 	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
 	id_estatus integer NOT NULL,
     clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
-CONSTRAINT pk_periodo_academico PRIMARY KEY (id_periodo_academico)
+CONSTRAINT pk_periodo_academico_id_periodo_academico PRIMARY KEY (id_periodo_academico),
+CONSTRAINT uq_periodo_academico_clave UNIQUE (clave)
 );
 COMMENT ON TABLE tecabix_sce.periodo_academico IS 'PERIODO ACADEMICO';
 COMMENT ON COLUMN tecabix_sce.periodo_academico.id_periodo_academico IS 'IDENTIFICADOR UNICO DEL PERIODO ACADEMICO';
@@ -1483,6 +1596,11 @@ ALTER TABLE tecabix_sce.periodo_academico ADD CONSTRAINT fk_periodo_academico_id
 REFERENCES tecabix_sce.plan_estudio(id_plan_estudio) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
+CREATE INDEX indx_periodo_academico_nombre
+    ON tecabix_sce.periodo_academico USING btree
+    (nombre COLLATE pg_catalog."default")
+    TABLESPACE pg_default;
+
 
 
 
@@ -1505,7 +1623,8 @@ CREATE TABLE tecabix_sce.asignatura(
 	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
 	id_estatus integer NOT NULL,
     clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
-CONSTRAINT pk_asignatura_id_asignatura PRIMARY KEY (id_asignatura)
+CONSTRAINT pk_asignatura_id_asignatura PRIMARY KEY (id_asignatura),
+CONSTRAINT uq_asignatura_academico_clave UNIQUE (clave)
 );
 COMMENT ON TABLE tecabix_sce.asignatura IS 'ASIGNATURA';
 COMMENT ON COLUMN tecabix_sce.asignatura.id_asignatura IS 'IDENTIFICADOR UNICO DE LA ASIGNATURA';
@@ -1533,6 +1652,11 @@ ALTER TABLE tecabix_sce.asignatura ADD CONSTRAINT fk_asignatura_id_pre_asignatur
 REFERENCES tecabix_sce.asignatura(id_asignatura) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
+CREATE INDEX indx_asignatura_nombre
+    ON tecabix_sce.asignatura USING btree
+    (nombre COLLATE pg_catalog."default")
+    TABLESPACE pg_default;
+
 
 
 CREATE SEQUENCE tecabix_sce.asignatura_periodo_academico_seq
@@ -1553,7 +1677,8 @@ CREATE TABLE tecabix_sce.asignatura_periodo_academico(
 	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
 	id_estatus integer NOT NULL,
     clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
-CONSTRAINT pk_asignatura_periodo_academico_id_asignatura_periodo_academico PRIMARY KEY (id_asignatura_periodo_academico)
+CONSTRAINT pk_asignatura_periodo_academico_id_asignatura_periodo_academico PRIMARY KEY (id_asignatura_periodo_academico),
+CONSTRAINT uq_asignatura_periodo_academico_clave UNIQUE (clave)
 );
 COMMENT ON TABLE tecabix_sce.asignatura_periodo_academico IS 'RELACION DE ASIGNATURA Y PERIODO ACADEMICO';
 COMMENT ON COLUMN tecabix_sce.asignatura_periodo_academico.id_asignatura_periodo_academico IS 'IDENTIFICADOR UNICO DE LA RELACION DE ASIGNATURA Y PERIODO ACADEMICO';
@@ -1598,7 +1723,8 @@ CREATE TABLE tecabix_sce.docente(
 	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
 	id_estatus integer NOT NULL,
     clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
-CONSTRAINT pk_docente_id_docente PRIMARY KEY (id_docente)
+CONSTRAINT pk_docente_id_docente PRIMARY KEY (id_docente),
+CONSTRAINT uq_docente_clave UNIQUE (clave)
 );
 COMMENT ON TABLE tecabix_sce.docente IS 'MAESTRO';
 COMMENT ON COLUMN tecabix_sce.docente.id_docente IS 'IDENTIFICADOR UNICO DEL MAESTRO';
@@ -1620,6 +1746,12 @@ ALTER TABLE tecabix_sce.docente ADD CONSTRAINT fk_docente_id_persona_fisica FORE
 REFERENCES tecabix_sce.persona_fisica(id_persona_fisica) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
+CREATE INDEX indx_docente_nombre
+    ON tecabix_sce.docente USING btree
+    (nombre COLLATE pg_catalog."default")
+    TABLESPACE pg_default;
+
+
 
 CREATE SEQUENCE tecabix_sce.grupo_seq
     INCREMENT 1
@@ -1638,7 +1770,8 @@ CREATE TABLE tecabix_sce.grupo(
 	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
 	id_estatus integer NOT NULL,
     clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
-CONSTRAINT pk_grupo_id_grupo PRIMARY KEY (id_grupo)
+CONSTRAINT pk_grupo_id_grupo PRIMARY KEY (id_grupo),
+CONSTRAINT uq_grupo_clave UNIQUE (clave)
 );
 COMMENT ON TABLE tecabix_sce.grupo IS 'GRUPO';
 COMMENT ON COLUMN tecabix_sce.grupo.id_grupo IS 'IDENTIFICADOR UNICO DEl GRUPO';
@@ -1660,6 +1793,12 @@ ALTER TABLE tecabix_sce.grupo ADD CONSTRAINT fk_grupo_id_periodo_academico FOREI
 REFERENCES tecabix_sce.periodo_academico(id_periodo_academico) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
+CREATE INDEX indx_grupo_nombre
+    ON tecabix_sce.grupo USING btree
+    (nombre COLLATE pg_catalog."default")
+    TABLESPACE pg_default;
+
+
 
 CREATE SEQUENCE tecabix_sce.clase_seq
     INCREMENT 1
@@ -1679,7 +1818,8 @@ CREATE TABLE tecabix_sce.clase(
 	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
 	id_estatus integer NOT NULL,
     clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
-CONSTRAINT pk_clase_id_clase PRIMARY KEY (id_clase)
+CONSTRAINT pk_clase_id_clase PRIMARY KEY (id_clase),
+CONSTRAINT uq_clase_clave UNIQUE (clave)
 );
 COMMENT ON TABLE tecabix_sce.clase IS 'CLASE';
 COMMENT ON COLUMN tecabix_sce.clase.id_clase IS 'IDENTIFICADOR UNICO DE LA CLASE';
@@ -1729,7 +1869,8 @@ CREATE TABLE tecabix_sce.clase_horario(
 	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
 	id_estatus integer NOT NULL,
     clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
-CONSTRAINT pk_clase_horario_idclase_horario PRIMARY KEY (id_clase_horario)
+CONSTRAINT pk_clase_horario_id_clase_horario PRIMARY KEY (id_clase_horario),
+CONSTRAINT uq_clase_horario_clave UNIQUE (clave)
 );
 COMMENT ON TABLE tecabix_sce.clase_horario IS 'HORARIOS DE CLASES';
 COMMENT ON COLUMN tecabix_sce.clase_horario.id_clase_horario IS 'IDENTIFICADOR UNICO DEL HORARIO';
@@ -1774,7 +1915,8 @@ CREATE TABLE tecabix_sce.clase_asistencia(
 	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
 	id_estatus integer NOT NULL,
     clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
-CONSTRAINT pk_clase_asistencia_id_clase_asistencia PRIMARY KEY (id_clase_asistencia)
+CONSTRAINT pk_clase_asistencia_id_clase_asistencia PRIMARY KEY (id_clase_asistencia),
+CONSTRAINT uq_clase_asistencia_clave UNIQUE (clave)
 );
 COMMENT ON TABLE tecabix_sce.clase_asistencia IS 'ASISTENCIA';
 COMMENT ON COLUMN tecabix_sce.clase_asistencia.id_clase_asistencia IS 'IDENTIFICADOR UNICO DE LA ASISTENCIA';
@@ -1814,7 +1956,8 @@ CREATE TABLE tecabix_sce.clase_inasistencia(
 	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
 	id_estatus integer NOT NULL,
     clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
-CONSTRAINT pk_clase_inasistencia_id_clase_inasistencia PRIMARY KEY (id_clase_inasistencia)
+CONSTRAINT pk_clase_inasistencia_id_clase_inasistencia PRIMARY KEY (id_clase_inasistencia),
+CONSTRAINT uq_clase_inasistencia_clave UNIQUE (clave)
 );
 COMMENT ON TABLE tecabix_sce.clase_inasistencia IS 'INASISTENCIA';
 COMMENT ON COLUMN tecabix_sce.clase_inasistencia.id_clase_inasistencia IS 'IDENTIFICADOR UNICO DE LA INASISTENCIA';
@@ -1855,7 +1998,8 @@ CREATE TABLE tecabix_sce.alumno(
 	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
 	id_estatus integer NOT NULL,
     clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
-CONSTRAINT pk_alumno_id_alumno PRIMARY KEY (id_alumno)
+CONSTRAINT pk_alumno_id_alumno PRIMARY KEY (id_alumno),
+CONSTRAINT uq_alumno_clave UNIQUE (clave)
 );
 COMMENT ON TABLE tecabix_sce.alumno IS 'ALUMNO';
 COMMENT ON COLUMN tecabix_sce.alumno.id_alumno IS 'IDENTIFICADOR UNICO DEL ALUMNO';
@@ -1894,7 +2038,8 @@ CREATE TABLE tecabix_sce.plan_estudio_alumno(
 	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
 	id_estatus integer NOT NULL,
     clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
-CONSTRAINT pk_plan_estudio_alumno_id_plan_estudio_alumno PRIMARY KEY (id_plan_estudio_alumno)
+CONSTRAINT pk_plan_estudio_alumno_id_plan_estudio_alumno PRIMARY KEY (id_plan_estudio_alumno),
+CONSTRAINT uq_plan_estudio_alumno_clave UNIQUE (clave)
 );
 COMMENT ON TABLE tecabix_sce.plan_estudio_alumno IS 'RELACION ENTRE PLAN DE ESTUDIO Y ALUMNO';
 COMMENT ON COLUMN tecabix_sce.plan_estudio_alumno.id_plan_estudio_alumno IS 'IDENTIFICADOR UNICO DEL PLAN DE ESTUDIO ALUMNO';
@@ -1938,7 +2083,8 @@ CREATE TABLE tecabix_sce.materia(
 	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
 	id_estatus integer NOT NULL,
     clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
-CONSTRAINT pk_materia_id_materia PRIMARY KEY (id_materia)
+CONSTRAINT pk_materia_id_materia PRIMARY KEY (id_materia),
+CONSTRAINT uq_materia_clave UNIQUE (clave)
 );
 COMMENT ON TABLE tecabix_sce.materia IS 'MATERIA';
 COMMENT ON COLUMN tecabix_sce.materia.id_materia IS 'IDENTIFICADOR UNICO DE LA MATERIA';
@@ -1983,7 +2129,8 @@ CREATE TABLE tecabix_sce.calificacion(
 	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
 	id_estatus integer NOT NULL,
     clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
-CONSTRAINT pk_calificacion_id_calificacion PRIMARY KEY (id_calificacion)
+CONSTRAINT pk_calificacion_id_calificacion PRIMARY KEY (id_calificacion),
+CONSTRAINT uq_calificacion_clave UNIQUE (clave)
 );
 COMMENT ON TABLE tecabix_sce.calificacion IS 'CALIFICACION FINAL DE LA MATERIA';
 COMMENT ON COLUMN tecabix_sce.calificacion.id_calificacion IS 'IDENTIFICADOR UNICO DE LA CALIFICACION';
