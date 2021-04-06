@@ -207,6 +207,10 @@ BEGIN
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('MASIVO','MASIVO', 'MENSAJES MASIVOS', 3, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('CORPORATIVO','CORPORATIVO', 'CORREO CORPORATIVO', 4, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 
+	INSERT INTO tecabix_sce.catalogo_tipo (nombre, descripcion, id_usuario_modificado, id_estatus) VALUES ('TIPO_ELEMENTO_CORREO', 'TIPO DE ELEMENTO DEL CORREO', VAR_USR_CREA, VAR_ACTIVO) RETURNING id_catalogo_tipo INTO id_aux_1;
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('CC','COPIANDO EN EL CORREO', 'CORREO AL QUE SE LE VA MANDAR UNA COPIA DEL CORREO', 1, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('ADJUNTO','ARCHIVO ADJUNTO', 'ARCHIVO QUE SE ESTA ADJUNTANDO', 2, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+
 		
 
 	/**************************** AUTHORITY ****************************/
@@ -281,6 +285,11 @@ BEGIN
 			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('PUESTO_CREAR', 'CREAR PUESTO', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('PUESTOS_EDITAR', 'EDITAR PUESTO', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('PUESTOS_ELIMINAR', 'ELIMINAR PUESTO', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+		
+		INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('CORREO', 'CORREO', AUTENTIFICADOS, VAR_USR_CREA, VAR_ACTIVO) RETURNING id_authority INTO id_aux_1;
+			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('CORREO_CREAR', 'CREAR PUESTO', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('CORREO_EDITAR', 'EDITAR PUESTO', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('CORREO_ELIMINAR', 'ELIMINAR PUESTO', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 
 	/**************************** BANCO ****************************/
 

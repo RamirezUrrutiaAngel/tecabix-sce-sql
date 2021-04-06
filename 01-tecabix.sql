@@ -1390,24 +1390,26 @@ CREATE SEQUENCE tecabix_sce.correo_seq
 
 
 CREATE TABLE tecabix_sce.correo(
-	id_correo bigint NOT NULL DEFAULT nextval('tecabix_sce.correo_seq'::regclass),
-	remitente character varying(35) NOT NULL,
-	psw character varying(50) NOT NULL,
+    id_correo bigint NOT NULL DEFAULT nextval('tecabix_sce.correo_seq'::regclass),
+    id_persona bigint NOT NULL,
+    remitente character varying(35) NOT NULL,
+    psw character varying(50) NOT NULL,
     smtp_servidor character varying(20) NOT NULL,
     smtp_port character varying(5) NOT NULL,
-	id_tipo integer NOT NULL,
+    id_tipo integer NOT NULL,
     vencimiento date NOT NULL DEFAULT now (),
     peticiones integer NOT NULL DEFAULT 450, 
-	id_usuario_modificado bigint NOT NULL,
-	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
-	id_estatus integer NOT NULL,
+    id_usuario_modificado bigint NOT NULL,
+    fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
+    id_estatus integer NOT NULL,
     clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
 CONSTRAINT pk_correo_id_correo PRIMARY KEY (id_correo),
 CONSTRAINT uq_correo_remitente UNIQUE (remitente),
-CONSTRAINT uq_correo_msj_clave UNIQUE (clave)
+CONSTRAINT uq_correo_clave UNIQUE (clave)
 );
 COMMENT ON TABLE tecabix_sce.correo IS 'CREDENCIALES DE EMAIL PARA CORREOS MASIVOS';
 COMMENT ON COLUMN tecabix_sce.correo.id_correo IS 'IDENTIFICADOR UNICO DEL CORREO';
+COMMENT ON COLUMN tecabix_sce.correo.id_persona IS 'IDENTIFICADOR UNICO DE LA PERSONA DEL CORREO';
 COMMENT ON COLUMN tecabix_sce.correo.remitente IS 'CORREO';
 COMMENT ON COLUMN tecabix_sce.correo.psw IS 'CONTRASEÑA DEL CORREO';
 COMMENT ON COLUMN tecabix_sce.correo.smtp_servidor IS 'SERVIDOR DEL CORREO';
@@ -1431,10 +1433,122 @@ ALTER TABLE tecabix_sce.correo ADD CONSTRAINT fk_correo_id_tipo FOREIGN KEY (id_
 REFERENCES tecabix_sce.catalogo(id_catalogo) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
+ALTER TABLE tecabix_sce.correo ADD CONSTRAINT fk_correo_id_persona FOREIGN KEY (id_persona)
+REFERENCES tecabix_sce.persona(id_persona) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
 CREATE INDEX indx_correo_remitente
     ON tecabix_sce.correo USING btree
     (remitente COLLATE pg_catalog."default")
     TABLESPACE pg_default;
+
+
+
+CREATE SEQUENCE tecabix_sce.correo_msj_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;
+    ALTER SEQUENCE tecabix_sce.correo_msj_seq
+    OWNER TO postgres;
+
+
+CREATE TABLE tecabix_sce.correo_msj(
+    id_correo_msj bigint NOT NULL DEFAULT nextval('tecabix_sce.correo_msj_seq'::regclass),
+    id_correo bigint NOT NULL,
+    destinatario character varying(50) NOT NULL,
+    asunto character varying(35) NOT NULL,
+    mensaje character varying(500) NOT NULL,
+    id_tipo integer NOT NULL,
+    programado timestamp without time zone NOT NULL DEFAULT now (),
+    id_usuario_modificado bigint NOT NULL,
+    fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
+    id_estatus integer NOT NULL,
+    clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
+CONSTRAINT pk_correo_msj_id_correo_msj PRIMARY KEY (id_correo_msj),
+CONSTRAINT uq_correo_msj_clave UNIQUE (clave)
+);
+COMMENT ON TABLE tecabix_sce.correo_msj IS 'MENSAJE DEL CORREO';
+COMMENT ON COLUMN tecabix_sce.correo_msj.id_correo_msj IS 'IDENTIFICADOR UNICO DEL MENSAJE DEL CORREO';
+COMMENT ON COLUMN tecabix_sce.correo_msj.id_correo IS 'IDENTIFICADOR UNICO DEL REMITENTE';
+COMMENT ON COLUMN tecabix_sce.correo_msj.destinatario IS 'DESTINATARIO';
+COMMENT ON COLUMN tecabix_sce.correo_msj.asunto IS 'ASUNTO';
+COMMENT ON COLUMN tecabix_sce.correo_msj.mensaje IS 'CUERRPO DEL CORREO';
+COMMENT ON COLUMN tecabix_sce.correo_msj.id_tipo IS 'TIPO DE MENSAJES QUE SERAN ENVIADO, CATALOGO_TIPO = TIPO_DE_CORREO';
+COMMENT ON COLUMN tecabix_sce.correo_msj.programado IS 'FECHA QUE ESTA PROGRAMADO EL ENVIO DEL MENSAJE';
+COMMENT ON COLUMN tecabix_sce.correo_msj.id_usuario_modificado IS 'ULTIMO USUARIO QUE MODIFICO EL REGISTRO';
+COMMENT ON COLUMN tecabix_sce.correo_msj.fecha_modificado IS 'ULTIMA FECHA QUE SE MODIFICO EL REGISTRO';
+COMMENT ON COLUMN tecabix_sce.correo_msj.id_estatus IS 'STATUS DEL REGISTRO, CATALOGO_TIPO = ESTATUS';
+
+
+ALTER TABLE tecabix_sce.correo_msj ADD CONSTRAINT fk_correo_msj_id_estatus FOREIGN KEY (id_estatus)
+REFERENCES tecabix_sce.catalogo(id_catalogo) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+ALTER TABLE tecabix_sce.correo_msj ADD CONSTRAINT fk_correo_msj_id_usuario_modificado FOREIGN KEY (id_usuario_modificado)
+REFERENCES tecabix_sce.usuario(id_usuario) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+ALTER TABLE tecabix_sce.correo_msj ADD CONSTRAINT fk_correo_msj_id_tipo FOREIGN KEY (id_tipo)
+REFERENCES tecabix_sce.catalogo(id_catalogo) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+ALTER TABLE tecabix_sce.correo_msj ADD CONSTRAINT fk_correo_msj_id_correo FOREIGN KEY (id_correo)
+REFERENCES tecabix_sce.correo(id_correo) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+
+
+CREATE SEQUENCE tecabix_sce.correo_msj_item_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;
+    ALTER SEQUENCE tecabix_sce.correo_msj_item_seq
+    OWNER TO postgres;
+
+
+CREATE TABLE tecabix_sce.correo_msj_item(
+    id_correo_msj_item bigint NOT NULL DEFAULT nextval('tecabix_sce.correo_msj_item_seq'::regclass),
+    id_correo_msj bigint NOT NULL,
+    id_tipo integer NOT NULL,
+    dato character varying(200) NOT NULL,
+    id_usuario_modificado bigint NOT NULL,
+    fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
+    id_estatus integer NOT NULL,
+    clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
+CONSTRAINT pk_correo_msj_item_id_correo_msj PRIMARY KEY (id_correo_msj),
+CONSTRAINT uq_correo_msj_item_clave UNIQUE (clave)
+);
+COMMENT ON TABLE tecabix_sce.correo_msj_item IS 'ELEMENTO DEL CORREOO';
+COMMENT ON COLUMN tecabix_sce.correo_msj_item.id_correo_msj_item IS 'IDENTIFICADOR UNICO DEL ITEM MENSAJE DEL CORREO';
+COMMENT ON COLUMN tecabix_sce.correo_msj_item.id_correo_msj IS 'IDENTIFICADOR UNICO DEL REMITENTE';
+COMMENT ON COLUMN tecabix_sce.correo_msj_item.dato IS 'VALOR DEL ITEM';
+COMMENT ON COLUMN tecabix_sce.correo_msj_item.id_tipo IS 'TIPO DE ELEMNTO DEL MSJ, CATALOGO_TIPO = TIPO_ELEMENTO_CORREO';
+COMMENT ON COLUMN tecabix_sce.correo_msj_item.id_usuario_modificado IS 'ULTIMO USUARIO QUE MODIFICO EL REGISTRO';
+COMMENT ON COLUMN tecabix_sce.correo_msj_item.fecha_modificado IS 'ULTIMA FECHA QUE SE MODIFICO EL REGISTRO';
+COMMENT ON COLUMN tecabix_sce.correo_msj_item.id_estatus IS 'STATUS DEL REGISTRO, CATALOGO_TIPO = ESTATUS';
+
+
+ALTER TABLE tecabix_sce.correo_msj_item ADD CONSTRAINT fk_correo_msj_item_id_estatus FOREIGN KEY (id_estatus)
+REFERENCES tecabix_sce.catalogo(id_catalogo) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+ALTER TABLE tecabix_sce.correo_msj_item ADD CONSTRAINT fk_correo_msj_item_id_usuario_modificado FOREIGN KEY (id_usuario_modificado)
+REFERENCES tecabix_sce.usuario(id_usuario) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+ALTER TABLE tecabix_sce.correo_msj_item ADD CONSTRAINT fk_correo_msj_item_id_tipo FOREIGN KEY (id_tipo)
+REFERENCES tecabix_sce.catalogo(id_catalogo) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+ALTER TABLE tecabix_sce.correo_msj_item ADD CONSTRAINT fk_correo_msj_item_id_correo_msj FOREIGN KEY (id_correo_msj)
+REFERENCES tecabix_sce.correo_msj(id_correo_msj) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+
 
 
 
