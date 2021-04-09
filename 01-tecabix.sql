@@ -1129,6 +1129,35 @@ ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
 
 
+CREATE SEQUENCE tecabix_sce.persona_moral_configuracion_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;
+    ALTER SEQUENCE tecabix_sce.persona_moral_configuracion_seq
+    OWNER TO postgres;
+
+CREATE TABLE tecabix_sce.persona_moral_configuracion(
+	id_persona_moral_configuracion bigint NOT NULL DEFAULT nextval('tecabix_sce.persona_moral_configuracion_seq'::regclass),
+	id_persona_moral bigint NOT NULL,
+	id_configuracion bigint NOT NULL,
+CONSTRAINT pk_persona_moral_configuracion_id_persona_moral_configuracion PRIMARY KEY (id_persona_moral_configuracion)
+);
+COMMENT ON TABLE tecabix_sce.persona_moral_configuracion IS 'RELACION DE LA EMPRESA Y LA CONFIGURACION';
+COMMENT ON COLUMN tecabix_sce.persona_moral_configuracion.id_persona_moral_configuracion IS 'IDENTIFICADOR UNICO DEL CONFIGURACION DE LA EMPRESA';
+COMMENT ON COLUMN tecabix_sce.persona_moral_configuracion.id_persona_moral IS 'LLAVE FORANEA DEL LA EMPRESA';
+COMMENT ON COLUMN tecabix_sce.persona_moral_configuracion.id_configuracion IS 'LLAVE FORANEA DE LA CONFIGURACION';
+
+ALTER TABLE tecabix_sce.persona_moral_configuracion ADD CONSTRAINT fk_persona_moral_configuracion_id_persona_moral FOREIGN KEY (id_persona_moral)
+REFERENCES tecabix_sce.plan(id_plan) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+ALTER TABLE tecabix_sce.persona_moral_configuracion ADD CONSTRAINT fk_persona_moral_configuracion_id_configuracion FOREIGN KEY (id_configuracion)
+REFERENCES tecabix_sce.configuracion(id_configuracion) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+
 CREATE SEQUENCE tecabix_sce.suscripcion_seq
     INCREMENT 1
     START 2340147048306470
