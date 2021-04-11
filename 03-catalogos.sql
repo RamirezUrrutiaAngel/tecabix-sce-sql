@@ -220,8 +220,8 @@ BEGIN
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('RAZON_SOCIAL','RAZON SOCIAL', 'NORAZON SOCIALMBRE', 0, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('USUARIO','USUARIO', 'USUARIO', 0, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('PASSWORD','CONTRASEÑA', 'CONTRASEÑA', 0, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
-	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('CLAVE_USUARIO','CLAVE USUARIO', 'CLAVE USUARIO', 0, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
-	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('CLAVE_EMPRESA','CLAVE EMPRESA', 'CLAVE EMPRESA', 0, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('ID_TRABAJADOR','CLAVE USUARIO', 'CLAVE USUARIO', 0, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('ID_EMPRESA','CLAVE EMPRESA', 'CLAVE EMPRESA', 0, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 
 		
 

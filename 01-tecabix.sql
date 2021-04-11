@@ -1150,7 +1150,7 @@ COMMENT ON COLUMN tecabix_sce.persona_moral_configuracion.id_persona_moral IS 'L
 COMMENT ON COLUMN tecabix_sce.persona_moral_configuracion.id_configuracion IS 'LLAVE FORANEA DE LA CONFIGURACION';
 
 ALTER TABLE tecabix_sce.persona_moral_configuracion ADD CONSTRAINT fk_persona_moral_configuracion_id_persona_moral FOREIGN KEY (id_persona_moral)
-REFERENCES tecabix_sce.plan(id_plan) MATCH SIMPLE
+REFERENCES tecabix_sce.persona_moral(id_persona_moral) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
 ALTER TABLE tecabix_sce.persona_moral_configuracion ADD CONSTRAINT fk_persona_moral_configuracion_id_configuracion FOREIGN KEY (id_configuracion)
@@ -1548,7 +1548,7 @@ CREATE TABLE tecabix_sce.correo_msj_item(
     fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
     id_estatus integer NOT NULL,
     clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
-CONSTRAINT pk_correo_msj_item_id_correo_msj PRIMARY KEY (id_correo_msj),
+CONSTRAINT pk_correo_msj_item_id_correo_msj PRIMARY KEY (id_correo_msj_item),
 CONSTRAINT uq_correo_msj_item_clave UNIQUE (clave)
 );
 COMMENT ON TABLE tecabix_sce.correo_msj_item IS 'ELEMENTO DEL CORREOO';
