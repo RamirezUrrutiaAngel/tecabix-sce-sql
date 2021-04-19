@@ -140,8 +140,11 @@ BEGIN
 
 	INSERT INTO tecabix_sce.catalogo_tipo (nombre, descripcion, id_usuario_modificado, id_estatus) VALUES ('TIPO_CONTACTO', 'MEDIO EN QUE SE PUEDE COMUINICAR CON UNA PERSONA FISICA O MORAL', VAR_USR_CREA, VAR_ACTIVO) RETURNING id_catalogo_tipo INTO id_aux_1;
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('E-MAIL', 'CORREO', 'CORREO ELECTRONICO', 1, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
-	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('TEL', 'TELEFONO', 'TELEFONO', 2, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
-	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('CEL', 'CELULAR', 'TELEFONO CELULAR', 3, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('TEL-CASA', 'CASA', 'TELEFONO DE CASA', 2, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('TEL-MOVIL', 'CELULAR', 'TELEFONO CELULAR', 3, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('TEL-OFICINA', 'OFICINA', 'TELEFONO DE OFICINA', 4, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('SITIO-WEB', 'SITIO WEB', 'PAGINA WEB', 5, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+
 
 	INSERT INTO tecabix_sce.catalogo_tipo (nombre, descripcion, id_usuario_modificado, id_estatus) VALUES ('TIPO_SOPORTE', 'TIPO DEL QUE SE VA A DAR SOPORTE', VAR_USR_CREA, VAR_ACTIVO) RETURNING id_catalogo_tipo INTO id_aux_1;
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('SOPORTE_TECNICO', 'TECNICO', 'SOPORTE TECNICO', 1, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
