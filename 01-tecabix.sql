@@ -1000,9 +1000,9 @@ CREATE SEQUENCE tecabix_sce.salario_seq
 
 CREATE TABLE tecabix_sce.salario(
 	id_salario bigint NOT NULL DEFAULT nextval('tecabix_sce.salario_seq'::regclass),
-	periodo numeric(8,2) NOT NULL DEFAULT 0,
-    dia numeric(8,2) NOT NULL DEFAULT 0,
-    hora numeric(8,2) NOT NULL DEFAULT 0,
+	periodo integer NOT NULL DEFAULT 0,
+    dia integer NOT NULL DEFAULT 0,
+    hora integer NOT NULL DEFAULT 0,
     hora_x_dia integer NOT NULL DEFAULT 9,
     dia_x_periodo integer NOT NULL DEFAULT 15,
     id_tipo_periodo integer NOT NULL,
@@ -1020,9 +1020,9 @@ CONSTRAINT uq_salario_clave UNIQUE (clave)
 );
 COMMENT ON TABLE tecabix_sce.salario IS 'BANCO';
 COMMENT ON COLUMN tecabix_sce.salario.id_salario IS 'IDENTIFICADOR UNICO DEL SALARIO';
-COMMENT ON COLUMN tecabix_sce.salario.periodo IS 'PERIODO DEL SALARIO POR DIAS';
-COMMENT ON COLUMN tecabix_sce.salario.dia IS 'EL PAGO POR DIA';
-COMMENT ON COLUMN tecabix_sce.salario.hora IS 'EL PAGO POR HORA';
+COMMENT ON COLUMN tecabix_sce.salario.periodo IS 'EL PAGO (EN CENTAVOS) POR PERIODO';
+COMMENT ON COLUMN tecabix_sce.salario.dia IS 'EL PAGO (EN CENTAVOS) POR DIA';
+COMMENT ON COLUMN tecabix_sce.salario.hora IS 'EL PAGO (EN CENTAVOS) POR HORA';
 COMMENT ON COLUMN tecabix_sce.salario.hora_x_dia IS 'NUMERO DE HORAS QUE SE TRABAJA POR DIA';
 COMMENT ON COLUMN tecabix_sce.salario.dia_x_periodo IS 'NUMERO DE DIAS QUE SE TRABAJA POR PERIODO';
 COMMENT ON COLUMN tecabix_sce.salario.id_tipo_periodo IS 'TIPO DE PERIODO, CATALOGO_TIPO = PERIODO_SALARIO';
