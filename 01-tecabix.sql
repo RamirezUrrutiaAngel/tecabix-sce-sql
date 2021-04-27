@@ -820,6 +820,243 @@ CREATE INDEX indx_puesto_nombre
 
 
 
+CREATE SEQUENCE tecabix_sce.seguro_social_seq
+    INCREMENT 1
+    START 1000432198763876
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;
+    ALTER SEQUENCE tecabix_sce.seguro_social_seq
+    OWNER TO postgres;
+
+CREATE TABLE tecabix_sce.seguro_social(
+	id_seguro_social bigint NOT NULL DEFAULT nextval('tecabix_sce.seguro_social_seq'::regclass),
+    numero character varying(12) NOT NULL,
+    id_estado integer NOT NULL,
+    ciudad character varying(100) NOT NULL,
+    curp character varying(19) NOT NULL,
+    rfc character varying(16) NOT NULL,
+    alta date NOT NULL DEFAULT now (),
+    baja date DEFAULT now (),
+    url_imagen character varying(200) ,
+    observaciones_baja character varying(200),
+	id_usuario_modificado bigint NOT NULL,
+	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
+	id_estatus integer NOT NULL,
+    clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
+CONSTRAINT pk_seguro_social_id_seguro_social PRIMARY KEY (id_seguro_social),
+CONSTRAINT uq_seguro_social_clave UNIQUE (clave)
+);
+COMMENT ON TABLE tecabix_sce.seguro_social IS 'SEGURO SOCIAL';
+COMMENT ON COLUMN tecabix_sce.seguro_social.id_seguro_social IS 'IDENTIFICADOR DEL SEGURO SOCIAL';
+COMMENT ON COLUMN tecabix_sce.seguro_social.numero IS 'NUMERO DEL SEGURO SOCIAL';
+COMMENT ON COLUMN tecabix_sce.seguro_social.id_estado IS 'ENTIDAD FEDERATIVA DONDE NACIO';
+COMMENT ON COLUMN tecabix_sce.seguro_social.ciudad IS 'CIUDAD DONDE NACIO';
+COMMENT ON COLUMN tecabix_sce.seguro_social.curp IS 'CLAVE ÚNICA DE REGISTRO DE POBLACIÓN';
+COMMENT ON COLUMN tecabix_sce.seguro_social.rfc IS 'REGISTRO FEDERAL DE CONTRIBUYENTES';
+COMMENT ON COLUMN tecabix_sce.seguro_social.alta IS 'FECHA EN QUE ENTRO A LA EMPRESA';
+COMMENT ON COLUMN tecabix_sce.seguro_social.baja IS 'FECHA EN QUE SALIO DE LA EMPRESA';
+COMMENT ON COLUMN tecabix_sce.seguro_social.url_imagen IS 'URL DE LA IMAGEN DE PERFIL DEL TRABAJADOR';
+COMMENT ON COLUMN tecabix_sce.seguro_social.id_usuario_modificado IS 'ULTIMO USUARIO QUE MODIFICO EL REGISTRO';
+COMMENT ON COLUMN tecabix_sce.seguro_social.fecha_modificado IS 'ULTIMA FECHA QUE SE MODIFICO EL REGISTRO';
+COMMENT ON COLUMN tecabix_sce.seguro_social.id_estatus IS 'STATUS DEL REGISTRO, CATALOGO_TIPO = ESTATUS';
+
+ALTER TABLE tecabix_sce.seguro_social ADD CONSTRAINT fk_seguro_social_id_estatus FOREIGN KEY (id_estatus)
+REFERENCES tecabix_sce.catalogo(id_catalogo) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+ALTER TABLE tecabix_sce.seguro_social ADD CONSTRAINT fk_seguro_social_id_usuario_modificado FOREIGN KEY (id_usuario_modificado)
+REFERENCES tecabix_sce.usuario(id_usuario) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+ALTER TABLE tecabix_sce.seguro_social ADD CONSTRAINT fk_seguro_social_id_estado FOREIGN KEY (id_estado)
+REFERENCES tecabix_sce.estado(id_estado) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+CREATE INDEX indx_seguro_social_numero
+    ON tecabix_sce.seguro_social USING btree
+    (numero COLLATE pg_catalog."default")
+    TABLESPACE pg_default;
+
+CREATE INDEX indx_seguro_social_curp
+    ON tecabix_sce.seguro_social USING btree
+    (curp COLLATE pg_catalog."default")
+    TABLESPACE pg_default;
+
+CREATE INDEX indx_seguro_social_rfc
+    ON tecabix_sce.seguro_social USING btree
+    (rfc COLLATE pg_catalog."default")
+    TABLESPACE pg_default;
+
+
+
+CREATE SEQUENCE tecabix_sce.turno_seq
+    INCREMENT 1
+    START 1000432198763876
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;
+    ALTER SEQUENCE tecabix_sce.turno_seq
+    OWNER TO postgres;
+
+CREATE TABLE tecabix_sce.turno(
+	id_turno bigint NOT NULL DEFAULT nextval('tecabix_sce.turno_seq'::regclass),
+    nombre character varying(45),
+	descripcion character varying(200) NOT NULL,
+    id_tipo integer NOT NULL,
+    id_empresa bigint NOT NULL,
+	id_usuario_modificado bigint NOT NULL,
+	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
+	id_estatus integer NOT NULL,
+    clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
+CONSTRAINT pk_turno_id_turno PRIMARY KEY (id_turno),
+CONSTRAINT uq_turno_clave UNIQUE (clave)
+);
+COMMENT ON TABLE tecabix_sce.turno IS 'TURNO LABORAL';
+COMMENT ON COLUMN tecabix_sce.turno.id_turno IS 'IDENTIFICADOR DEL TURNO';
+COMMENT ON COLUMN tecabix_sce.turno.nombre IS 'NOMBRE DEL TURNO';
+COMMENT ON COLUMN tecabix_sce.turno.descripcion IS 'DESCRIIIPCION DEL TURNO';
+COMMENT ON COLUMN tecabix_sce.turno.id_tipo IS 'TIPO DE TURNO, CATALOGO_TIPO = TURNO';
+COMMENT ON COLUMN tecabix_sce.turno.id_empresa IS 'EMPRESA AL QUE PERTENECE EL TURNO';
+COMMENT ON COLUMN tecabix_sce.turno.id_usuario_modificado IS 'ULTIMO USUARIO QUE MODIFICO EL REGISTRO';
+COMMENT ON COLUMN tecabix_sce.turno.fecha_modificado IS 'ULTIMA FECHA QUE SE MODIFICO EL REGISTRO';
+COMMENT ON COLUMN tecabix_sce.turno.id_estatus IS 'STATUS DEL REGISTRO, CATALOGO_TIPO = ESTATUS';
+
+ALTER TABLE tecabix_sce.turno ADD CONSTRAINT fk_turno_id_estatus FOREIGN KEY (id_estatus)
+REFERENCES tecabix_sce.catalogo(id_catalogo) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+ALTER TABLE tecabix_sce.turno ADD CONSTRAINT fk_turno_id_usuario_modificado FOREIGN KEY (id_usuario_modificado)
+REFERENCES tecabix_sce.usuario(id_usuario) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+ALTER TABLE tecabix_sce.turno ADD CONSTRAINT fk_turno_id_tipo FOREIGN KEY (id_tipo)
+REFERENCES tecabix_sce.catalogo(id_catalogo) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+ALTER TABLE tecabix_sce.turno ADD CONSTRAINT fk_turno_id_empresa FOREIGN KEY (id_empresa)
+REFERENCES tecabix_sce.persona_moral(id_persona_moral) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+
+
+CREATE SEQUENCE tecabix_sce.turno_dia_seq
+    INCREMENT 1
+    START 1000432198763876
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;
+    ALTER SEQUENCE tecabix_sce.turno_dia_seq
+    OWNER TO postgres;
+
+CREATE TABLE tecabix_sce.turno_dia(
+	id_turno_dia bigint NOT NULL DEFAULT nextval('tecabix_sce.turno_dia_seq'::regclass),
+    id_turno bigint NOT NULL,
+    id_dia integer NOT NULL,
+    inicio time NOT NULL DEFAULT now (),
+    fin time NOT NULL DEFAULT now (),
+	id_usuario_modificado bigint NOT NULL,
+	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
+	id_estatus integer NOT NULL,
+    clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
+CONSTRAINT pk_turno_dia_id_turno_dia PRIMARY KEY (id_turno_dia),
+CONSTRAINT uq_turno_dia_clave UNIQUE (clave)
+);
+COMMENT ON TABLE tecabix_sce.turno_dia IS 'HORARIOS DE TRABAJO';
+COMMENT ON COLUMN tecabix_sce.turno_dia.id_turno_dia IS 'IDENTIFICADOR UNICO DEL HORARIO';
+COMMENT ON COLUMN tecabix_sce.turno_dia.id_turno IS 'IDENTIFICADOR UNICO DEL TURNO';
+COMMENT ON COLUMN tecabix_sce.turno_dia.id_dia IS 'DIA DE LA SEMANA, CATALOGO_TIPO = DIA_DE_LA_SEMANA';
+COMMENT ON COLUMN tecabix_sce.turno_dia.inicio IS 'HORA DE INICIO DE LA CLASE';
+COMMENT ON COLUMN tecabix_sce.turno_dia.fin IS 'HORA EN QUE FINALIZA LA CLASE';
+COMMENT ON COLUMN tecabix_sce.turno_dia.id_usuario_modificado IS 'ULTIMO USUARIO QUE MODIFICO EL REGISTRO';
+COMMENT ON COLUMN tecabix_sce.turno_dia.fecha_modificado IS 'ULTIMA FECHA QUE SE MODIFICO EL REGISTRO';
+COMMENT ON COLUMN tecabix_sce.turno_dia.id_estatus IS 'STATUS DEL REGISTRO, CATALOGO_TIPO = ESTATUS';
+
+ALTER TABLE tecabix_sce.turno_dia ADD CONSTRAINT fk_turno_dia_id_estatus FOREIGN KEY (id_estatus)
+REFERENCES tecabix_sce.catalogo(id_catalogo) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+ALTER TABLE tecabix_sce.turno_dia ADD CONSTRAINT fk_turno_dia_id_usuario_modificado FOREIGN KEY (id_usuario_modificado)
+REFERENCES tecabix_sce.usuario(id_usuario) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+ALTER TABLE tecabix_sce.turno_dia ADD CONSTRAINT fk_turno_dia_id_dia FOREIGN KEY (id_dia)
+REFERENCES tecabix_sce.catalogo(id_catalogo) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+ALTER TABLE tecabix_sce.turno_dia ADD CONSTRAINT fk_turno_dia_id_clase FOREIGN KEY (id_turno)
+REFERENCES tecabix_sce.turno(id_turno) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+
+CREATE SEQUENCE tecabix_sce.salario_seq
+    INCREMENT 1
+    START 1000432198763876
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;
+    ALTER SEQUENCE tecabix_sce.salario_seq
+    OWNER TO postgres;
+
+CREATE TABLE tecabix_sce.salario(
+	id_salario bigint NOT NULL DEFAULT nextval('tecabix_sce.salario_seq'::regclass),
+	periodo numeric(8,2) NOT NULL DEFAULT 0,
+    dia numeric(8,2) NOT NULL DEFAULT 0,
+    hora numeric(8,2) NOT NULL DEFAULT 0,
+    hora_x_dia integer NOT NULL DEFAULT 9,
+    dia_x_periodo integer NOT NULL DEFAULT 15,
+    id_tipo_periodo integer NOT NULL,
+    id_tipo_pago integer NOT NULL,
+    id_banco integer,
+    numero_cuenta character varying(20),
+    sucursal character varying(20),
+    clave_interbancaria character varying(19),
+	id_usuario_modificado bigint NOT NULL,
+	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
+	id_estatus integer NOT NULL,
+    clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
+CONSTRAINT pk_salario_id_salario PRIMARY KEY (id_salario),
+CONSTRAINT uq_salario_clave UNIQUE (clave)
+);
+COMMENT ON TABLE tecabix_sce.salario IS 'BANCO';
+COMMENT ON COLUMN tecabix_sce.salario.id_salario IS 'IDENTIFICADOR UNICO DEL SALARIO';
+COMMENT ON COLUMN tecabix_sce.salario.periodo IS 'PERIODO DEL SALARIO POR DIAS';
+COMMENT ON COLUMN tecabix_sce.salario.dia IS 'EL PAGO POR DIA';
+COMMENT ON COLUMN tecabix_sce.salario.hora IS 'EL PAGO POR HORA';
+COMMENT ON COLUMN tecabix_sce.salario.hora_x_dia IS 'NUMERO DE HORAS QUE SE TRABAJA POR DIA';
+COMMENT ON COLUMN tecabix_sce.salario.dia_x_periodo IS 'NUMERO DE DIAS QUE SE TRABAJA POR PERIODO';
+COMMENT ON COLUMN tecabix_sce.salario.id_tipo_periodo IS 'TIPO DE PERIODO, CATALOGO_TIPO = PERIODO_SALARIO';
+COMMENT ON COLUMN tecabix_sce.salario.id_tipo_pago IS 'TIPO DE PAGO, CATALOGO_TIPO = PAGO_SALARIO';
+COMMENT ON COLUMN tecabix_sce.salario.id_banco IS 'AL BANCO QUE SE DEPOSITARA';
+COMMENT ON COLUMN tecabix_sce.salario.numero_cuenta IS 'NUMERO DE CUENTA DEL BANCO';
+COMMENT ON COLUMN tecabix_sce.salario.sucursal IS 'SUCURSAL DEL BANCO';
+COMMENT ON COLUMN tecabix_sce.salario.clave_interbancaria IS 'CLAVE INTERBANCARIA';
+COMMENT ON COLUMN tecabix_sce.salario.id_usuario_modificado IS 'ULTIMO USUARIO QUE MODIFICO EL REGISTRO';
+COMMENT ON COLUMN tecabix_sce.salario.fecha_modificado IS 'ULTIMA FECHA QUE SE MODIFICO EL REGISTRO';
+COMMENT ON COLUMN tecabix_sce.salario.id_estatus IS 'STATUS DEL REGISTRO, CATALOGO_TIPO = ESTATUS';
+
+ALTER TABLE tecabix_sce.salario ADD CONSTRAINT fk_salario_id_estatus FOREIGN KEY (id_estatus)
+REFERENCES tecabix_sce.catalogo(id_catalogo) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+ALTER TABLE tecabix_sce.salario ADD CONSTRAINT fk_salario_id_usuario_modificado FOREIGN KEY (id_usuario_modificado)
+REFERENCES tecabix_sce.usuario(id_usuario) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+ALTER TABLE tecabix_sce.salario ADD CONSTRAINT fk_salario_id_tipo_periodo FOREIGN KEY (id_tipo_periodo)
+REFERENCES tecabix_sce.catalogo(id_catalogo) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+ALTER TABLE tecabix_sce.salario ADD CONSTRAINT fk_salario_id_tipo_pago FOREIGN KEY (id_tipo_pago)
+REFERENCES tecabix_sce.catalogo(id_catalogo) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+ALTER TABLE tecabix_sce.salario ADD CONSTRAINT fk_salario_id_banco FOREIGN KEY (id_banco)
+REFERENCES tecabix_sce.banco(id_banco) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+
+
 CREATE SEQUENCE tecabix_sce.trabajador_seq
     INCREMENT 1
     START 1000432198763876
@@ -831,12 +1068,13 @@ CREATE SEQUENCE tecabix_sce.trabajador_seq
 
 CREATE TABLE tecabix_sce.trabajador(
 	id_trabajador bigint NOT NULL DEFAULT nextval('tecabix_sce.trabajador_seq'::regclass),
-    curp character varying(19),
 	id_persona_fisica bigint NOT NULL,
+    id_seguro_social bigint NOT NULL,
 	id_puesto bigint NOT NULL,
-    id_plantel bigint,
+    id_plantel bigint NOT NULL,
+    id_turno bigint NOT NULL,
+    id_salario bigint NOT NULL,
 	id_jefe bigint,
-	url_imagen character varying(200) ,
 	id_empresa bigint NOT NULL,
 	id_usuario_modificado bigint NOT NULL,
 	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
@@ -847,12 +1085,13 @@ CONSTRAINT uq_trabajador_clave UNIQUE (clave)
 );
 COMMENT ON TABLE tecabix_sce.trabajador IS 'TRABAJADOR';
 COMMENT ON COLUMN tecabix_sce.trabajador.id_trabajador IS 'IDENTIFICADOR DEL TRABAJADOR';
-COMMENT ON COLUMN tecabix_sce.trabajador.curp IS 'CLAVE ÚNICA DE REGISTRO DE POBLACIÓN';
 COMMENT ON COLUMN tecabix_sce.trabajador.id_persona_fisica IS 'LLAVE FORANEA DE LA PERSONA';
+COMMENT ON COLUMN tecabix_sce.trabajador.id_seguro_social IS 'LLAVE FORANEA DEL SEGURO SOCIAL';
 COMMENT ON COLUMN tecabix_sce.trabajador.id_puesto IS 'LLAVE FORANEA DEL PUESTO';
 COMMENT ON COLUMN tecabix_sce.trabajador.id_plantel IS 'LLAVE FORANEA DEL PLANTEL';
+COMMENT ON COLUMN tecabix_sce.trabajador.id_turno IS 'LLAVE FORANEA DEL TURNO';
+COMMENT ON COLUMN tecabix_sce.trabajador.id_salario IS 'LLAVE FORANEA DEL SALARIO';
 COMMENT ON COLUMN tecabix_sce.trabajador.id_jefe IS 'LLAVE FORANEA DEL JEFE DIRECTO';
-COMMENT ON COLUMN tecabix_sce.trabajador.url_imagen IS 'URL DE LA IMAGEN DE PERFIL DEL TRABAJADOR';
 COMMENT ON COLUMN tecabix_sce.trabajador.id_empresa IS 'LLAVE FORANEA DE LA EMPRESA AL QUE TRABAJA';
 COMMENT ON COLUMN tecabix_sce.trabajador.id_usuario_modificado IS 'ULTIMO USUARIO QUE MODIFICO EL REGISTRO';
 COMMENT ON COLUMN tecabix_sce.trabajador.fecha_modificado IS 'ULTIMA FECHA QUE SE MODIFICO EL REGISTRO';
@@ -874,6 +1113,14 @@ ALTER TABLE tecabix_sce.trabajador ADD CONSTRAINT fk_trabajador_id_empresa FOREI
 REFERENCES tecabix_sce.persona_moral(id_persona_moral) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
+ALTER TABLE tecabix_sce.trabajador ADD CONSTRAINT fk_trabajador_id_turno FOREIGN KEY (id_turno)
+REFERENCES tecabix_sce.turno(id_turno) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+ALTER TABLE tecabix_sce.trabajador ADD CONSTRAINT fk_trabajador_id_salario FOREIGN KEY (id_salario)
+REFERENCES tecabix_sce.salario(id_salario) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
 ALTER TABLE tecabix_sce.trabajador ADD CONSTRAINT fk_trabajador_id_jefe FOREIGN KEY (id_jefe)
 REFERENCES tecabix_sce.trabajador(id_trabajador) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
@@ -881,11 +1128,6 @@ ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 ALTER TABLE tecabix_sce.trabajador ADD CONSTRAINT fk_trabajador_id_persona_fisica FOREIGN KEY (id_persona_fisica)
 REFERENCES tecabix_sce.persona_fisica(id_persona_fisica) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
-
-CREATE INDEX indx_trabajador_curp
-    ON tecabix_sce.trabajador USING btree
-    (curp COLLATE pg_catalog."default")
-    TABLESPACE pg_default;
 
 
 
@@ -985,11 +1227,11 @@ ALTER TABLE tecabix_sce.configuracion ADD CONSTRAINT fk_configuracion_id_tipo FO
 REFERENCES tecabix_sce.catalogo(id_catalogo) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
-ALTER TABLE tecabix_sce.configuracion ADD CONSTRAINT fk_trabajador_id_estatus FOREIGN KEY (id_estatus)
+ALTER TABLE tecabix_sce.configuracion ADD CONSTRAINT fk_configuracion_id_estatus FOREIGN KEY (id_estatus)
 REFERENCES tecabix_sce.catalogo(id_catalogo) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
-ALTER TABLE tecabix_sce.configuracion ADD CONSTRAINT fk_trabajador_id_usuario_modificado FOREIGN KEY (id_usuario_modificado)
+ALTER TABLE tecabix_sce.configuracion ADD CONSTRAINT fk_configuracion_id_usuario_modificado FOREIGN KEY (id_usuario_modificado)
 REFERENCES tecabix_sce.usuario(id_usuario) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
