@@ -822,7 +822,7 @@ CREATE INDEX indx_puesto_nombre
 
 CREATE SEQUENCE tecabix_sce.seguro_social_seq
     INCREMENT 1
-    START 1000432198763876
+    START 1
     MINVALUE 1
     MAXVALUE 9223372036854775807
     CACHE 1;
@@ -892,7 +892,7 @@ CREATE INDEX indx_seguro_social_rfc
 
 CREATE SEQUENCE tecabix_sce.turno_seq
     INCREMENT 1
-    START 1000432198763876
+    START 1
     MINVALUE 1
     MAXVALUE 9223372036854775807
     CACHE 1;
@@ -942,7 +942,7 @@ ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
 CREATE SEQUENCE tecabix_sce.turno_dia_seq
     INCREMENT 1
-    START 1000432198763876
+    START 1
     MINVALUE 1
     MAXVALUE 9223372036854775807
     CACHE 1;
@@ -991,7 +991,7 @@ ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
 CREATE SEQUENCE tecabix_sce.salario_seq
     INCREMENT 1
-    START 1000432198763876
+    START 1
     MINVALUE 1
     MAXVALUE 9223372036854775807
     CACHE 1;
@@ -1071,7 +1071,7 @@ CREATE TABLE tecabix_sce.trabajador(
 	id_persona_fisica bigint NOT NULL,
     id_seguro_social bigint NOT NULL,
 	id_puesto bigint NOT NULL,
-    id_plantel bigint NOT NULL,
+    id_plantel bigint,
     id_turno bigint NOT NULL,
     id_salario bigint NOT NULL,
 	id_jefe bigint,
