@@ -109,6 +109,9 @@ BEGIN
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('MAX_REG_TRABAJADOR','NUMERO MÁXIMO DE REGISTROS DE TRABAJADORES', 'NUMERO MÁXIMO DE REGISTROS DE TRABAJADORES QUE SE PUEDEN GUARDAR', 5, id_aux_1, VAR_USR_CREA, VAR_ACTIVO) RETURNING id_catalogo INTO id_aux_2;
 		INSERT INTO tecabix_sce.configuracion(id_tipo, valor, id_usuario_modificado, id_estatus)VALUES (id_aux_2, '36', VAR_USR_CREA, VAR_ACTIVO) RETURNING id_configuracion INTO id_aux_2;
 			INSERT INTO tecabix_sce.plan_configuracion(id_plan, id_configuracion)VALUES (id_aux_3, id_aux_2);
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('MAX_REG_TURNO','NUMERO MÁXIMO DE REGISTROS DE TURNO', 'NUMERO MÁXIMO DE REGISTROS DE TURNO QUE SE PUEDEN GUARDAR', 6, id_aux_1, VAR_USR_CREA, VAR_ACTIVO) RETURNING id_catalogo INTO id_aux_2;
+		INSERT INTO tecabix_sce.configuracion(id_tipo, valor, id_usuario_modificado, id_estatus)VALUES (id_aux_2, '14', VAR_USR_CREA, VAR_ACTIVO) RETURNING id_configuracion INTO id_aux_2;
+			INSERT INTO tecabix_sce.plan_configuracion(id_plan, id_configuracion)VALUES (id_aux_3, id_aux_2);
 
 
 	
@@ -316,6 +319,12 @@ BEGIN
 			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('CORREO_CREAR', 'CREAR PUESTO', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('CORREO_EDITAR', 'EDITAR PUESTO', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('CORREO_ELIMINAR', 'ELIMINAR PUESTO', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+
+
+		INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('TURNO', 'TURNO', AUTENTIFICADOS, VAR_USR_CREA, VAR_ACTIVO) RETURNING id_authority INTO id_aux_1;
+			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('TURNO_CREAR', 'CREAR TURNO', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('TURNO_EDITAR', 'EDITAR TURNO', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+			INSERT INTO tecabix_sce.authority(nombre, descripcion, id_pre_authority, id_usuario_modificado, id_estatus) VALUES ('TURNO_ELIMINAR', 'ELIMINAR TURNO', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 
 	/**************************** BANCO ****************************/
 

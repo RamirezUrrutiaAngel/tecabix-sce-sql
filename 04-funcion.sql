@@ -134,3 +134,14 @@ BEGIN
     RETURN num <= num_max;
 END;
 $$ LANGUAGE plpgsql;
+
+CREATE FUNCTION tecabix_sce.turno_can_insert(arg_id_empresa bigint) RETURNS boolean AS $$ 
+DECLARE
+    num         bigint;
+    num_max     bigint;
+BEGIN
+    SELECT COUNT(*) INTO num FROM tecabix_sce.turno a WHERE a.id_empresa = arg_id_empresa;
+    SELECT n.valor INTO num_max FROM tecabix_sce.numero_maximo_registro n WHERE n.id_empresa = arg_id_empresa AND nombre = 'MAX_REG_TURNO';
+    RETURN num <= num_max;
+END;
+$$ LANGUAGE plpgsql;

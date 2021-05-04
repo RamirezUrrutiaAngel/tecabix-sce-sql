@@ -838,7 +838,6 @@ CREATE TABLE tecabix_sce.seguro_social(
     rfc character varying(16) NOT NULL,
     alta date NOT NULL DEFAULT now (),
     baja date DEFAULT now (),
-    url_imagen character varying(200) ,
     observaciones_baja character varying(200),
 	id_usuario_modificado bigint NOT NULL,
 	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
@@ -856,7 +855,6 @@ COMMENT ON COLUMN tecabix_sce.seguro_social.curp IS 'CLAVE ÚNICA DE REGISTRO DE
 COMMENT ON COLUMN tecabix_sce.seguro_social.rfc IS 'REGISTRO FEDERAL DE CONTRIBUYENTES';
 COMMENT ON COLUMN tecabix_sce.seguro_social.alta IS 'FECHA EN QUE ENTRO A LA EMPRESA';
 COMMENT ON COLUMN tecabix_sce.seguro_social.baja IS 'FECHA EN QUE SALIO DE LA EMPRESA';
-COMMENT ON COLUMN tecabix_sce.seguro_social.url_imagen IS 'URL DE LA IMAGEN DE PERFIL DEL TRABAJADOR';
 COMMENT ON COLUMN tecabix_sce.seguro_social.id_usuario_modificado IS 'ULTIMO USUARIO QUE MODIFICO EL REGISTRO';
 COMMENT ON COLUMN tecabix_sce.seguro_social.fecha_modificado IS 'ULTIMA FECHA QUE SE MODIFICO EL REGISTRO';
 COMMENT ON COLUMN tecabix_sce.seguro_social.id_estatus IS 'STATUS DEL REGISTRO, CATALOGO_TIPO = ESTATUS';
@@ -960,6 +958,7 @@ CREATE TABLE tecabix_sce.turno_dia(
 	id_estatus integer NOT NULL,
     clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
 CONSTRAINT pk_turno_dia_id_turno_dia PRIMARY KEY (id_turno_dia),
+CONSTRAINT uq_turno_dia_id_turno_id_dia UNIQUE (id_turno, id_dia),
 CONSTRAINT uq_turno_dia_clave UNIQUE (clave)
 );
 COMMENT ON TABLE tecabix_sce.turno_dia IS 'HORARIOS DE TRABAJO';
@@ -1009,7 +1008,7 @@ CREATE TABLE tecabix_sce.salario(
     id_tipo_pago integer NOT NULL,
     id_banco integer,
     numero_cuenta character varying(20),
-    sucursal character varying(20),
+    sucursal character varying(45),
     clave_interbancaria character varying(19),
 	id_usuario_modificado bigint NOT NULL,
 	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
