@@ -184,10 +184,6 @@ BEGIN
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('VETERINARIA', 'FACULTAD DE VETERINARIA', 'FACULTAD DE VETERINARIA', 20, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('QUÍMICA', 'FACULTAD DE QUÍMICA', 'FACULTAD DE QUÍMICA', 21, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 
-	INSERT INTO tecabix_sce.catalogo_tipo (nombre, descripcion, id_usuario_modificado, id_estatus) VALUES ('TURNO', 'TURNO U HORARIO', VAR_USR_CREA, VAR_ACTIVO) RETURNING id_catalogo_tipo INTO id_aux_1;
-	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('MATUTINO', 'MATUTINO', 'MATUTINO', 1, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
-	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('VESPERTINO', 'VESPERTINO', 'VESPERTINO', 2, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
-
 	INSERT INTO tecabix_sce.catalogo_tipo (nombre, descripcion, id_usuario_modificado, id_estatus) VALUES ('PERIODO_ACADEMICO', 'PERIODO ACADEMICO', VAR_USR_CREA, VAR_ACTIVO) RETURNING id_catalogo_tipo INTO id_aux_1;
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('TRIMESTRE', 'MATUTINO', 'MATUTINO', 1, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('CUATRIMESTRE', 'CUATRIMESTRE', 'CUATRIMESTRE', 2, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);

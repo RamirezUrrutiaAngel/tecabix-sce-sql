@@ -901,7 +901,6 @@ CREATE TABLE tecabix_sce.turno(
 	id_turno bigint NOT NULL DEFAULT nextval('tecabix_sce.turno_seq'::regclass),
     nombre character varying(45),
 	descripcion character varying(200) NOT NULL,
-    id_tipo integer NOT NULL,
     id_empresa bigint NOT NULL,
 	id_usuario_modificado bigint NOT NULL,
 	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
@@ -914,7 +913,6 @@ COMMENT ON TABLE tecabix_sce.turno IS 'TURNO LABORAL';
 COMMENT ON COLUMN tecabix_sce.turno.id_turno IS 'IDENTIFICADOR DEL TURNO';
 COMMENT ON COLUMN tecabix_sce.turno.nombre IS 'NOMBRE DEL TURNO';
 COMMENT ON COLUMN tecabix_sce.turno.descripcion IS 'DESCRIIIPCION DEL TURNO';
-COMMENT ON COLUMN tecabix_sce.turno.id_tipo IS 'TIPO DE TURNO, CATALOGO_TIPO = TURNO';
 COMMENT ON COLUMN tecabix_sce.turno.id_empresa IS 'EMPRESA AL QUE PERTENECE EL TURNO';
 COMMENT ON COLUMN tecabix_sce.turno.id_usuario_modificado IS 'ULTIMO USUARIO QUE MODIFICO EL REGISTRO';
 COMMENT ON COLUMN tecabix_sce.turno.fecha_modificado IS 'ULTIMA FECHA QUE SE MODIFICO EL REGISTRO';
@@ -926,10 +924,6 @@ ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
 ALTER TABLE tecabix_sce.turno ADD CONSTRAINT fk_turno_id_usuario_modificado FOREIGN KEY (id_usuario_modificado)
 REFERENCES tecabix_sce.usuario(id_usuario) MATCH SIMPLE
-ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
-
-ALTER TABLE tecabix_sce.turno ADD CONSTRAINT fk_turno_id_tipo FOREIGN KEY (id_tipo)
-REFERENCES tecabix_sce.catalogo(id_catalogo) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
 ALTER TABLE tecabix_sce.turno ADD CONSTRAINT fk_turno_id_empresa FOREIGN KEY (id_empresa)
