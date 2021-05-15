@@ -1011,7 +1011,7 @@ CREATE TABLE tecabix_sce.salario(
 CONSTRAINT pk_salario_id_salario PRIMARY KEY (id_salario),
 CONSTRAINT uq_salario_clave UNIQUE (clave)
 );
-COMMENT ON TABLE tecabix_sce.salario IS 'BANCO';
+COMMENT ON TABLE tecabix_sce.salario IS 'SALARIO O REMUNERACION';
 COMMENT ON COLUMN tecabix_sce.salario.id_salario IS 'IDENTIFICADOR UNICO DEL SALARIO';
 COMMENT ON COLUMN tecabix_sce.salario.periodo IS 'EL PAGO (EN CENTAVOS) POR PERIODO';
 COMMENT ON COLUMN tecabix_sce.salario.dia IS 'EL PAGO (EN CENTAVOS) POR DIA';

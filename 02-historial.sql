@@ -175,7 +175,7 @@ CREATE TABLE tecabix_sce_historial.configuracion_historial(
     fecha timestamp without time zone NOT NULL DEFAULT now (),
     id_accion bigint NOT NULL,
     id_usuario_modificado bigint NOT NULL,
-	descripcion character varying(150) NOT NULL,
+	descripcion character varying(550) NOT NULL,
 CONSTRAINT pk_configuracion_historial_id_configuracion_historial PRIMARY KEY (id_configuracion_historial)
 );
 COMMENT ON TABLE tecabix_sce_historial.configuracion_historial IS 'HISTORIAL DEL LA CONFIGURACION';
