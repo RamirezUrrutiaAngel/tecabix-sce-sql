@@ -89,37 +89,37 @@ ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
 
 
-CREATE SEQUENCE tecabix_sce_historial.authority_historial_seq
+CREATE SEQUENCE tecabix_sce_historial.autorizacion_historial_seq
     INCREMENT 1
     START 1
     MINVALUE 1
     MAXVALUE 9223372036854775807
     CACHE 1;
-    ALTER SEQUENCE tecabix_sce_historial.authority_historial_seq
+    ALTER SEQUENCE tecabix_sce_historial.autorizacion_historial_seq
     OWNER TO postgres;
 
-CREATE TABLE tecabix_sce_historial.authority_historial(
-	id_authority_historial bigint NOT NULL DEFAULT nextval('tecabix_sce_historial.authority_historial_seq'::regclass),
-	id_authority bigint NOT NULL,
+CREATE TABLE tecabix_sce_historial.autorizacion_historial(
+	id_autorizacion_historial bigint NOT NULL DEFAULT nextval('tecabix_sce_historial.autorizacion_historial_seq'::regclass),
+	id_autorizacion bigint NOT NULL,
     fecha timestamp without time zone NOT NULL DEFAULT now (),
     id_accion bigint NOT NULL,
     id_usuario_modificado bigint NOT NULL,
 	descripcion character varying(150) NOT NULL,
-CONSTRAINT pk_authority_historial_id_authority_historial PRIMARY KEY (id_authority_historial)
+CONSTRAINT pk_autorizacion_historial_id_autorizacion_historial PRIMARY KEY (id_autorizacion_historial)
 );
-COMMENT ON TABLE tecabix_sce_historial.authority_historial IS 'HISTORIAL DEL CATALOGO';
-COMMENT ON COLUMN tecabix_sce_historial.authority_historial.id_authority_historial IS 'IDENTIFICADOR UNICO DEL HISTORIAL DEL AUTHORITY';
-COMMENT ON COLUMN tecabix_sce_historial.authority_historial.id_authority IS 'IDENTIFICADOR UNICO DEL AUTHORITY';
-COMMENT ON COLUMN tecabix_sce_historial.authority_historial.fecha IS 'FECHA EN QUE SE REALIZO LA ACCION';
-COMMENT ON COLUMN tecabix_sce_historial.authority_historial.id_accion IS 'TIPO DE ACCION QUE SE REALIZO, CATALOGO_TIPO = CRUD';
-COMMENT ON COLUMN tecabix_sce_historial.authority_historial.id_usuario_modificado IS 'USUARIO QUE REALIZO LA ACCION';
-COMMENT ON COLUMN tecabix_sce_historial.authority_historial.descripcion IS 'DESCRIPCION DE LA ACCION';
+COMMENT ON TABLE tecabix_sce_historial.autorizacion_historial IS 'HISTORIAL DEL CATALOGO';
+COMMENT ON COLUMN tecabix_sce_historial.autorizacion_historial.id_autorizacion_historial IS 'IDENTIFICADOR UNICO DEL HISTORIAL DEL autorizacion';
+COMMENT ON COLUMN tecabix_sce_historial.autorizacion_historial.id_autorizacion IS 'IDENTIFICADOR UNICO DEL autorizacion';
+COMMENT ON COLUMN tecabix_sce_historial.autorizacion_historial.fecha IS 'FECHA EN QUE SE REALIZO LA ACCION';
+COMMENT ON COLUMN tecabix_sce_historial.autorizacion_historial.id_accion IS 'TIPO DE ACCION QUE SE REALIZO, CATALOGO_TIPO = CRUD';
+COMMENT ON COLUMN tecabix_sce_historial.autorizacion_historial.id_usuario_modificado IS 'USUARIO QUE REALIZO LA ACCION';
+COMMENT ON COLUMN tecabix_sce_historial.autorizacion_historial.descripcion IS 'DESCRIPCION DE LA ACCION';
 
-ALTER TABLE tecabix_sce_historial.authority_historial ADD CONSTRAINT fk_authority_historial_id_accion FOREIGN KEY (id_accion)
+ALTER TABLE tecabix_sce_historial.autorizacion_historial ADD CONSTRAINT fk_autorizacion_historial_id_accion FOREIGN KEY (id_accion)
 REFERENCES tecabix_sce.catalogo(id_catalogo) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
-ALTER TABLE tecabix_sce_historial.authority_historial ADD CONSTRAINT fk_authority_historial_id_usuario_modificado FOREIGN KEY (id_usuario_modificado)
+ALTER TABLE tecabix_sce_historial.autorizacion_historial ADD CONSTRAINT fk_autorizacion_historial_id_usuario_modificado FOREIGN KEY (id_usuario_modificado)
 REFERENCES tecabix_sce.usuario(id_usuario) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
@@ -850,45 +850,45 @@ CREATE TRIGGER trg_catalogo_after_delete
     EXECUTE PROCEDURE tecabix_sce.trg_catalogo_after_delete();
 
 
-/******** AUTHORITY ********/
-CREATE FUNCTION tecabix_sce.trg_authority_before_delate() RETURNS TRIGGER AS $$ 
+/******** autorizacion ********/
+CREATE FUNCTION tecabix_sce.trg_autorizacion_before_delate() RETURNS TRIGGER AS $$ 
 DECLARE
     item_aux        RECORD;
 BEGIN
 
-    DELETE FROM tecabix_sce.perfil_authority  WHERE id_authority = OLD.id_authority;
+    DELETE FROM tecabix_sce.perfil_autorizacion  WHERE id_autorizacion = OLD.id_autorizacion;
     RETURN OLD;
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER trg_authority_before_delate
+CREATE TRIGGER trg_autorizacion_before_delate
     BEFORE DELETE
-    ON tecabix_sce.authority
+    ON tecabix_sce.autorizacion
     FOR EACH ROW
-    EXECUTE PROCEDURE tecabix_sce.trg_authority_before_delate();
+    EXECUTE PROCEDURE tecabix_sce.trg_autorizacion_before_delate();
 
 /**/
-CREATE FUNCTION tecabix_sce.trg_authority_after_insert() RETURNS TRIGGER AS $$ 
+CREATE FUNCTION tecabix_sce.trg_autorizacion_after_insert() RETURNS TRIGGER AS $$ 
 DECLARE
     item_aux        RECORD;
     var_insert      bigint;
 BEGIN
     SELECT id_catalogo INTO var_insert FROM tecabix_sce.catalogo WHERE nombre = 'CREAR' AND id_catalogo_tipo IN (SELECT id_catalogo_tipo FROM tecabix_sce.catalogo_tipo WHERE nombre = 'CRUD');
     
-    INSERT INTO tecabix_sce_historial.authority_historial (id_authority, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_authority,var_insert, NEW.id_usuario_modificado, 'Se creo un nuevo registro '|| NEW.nombre );
+    INSERT INTO tecabix_sce_historial.autorizacion_historial (id_autorizacion, id_accion, id_usuario_modificado, descripcion) 
+        VALUES(NEW.id_autorizacion,var_insert, NEW.id_usuario_modificado, 'Se creo un nuevo registro '|| NEW.nombre );
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER trg_authority_after_insert
+CREATE TRIGGER trg_autorizacion_after_insert
     AFTER INSERT
-    ON tecabix_sce.authority
+    ON tecabix_sce.autorizacion
     FOR EACH ROW
-    EXECUTE PROCEDURE tecabix_sce.trg_authority_after_insert();
+    EXECUTE PROCEDURE tecabix_sce.trg_autorizacion_after_insert();
 
 /**/
-CREATE FUNCTION tecabix_sce.trg_authority_after_update() RETURNS TRIGGER AS $$ 
+CREATE FUNCTION tecabix_sce.trg_autorizacion_after_update() RETURNS TRIGGER AS $$ 
 DECLARE
     item_aux        RECORD;
     var_update      bigint;
@@ -898,34 +898,34 @@ BEGIN
     SELECT id_catalogo INTO var_update FROM tecabix_sce.catalogo WHERE nombre = 'ACTUALIZAR' AND id_catalogo_tipo IN (SELECT id_catalogo_tipo FROM tecabix_sce.catalogo_tipo WHERE nombre = 'CRUD');
     
     IF OLD.nombre != NEW.nombre THEN
-        INSERT INTO tecabix_sce_historial.authority_historial (id_authority, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_authority,var_update, NEW.id_usuario_modificado, 'Se actualizo el nombre de '|| OLD.nombre || ' a ' || NEW.nombre);
+        INSERT INTO tecabix_sce_historial.autorizacion_historial (id_autorizacion, id_accion, id_usuario_modificado, descripcion) 
+        VALUES(NEW.id_autorizacion,var_update, NEW.id_usuario_modificado, 'Se actualizo el nombre de '|| OLD.nombre || ' a ' || NEW.nombre);
     END IF;
 
     IF OLD.id_estatus != NEW.id_estatus THEN
         SELECT nombre INTO id_aux_1 FROM tecabix_sce.catalogo WHERE id_catalogo = OLD.id_estatus;
         SELECT nombre INTO id_aux_2 FROM tecabix_sce.catalogo WHERE id_catalogo = NEW.id_estatus;
-        INSERT INTO tecabix_sce_historial.authority_historial (id_authority, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_authority,var_update, NEW.id_usuario_modificado, 'Se actualizo el estatus de '|| id_aux_1 || ' a ' || id_aux_2);
+        INSERT INTO tecabix_sce_historial.autorizacion_historial (id_autorizacion, id_accion, id_usuario_modificado, descripcion) 
+        VALUES(NEW.id_autorizacion,var_update, NEW.id_usuario_modificado, 'Se actualizo el estatus de '|| id_aux_1 || ' a ' || id_aux_2);
     END IF;
 
     IF OLD.descripcion != NEW.descripcion THEN
-        INSERT INTO tecabix_sce_historial.authority_historial (id_authority, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(NEW.id_authority,var_update, NEW.id_usuario_modificado, 'Se actualizo la descripción');
+        INSERT INTO tecabix_sce_historial.autorizacion_historial (id_autorizacion, id_accion, id_usuario_modificado, descripcion) 
+        VALUES(NEW.id_autorizacion,var_update, NEW.id_usuario_modificado, 'Se actualizo la descripción');
     END IF;
 
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER trg_authority_after_update
+CREATE TRIGGER trg_autorizacion_after_update
     AFTER UPDATE
-    ON tecabix_sce.authority
+    ON tecabix_sce.autorizacion
     FOR EACH ROW
-    EXECUTE PROCEDURE tecabix_sce.trg_authority_after_update();
+    EXECUTE PROCEDURE tecabix_sce.trg_autorizacion_after_update();
 
 /**/
-CREATE FUNCTION tecabix_sce.trg_authority_after_delete() RETURNS TRIGGER AS $$ 
+CREATE FUNCTION tecabix_sce.trg_autorizacion_after_delete() RETURNS TRIGGER AS $$ 
 DECLARE
     item_aux        RECORD;
     var_delete      bigint;
@@ -934,18 +934,18 @@ DECLARE
 BEGIN
     SELECT id_catalogo INTO var_delete FROM tecabix_sce.catalogo WHERE nombre = 'ELIMINAR' AND id_catalogo_tipo IN (SELECT id_catalogo_tipo FROM tecabix_sce.catalogo_tipo WHERE nombre = 'CRUD');
     
-    INSERT INTO tecabix_sce_historial.authority_historial (id_authority, id_accion, id_usuario_modificado, descripcion) 
-        VALUES(OLD.id_authority,var_delete, OLD.id_usuario_modificado, 'Se elimino el registro');
+    INSERT INTO tecabix_sce_historial.autorizacion_historial (id_autorizacion, id_accion, id_usuario_modificado, descripcion) 
+        VALUES(OLD.id_autorizacion,var_delete, OLD.id_usuario_modificado, 'Se elimino el registro');
 
     RETURN OLD;
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER trg_authority_after_delete
+CREATE TRIGGER trg_autorizacion_after_delete
     AFTER DELETE
-    ON tecabix_sce.authority
+    ON tecabix_sce.autorizacion
     FOR EACH ROW
-    EXECUTE PROCEDURE tecabix_sce.trg_authority_after_delete();
+    EXECUTE PROCEDURE tecabix_sce.trg_autorizacion_after_delete();
 
 
 /******** PERFIL ********/
@@ -957,8 +957,8 @@ BEGIN
 		UPDATE tecabix_sce.usuario SET id_perfil = NULL WHERE id_usuario = item_aux.id_usuario;
 	END LOOP;
 
-    FOR item_aux IN SELECT * FROM tecabix_sce.perfil_authority WHERE id_perfil = OLD.id_perfil LOOP
-		DELETE FROM tecabix_sce.perfil_authority  WHERE id_perfil_authority = item_aux.id_perfil_authority;
+    FOR item_aux IN SELECT * FROM tecabix_sce.perfil_autorizacion WHERE id_perfil = OLD.id_perfil LOOP
+		DELETE FROM tecabix_sce.perfil_autorizacion  WHERE id_perfil_autorizacion = item_aux.id_perfil_autorizacion;
 	END LOOP;
     RETURN OLD;
 END;

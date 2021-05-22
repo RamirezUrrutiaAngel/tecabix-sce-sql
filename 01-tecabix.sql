@@ -219,78 +219,78 @@ CREATE INDEX indx_perfil_nombre
     (nombre COLLATE pg_catalog."default")
     TABLESPACE pg_default;
 
-CREATE SEQUENCE tecabix_sce.authority_seq
+CREATE SEQUENCE tecabix_sce.autorizacion_seq
     INCREMENT 1
     START 1
     MINVALUE 1
     MAXVALUE 9223372036854775807
     CACHE 1;
-    ALTER SEQUENCE tecabix_sce.authority_seq
+    ALTER SEQUENCE tecabix_sce.autorizacion_seq
     OWNER TO postgres;
 
-CREATE TABLE tecabix_sce.authority(
-	id_authority integer NOT NULL DEFAULT nextval('tecabix_sce.authority_seq'::regclass),
+CREATE TABLE tecabix_sce.autorizacion(
+	id_autorizacion integer NOT NULL DEFAULT nextval('tecabix_sce.autorizacion_seq'::regclass),
 	nombre character varying(50) NOT NULL,
 	descripcion character varying(300) NOT NULL,
-	id_pre_authority integer,
+	id_pre_autorizacion integer,
     id_usuario_modificado bigint,
 	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
 	id_estatus integer NOT NULL,
     clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
-CONSTRAINT pk_authority_id_authority PRIMARY KEY (id_authority),
-CONSTRAINT uq_authority_clave UNIQUE (clave)
+CONSTRAINT pk_autorizacion_id_autorizacion PRIMARY KEY (id_autorizacion),
+CONSTRAINT uq_autorizacion_clave UNIQUE (clave)
 );
-COMMENT ON TABLE tecabix_sce.authority IS 'PERMISOS DEL PERFIL';
-COMMENT ON COLUMN tecabix_sce.authority.id_authority IS 'IDENTIFICADOR UNICO DEL PERMISO';
-COMMENT ON COLUMN tecabix_sce.authority.nombre IS 'NOMBRE DEL PERMISO';
-COMMENT ON COLUMN tecabix_sce.authority.descripcion IS 'DESCRIPCION DEL PERMISO';
-COMMENT ON COLUMN tecabix_sce.authority.id_pre_authority IS 'PERMISO PADRE';
-COMMENT ON COLUMN tecabix_sce.authority.id_usuario_modificado IS 'ULTIMO USUARIO QUE MODIFICO EL REGISTRO';
-COMMENT ON COLUMN tecabix_sce.authority.fecha_modificado IS 'ULTIMA FECHA QUE SE MODIFICO EL REGISTRO';
-COMMENT ON COLUMN tecabix_sce.authority.id_estatus IS 'STATUS DEL REGISTRO, CATALOGO_TIPO = ESTATUS';
+COMMENT ON TABLE tecabix_sce.autorizacion IS 'PERMISOS DEL PERFIL';
+COMMENT ON COLUMN tecabix_sce.autorizacion.id_autorizacion IS 'IDENTIFICADOR UNICO DEL PERMISO';
+COMMENT ON COLUMN tecabix_sce.autorizacion.nombre IS 'NOMBRE DEL PERMISO';
+COMMENT ON COLUMN tecabix_sce.autorizacion.descripcion IS 'DESCRIPCION DEL PERMISO';
+COMMENT ON COLUMN tecabix_sce.autorizacion.id_pre_autorizacion IS 'PERMISO PADRE';
+COMMENT ON COLUMN tecabix_sce.autorizacion.id_usuario_modificado IS 'ULTIMO USUARIO QUE MODIFICO EL REGISTRO';
+COMMENT ON COLUMN tecabix_sce.autorizacion.fecha_modificado IS 'ULTIMA FECHA QUE SE MODIFICO EL REGISTRO';
+COMMENT ON COLUMN tecabix_sce.autorizacion.id_estatus IS 'STATUS DEL REGISTRO, CATALOGO_TIPO = ESTATUS';
 
 
-ALTER TABLE tecabix_sce.authority ADD CONSTRAINT fk_authority_id_pre_authority FOREIGN KEY (id_pre_authority)
-REFERENCES tecabix_sce.authority(id_authority) MATCH SIMPLE
+ALTER TABLE tecabix_sce.autorizacion ADD CONSTRAINT fk_autorizacion_id_pre_autorizacion FOREIGN KEY (id_pre_autorizacion)
+REFERENCES tecabix_sce.autorizacion(id_autorizacion) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
-ALTER TABLE tecabix_sce.authority ADD CONSTRAINT fk_authority_id_estatus FOREIGN KEY (id_estatus)
+ALTER TABLE tecabix_sce.autorizacion ADD CONSTRAINT fk_autorizacion_id_estatus FOREIGN KEY (id_estatus)
 REFERENCES tecabix_sce.catalogo(id_catalogo) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
 
-CREATE INDEX indx_authority_nombre
-    ON tecabix_sce.authority USING btree
+CREATE INDEX indx_autorizacion_nombre
+    ON tecabix_sce.autorizacion USING btree
     (nombre COLLATE pg_catalog."default")
     TABLESPACE pg_default;
 
 
 
-CREATE SEQUENCE tecabix_sce.perfil_authority_seq
+CREATE SEQUENCE tecabix_sce.perfil_autorizacion_seq
     INCREMENT 1
     START 1
     MINVALUE 1
     MAXVALUE 9223372036854775807
     CACHE 1;
-    ALTER SEQUENCE tecabix_sce.perfil_authority_seq
+    ALTER SEQUENCE tecabix_sce.perfil_autorizacion_seq
     OWNER TO postgres;
-CREATE TABLE tecabix_sce.perfil_authority(
-	id_perfil_authority bigint NOT NULL DEFAULT nextval('tecabix_sce.perfil_authority_seq'::regclass),
+CREATE TABLE tecabix_sce.perfil_autorizacion(
+	id_perfil_autorizacion bigint NOT NULL DEFAULT nextval('tecabix_sce.perfil_autorizacion_seq'::regclass),
 	id_perfil bigint NOT NULL,
-	id_authority integer NOT NULL,
-CONSTRAINT pk_perfil_authority_id_perfil_authority PRIMARY KEY (id_perfil_authority)
+	id_autorizacion integer NOT NULL,
+CONSTRAINT pk_perfil_autorizacion_id_perfil_autorizacion PRIMARY KEY (id_perfil_autorizacion)
 );
-COMMENT ON TABLE tecabix_sce.perfil_authority IS 'RELACION ENTRE PERFIL Y AUTHORITY';
-COMMENT ON COLUMN tecabix_sce.perfil_authority.id_perfil_authority IS 'IDENTIFICADOR UNICO DE LA RELACION';
-COMMENT ON COLUMN tecabix_sce.perfil_authority.id_perfil IS 'LLAVE FORANEA DEL PERFIL';
-COMMENT ON COLUMN tecabix_sce.perfil_authority.id_authority IS 'LLAVE FORANEA DEL AUTHORITY';
+COMMENT ON TABLE tecabix_sce.perfil_autorizacion IS 'RELACION ENTRE PERFIL Y autorizacion';
+COMMENT ON COLUMN tecabix_sce.perfil_autorizacion.id_perfil_autorizacion IS 'IDENTIFICADOR UNICO DE LA RELACION';
+COMMENT ON COLUMN tecabix_sce.perfil_autorizacion.id_perfil IS 'LLAVE FORANEA DEL PERFIL';
+COMMENT ON COLUMN tecabix_sce.perfil_autorizacion.id_autorizacion IS 'LLAVE FORANEA DEL autorizacion';
 
-ALTER TABLE tecabix_sce.perfil_authority ADD CONSTRAINT fk_perfil_authority_id_perfil FOREIGN KEY (id_perfil)
+ALTER TABLE tecabix_sce.perfil_autorizacion ADD CONSTRAINT fk_perfil_autorizacion_id_perfil FOREIGN KEY (id_perfil)
 REFERENCES tecabix_sce.perfil(id_perfil) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
-ALTER TABLE tecabix_sce.perfil_authority ADD CONSTRAINT fk_perfil_authority_id_authority FOREIGN KEY (id_authority)
-REFERENCES tecabix_sce.authority(id_authority) MATCH SIMPLE
+ALTER TABLE tecabix_sce.perfil_autorizacion ADD CONSTRAINT fk_perfil_autorizacion_id_autorizacion FOREIGN KEY (id_autorizacion)
+REFERENCES tecabix_sce.autorizacion(id_autorizacion) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
 
@@ -351,7 +351,7 @@ CREATE INDEX indx_usuario_correo_idx
     (correo COLLATE pg_catalog."default")
     TABLESPACE pg_default;
 
-ALTER TABLE tecabix_sce.authority ADD CONSTRAINT fk_authority_id_usuario_modificado FOREIGN KEY (id_usuario_modificado)
+ALTER TABLE tecabix_sce.autorizacion ADD CONSTRAINT fk_autorizacion_id_usuario_modificado FOREIGN KEY (id_usuario_modificado)
 REFERENCES tecabix_sce.usuario(id_usuario) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
