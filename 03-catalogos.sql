@@ -249,6 +249,8 @@ BEGIN
 
 		INSERT INTO tecabix_sce.autorizacion(nombre, descripcion, id_pre_autorizacion, id_usuario_modificado, id_estatus) VALUES ('CATALOGO', 'CATALOGO', ADMINISTRADOR_ROOT, VAR_USR_CREA, VAR_ACTIVO);
 
+		INSERT INTO tecabix_sce.autorizacion(nombre, descripcion, id_pre_autorizacion, id_usuario_modificado, id_estatus) VALUES ('CONFIGURACION', 'CONFIGURACION', ADMINISTRADOR_ROOT, VAR_USR_CREA, VAR_ACTIVO);
+
 		INSERT INTO tecabix_sce.autorizacion(nombre, descripcion, id_pre_autorizacion, id_usuario_modificado, id_estatus) VALUES ('USUARIO', 'USUARIOS', AUTENTIFICADOS, VAR_USR_CREA, VAR_ACTIVO) RETURNING id_autorizacion INTO id_aux_1;
 			INSERT INTO tecabix_sce.autorizacion(nombre, descripcion, id_pre_autorizacion, id_usuario_modificado, id_estatus) VALUES ('USUARIO_CREAR', 'CREAR USUARIOS', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 			INSERT INTO tecabix_sce.autorizacion(nombre, descripcion, id_pre_autorizacion, id_usuario_modificado, id_estatus) VALUES ('USUARIO_EDITAR', 'EDITAR LOS USUARIOS', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
