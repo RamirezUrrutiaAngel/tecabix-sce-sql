@@ -87,7 +87,7 @@ DECLARE
 BEGIN
     SELECT COUNT(*) INTO num FROM tecabix_sce.departamento d WHERE d.id_empresa = arg_id_empresa;
     SELECT n.valor INTO num_max FROM tecabix_sce.numero_maximo_registro n WHERE n.id_empresa = arg_id_empresa AND nombre = 'MAX_REG_DEPARTAMENTO';
-    RETURN num <= num_max;
+    RETURN num < num_max;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -98,7 +98,7 @@ DECLARE
 BEGIN
     SELECT COUNT(*) INTO num FROM tecabix_sce.puesto a JOIN tecabix_sce.departamento b ON a.id_departamento = b.id_departamento WHERE b.id_empresa = arg_id_empresa;
     SELECT n.valor INTO num_max FROM tecabix_sce.numero_maximo_registro n WHERE n.id_empresa = arg_id_empresa AND nombre = 'MAX_REG_PUESTO';
-    RETURN num <= num_max;
+    RETURN num < num_max;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -109,7 +109,7 @@ DECLARE
 BEGIN
     SELECT COUNT(*) INTO num FROM tecabix_sce.plantel a WHERE a.id_empresa = arg_id_empresa;
     SELECT n.valor INTO num_max FROM tecabix_sce.numero_maximo_registro n WHERE n.id_empresa = arg_id_empresa AND nombre = 'MAX_REG_PLANTEL';
-    RETURN num <= num_max;
+    RETURN num < num_max;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -120,7 +120,7 @@ DECLARE
 BEGIN
     SELECT COUNT(*) INTO num FROM tecabix_sce.perfil a WHERE a.id_empresa = arg_id_empresa;
     SELECT n.valor INTO num_max FROM tecabix_sce.numero_maximo_registro n WHERE n.id_empresa = arg_id_empresa AND nombre = 'MAX_REG_PERFIL';
-    RETURN num <= num_max;
+    RETURN num < num_max;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -131,7 +131,7 @@ DECLARE
 BEGIN
     SELECT COUNT(*) INTO num FROM tecabix_sce.trabajador a WHERE a.id_empresa = arg_id_empresa;
     SELECT n.valor INTO num_max FROM tecabix_sce.numero_maximo_registro n WHERE n.id_empresa = arg_id_empresa AND nombre = 'MAX_REG_TRABAJADOR';
-    RETURN num <= num_max;
+    RETURN num < num_max;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -142,6 +142,6 @@ DECLARE
 BEGIN
     SELECT COUNT(*) INTO num FROM tecabix_sce.turno a WHERE a.id_empresa = arg_id_empresa;
     SELECT n.valor INTO num_max FROM tecabix_sce.numero_maximo_registro n WHERE n.id_empresa = arg_id_empresa AND nombre = 'MAX_REG_TURNO';
-    RETURN num <= num_max;
+    RETURN num < num_max;
 END;
 $$ LANGUAGE plpgsql;
