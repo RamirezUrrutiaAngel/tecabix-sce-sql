@@ -236,8 +236,25 @@ BEGIN
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('[ID_TRABAJADOR]','CLAVE USUARIO', 'CLAVE USUARIO', 0, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('[ID_EMPRESA]','CLAVE EMPRESA', 'CLAVE EMPRESA', 0, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 
-		
-
+	INSERT INTO tecabix_sce.catalogo_tipo (nombre, descripcion, id_usuario_modificado, id_estatus) VALUES ('TIPO_DETALLE_PRODUCTO', 'TIPO DE DETALLE DEL PRODUCTO', VAR_USR_CREA, VAR_ACTIVO) RETURNING id_catalogo_tipo INTO id_aux_1;
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('Autor','Autor', 'Autor', 1, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('Editorial','Editorial', 'Editorial', 2, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('Edicion','Edición', 'Edición', 3, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('Marca','Marca', 'Marca', 4, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('Modelo','Modelo', 'Modelo', 5, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('Alto','Alto (mm)', 'Alto en milimetros' , 6, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('Ancho','Ancho (mm)', 'Ancho en milimetros', 7, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('Largo','Largo (mm)', 'Largo en milimetros', 8, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('Peso','Peso (g)', 'Peso en gramo', 9, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('Volumen','Volumen (ml)', 'Volumen en mililitro', 10, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('Procesador','Procesador', 'Procesador', 11, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('SSD','Almacenamiento SSD', 'Almacenamiento SSD (GB)', 12, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('HDD','Almacenamiento HDD', 'Almacenamiento HDD (GB)', 14, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('RAM','Memoria RAM', 'Memoria RAM (GB)', 14, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('Pantalla','Tamaño de la Pantalla', 'Tamaño de la Pantalla (in)', 15, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('Display','Tecnologia del display', 'Tecnologia del display', 16, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('Teclado','Tipo de teclado', 'Tipo de teclado', 17, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+	
 	/**************************** AUTORIZACION ****************************/
 
 	INSERT INTO tecabix_sce.autorizacion(nombre, descripcion, id_pre_autorizacion, id_usuario_modificado, id_estatus) VALUES ('ADMINISTRADOR_ROOT', 'SUPER USUARIOS', NULL, VAR_USR_CREA, VAR_ACTIVO) RETURNING id_autorizacion INTO ADMINISTRADOR_ROOT;
