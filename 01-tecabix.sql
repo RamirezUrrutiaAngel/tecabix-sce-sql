@@ -1546,6 +1546,138 @@ REFERENCES tecabix_sce.licencia(id_licencia) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
 
+
+CREATE SEQUENCE tecabix_sce.producto_departamento_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;
+    ALTER SEQUENCE tecabix_sce.producto_departamento_seq
+    OWNER TO postgres;
+
+CREATE TABLE tecabix_sce.producto_departamento(
+	id_producto_departamento bigint NOT NULL DEFAULT nextval('tecabix_sce.producto_departamento_seq'::regclass),
+    id_pre_producto_departamento bigint,
+    nombre character varying(40) NOT NULL,
+    descripcion character varying(250) NOT NULL,
+	id_usuario_modificado bigint NOT NULL,
+	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
+	id_estatus integer NOT NULL,
+    clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
+CONSTRAINT pk_producto_departamento_id_producto_departamento PRIMARY KEY (id_producto_departamento),
+CONSTRAINT uq_producto_departamento_clave UNIQUE (clave)
+);
+COMMENT ON TABLE tecabix_sce.producto_departamento IS 'DEPARTAMENTO DEL PRODUCTO';
+COMMENT ON COLUMN tecabix_sce.producto_departamento.id_producto_departamento IS 'IDENTIFICADOR UNICO DEL DEPARTAMENTO DEL PRODUCTO';
+COMMENT ON COLUMN tecabix_sce.producto_departamento.id_pre_producto_departamento IS 'IDENTIFICADOR UNICO DEL PRE DEPARTAMENTO DEL PRODUCTO';
+COMMENT ON COLUMN tecabix_sce.producto_departamento.nombre IS 'NOMBRE DEL DEPARTAMENTTO';
+COMMENT ON COLUMN tecabix_sce.producto_departamento.descripcion IS 'DESCRIPCION DEL DEPARTAMENTO';
+COMMENT ON COLUMN tecabix_sce.producto_departamento.id_usuario_modificado IS 'ULTIMO USUARIO QUE MODIFICO EL REGISTRO';
+COMMENT ON COLUMN tecabix_sce.producto_departamento.fecha_modificado IS 'ULTIMA FECHA QUE SE MODIFICO EL REGISTRO';
+COMMENT ON COLUMN tecabix_sce.producto_departamento.id_estatus IS 'STATUS DEL REGISTRO, CATALOGO_TIPO = ESTATUS';
+
+ALTER TABLE tecabix_sce.producto_departamento ADD CONSTRAINT fk_producto_departamento_id_pre_producto_departamento FOREIGN KEY (id_pre_producto_departamento)
+REFERENCES tecabix_sce.producto_departamento(id_producto_departamento) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+ALTER TABLE tecabix_sce.producto_departamento ADD CONSTRAINT fk_producto_departamento_id_estatus FOREIGN KEY (id_estatus)
+REFERENCES tecabix_sce.catalogo(id_catalogo) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+ALTER TABLE tecabix_sce.producto_departamento ADD CONSTRAINT fk_producto_departamento_id_usuario_modificado FOREIGN KEY (id_usuario_modificado)
+REFERENCES tecabix_sce.usuario(id_usuario) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+
+
+CREATE SEQUENCE tecabix_sce.producto_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;
+    ALTER SEQUENCE tecabix_sce.producto_seq
+    OWNER TO postgres;
+
+CREATE TABLE tecabix_sce.producto(
+	id_producto bigint NOT NULL DEFAULT nextval('tecabix_sce.producto_seq'::regclass),
+    nombre character varying(40) NOT NULL,
+    descripcion character varying(250) NOT NULL,
+    id_producto_departamento integer NOT NULL,
+	id_usuario_modificado bigint NOT NULL,
+	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
+	id_estatus integer NOT NULL,
+    clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
+CONSTRAINT pk_producto_id_producto PRIMARY KEY (id_producto),
+CONSTRAINT uq_producto_clave UNIQUE (clave)
+);
+COMMENT ON TABLE tecabix_sce.producto IS 'PRODUCTO';
+COMMENT ON COLUMN tecabix_sce.producto.id_producto IS 'IDENTIFICADOR UNICO DEL PRODUCTO';
+COMMENT ON COLUMN tecabix_sce.producto.nombre IS 'NOMBRE DEL PRODUCTO';
+COMMENT ON COLUMN tecabix_sce.producto.descripcion IS 'DESCRIPCION DEL PRODUCTO';
+COMMENT ON COLUMN tecabix_sce.producto.id_producto_departamento IS 'TIPO DE PRODUCTO';
+COMMENT ON COLUMN tecabix_sce.producto.id_usuario_modificado IS 'ULTIMO USUARIO QUE MODIFICO EL REGISTRO';
+COMMENT ON COLUMN tecabix_sce.producto.fecha_modificado IS 'ULTIMA FECHA QUE SE MODIFICO EL REGISTRO';
+COMMENT ON COLUMN tecabix_sce.producto.id_estatus IS 'STATUS DEL REGISTRO, CATALOGO_TIPO = ESTATUS';
+
+ALTER TABLE tecabix_sce.producto ADD CONSTRAINT fk_producto_id_producto_departamento FOREIGN KEY (id_producto_departamento)
+REFERENCES tecabix_sce.producto_departamento(id_producto_departamento) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+ALTER TABLE tecabix_sce.producto ADD CONSTRAINT fk_producto_id_estatus FOREIGN KEY (id_estatus)
+REFERENCES tecabix_sce.catalogo(id_catalogo) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+ALTER TABLE tecabix_sce.producto ADD CONSTRAINT fk_producto_id_usuario_modificado FOREIGN KEY (id_usuario_modificado)
+REFERENCES tecabix_sce.usuario(id_usuario) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+
+
+CREATE SEQUENCE tecabix_sce.producto_detalle_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;
+    ALTER SEQUENCE tecabix_sce.producto_detalle_seq
+    OWNER TO postgres;
+
+CREATE TABLE tecabix_sce.producto_detalle(
+	id_producto_detalle bigint NOT NULL DEFAULT nextval('tecabix_sce.producto_detalle_seq'::regclass),
+    id_producto bigint NOT NULL,
+    id_tipo integer NOT NULL,
+    valor character varying(250) NOT NULL,
+	id_usuario_modificado bigint NOT NULL,
+	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
+	id_estatus integer NOT NULL,
+    clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
+CONSTRAINT pk_producto_detalle_id_producto_detalle PRIMARY KEY (id_producto_detalle),
+CONSTRAINT uq_producto_detalle_clave UNIQUE (clave)
+);
+COMMENT ON TABLE tecabix_sce.producto_detalle IS 'DETALLES DEL PRODUCTO';
+COMMENT ON COLUMN tecabix_sce.producto_detalle.id_producto_detalle IS 'IDENTIFICADOR UNICO DEL DETALLE DEL PRODUCTO';
+COMMENT ON COLUMN tecabix_sce.producto_detalle.id_producto IS 'IDENTIFICADOR UNICO DEL PRODUCTO';
+COMMENT ON COLUMN tecabix_sce.producto_detalle.id_tipo IS 'TIPO DE DETALLE DEL PRODUCTO, CATALOGO_TIPO = TIPO_DETALLE_PRODUCTO';
+COMMENT ON COLUMN tecabix_sce.producto_detalle.id_usuario_modificado IS 'ULTIMO USUARIO QUE MODIFICO EL REGISTRO';
+COMMENT ON COLUMN tecabix_sce.producto_detalle.fecha_modificado IS 'ULTIMA FECHA QUE SE MODIFICO EL REGISTRO';
+COMMENT ON COLUMN tecabix_sce.producto_detalle.id_estatus IS 'STATUS DEL REGISTRO, CATALOGO_TIPO = ESTATUS';
+
+ALTER TABLE tecabix_sce.producto_detalle ADD CONSTRAINT fk_producto_detalle_id_tipo FOREIGN KEY (id_tipo)
+REFERENCES tecabix_sce.catalogo(id_catalogo) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+ALTER TABLE tecabix_sce.producto_detalle ADD CONSTRAINT fk_producto_detalle_id_estatus FOREIGN KEY (id_estatus)
+REFERENCES tecabix_sce.catalogo(id_catalogo) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+ALTER TABLE tecabix_sce.producto_detalle ADD CONSTRAINT fk_producto_detalle_id_usuario_modificado FOREIGN KEY (id_usuario_modificado)
+REFERENCES tecabix_sce.usuario(id_usuario) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+
+
 CREATE SEQUENCE tecabix_sce.soporte_seq
     INCREMENT 1
     START 1
