@@ -1604,7 +1604,7 @@ CREATE TABLE tecabix_sce.producto(
 	id_producto bigint NOT NULL DEFAULT nextval('tecabix_sce.producto_seq'::regclass),
     nombre character varying(40) NOT NULL,
     descripcion character varying(250) NOT NULL,
-    id_producto_departamento integer NOT NULL,
+    id_producto_departamento bigint NOT NULL,
 	id_usuario_modificado bigint NOT NULL,
 	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
 	id_estatus integer NOT NULL,
