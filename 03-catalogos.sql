@@ -358,6 +358,7 @@ BEGIN
 			INSERT INTO tecabix_sce.autorizacion(nombre, descripcion, id_pre_autorizacion, id_usuario_modificado, id_estatus) VALUES ('CAJA_REGISTRADORA_CREAR', 'CREAR CAJA', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 			INSERT INTO tecabix_sce.autorizacion(nombre, descripcion, id_pre_autorizacion, id_usuario_modificado, id_estatus) VALUES ('CAJA_REGISTRADORA_EDITAR', 'EDITAR CAJA', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 			INSERT INTO tecabix_sce.autorizacion(nombre, descripcion, id_pre_autorizacion, id_usuario_modificado, id_estatus) VALUES ('CAJA_REGISTRADORA_ABRIR', 'ABRIR CAJA', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+			INSERT INTO tecabix_sce.autorizacion(nombre, descripcion, id_pre_autorizacion, id_usuario_modificado, id_estatus) VALUES ('CAJA_REGISTRADORA_CERRAR', 'CERRAR CAJA', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 			INSERT INTO tecabix_sce.autorizacion(nombre, descripcion, id_pre_autorizacion, id_usuario_modificado, id_estatus) VALUES ('CAJA_REGISTRADORA_ELIMINAR', 'CREAR CAJA', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 			INSERT INTO tecabix_sce.autorizacion(nombre, descripcion, id_pre_autorizacion, id_usuario_modificado, id_estatus) VALUES ('CAJA_REGISTRADORA_VENTA', 'VENTA', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 			INSERT INTO tecabix_sce.autorizacion(nombre, descripcion, id_pre_autorizacion, id_usuario_modificado, id_estatus) VALUES ('CAJA_REGISTRADORA_DEPOSITO', 'DEPOSITO', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
