@@ -309,6 +309,7 @@ CREATE TABLE tecabix_sce.usuario(
 	nombre character varying(45) NOT NULL,
 	psw character varying(500) NOT NULL,
 	correo character varying(45) NOT NULL,
+    pin character varying(8),
 	id_perfil bigint,
 	id_usuario_modificado bigint,
 	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
@@ -596,6 +597,7 @@ CREATE TABLE tecabix_sce.persona_fisica(
 	id_estatus integer NOT NULL,
     clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
 CONSTRAINT pk_persona_fisica_id_persona_fisica PRIMARY KEY (id_persona_fisica),
+CONSTRAINT uq_persona_fisica_id_persona UNIQUE (id_persona),
 CONSTRAINT uq_persona_fisica_clave UNIQUE (clave)
 );
 COMMENT ON TABLE tecabix_sce.persona_fisica IS 'PERSONAS FISICAS';
@@ -1157,11 +1159,11 @@ COMMENT ON COLUMN tecabix_sce.plantel.fecha_modificado IS 'ULTIMA FECHA QUE SE M
 COMMENT ON COLUMN tecabix_sce.plantel.id_estatus IS 'STATUS DEL REGISTRO, CATALOGO_TIPO = ESTATUS';
 
 
-ALTER TABLE tecabix_sce.plantel ADD CONSTRAINT fk_trabajador_id_estatus FOREIGN KEY (id_estatus)
+ALTER TABLE tecabix_sce.plantel ADD CONSTRAINT fk_plantel_id_estatus FOREIGN KEY (id_estatus)
 REFERENCES tecabix_sce.catalogo(id_catalogo) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
-ALTER TABLE tecabix_sce.plantel ADD CONSTRAINT fk_trabajador_id_usuario_modificado FOREIGN KEY (id_usuario_modificado)
+ALTER TABLE tecabix_sce.plantel ADD CONSTRAINT fk_plantel_id_usuario_modificado FOREIGN KEY (id_usuario_modificado)
 REFERENCES tecabix_sce.usuario(id_usuario) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
@@ -1185,6 +1187,154 @@ CREATE INDEX indx_plantel_nombre
     ON tecabix_sce.plantel USING btree
     (nombre COLLATE pg_catalog."default")
     TABLESPACE pg_default;
+
+
+
+CREATE SEQUENCE tecabix_sce.caja_registradora_seq
+    INCREMENT 1
+    START 69327257600
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;
+    ALTER SEQUENCE tecabix_sce.caja_registradora_seq
+    OWNER TO postgres;
+
+CREATE TABLE tecabix_sce.caja_registradora(
+    id_caja_registradora bigint NOT NULL DEFAULT nextval('tecabix_sce.caja_registradora_seq'::regclass),
+    id_licencia bigint NOT NULL,
+    nombre character varying(50) NOT NULL,
+    descripcion character varying(300) NOT NULL,
+    marca character varying(50) NOT NULL,
+    modelo character varying(50) NOT NULL,
+    id_plantel bigint NOT NULL,
+    id_usuario_modificado bigint NOT NULL,
+    fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
+    id_estatus integer NOT NULL,
+    clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
+CONSTRAINT pk_caja_registradora_id_caja_registradora PRIMARY KEY (id_caja_registradora),
+CONSTRAINT uq_caja_registradora_id_licencia UNIQUE (id_licencia),
+CONSTRAINT uq_caja_registradora_clave UNIQUE (clave)
+);
+COMMENT ON TABLE tecabix_sce.caja_registradora IS 'CAJA REGISTRADORA';
+COMMENT ON COLUMN tecabix_sce.caja_registradora.id_caja_registradora IS 'IDENTIFICADOR UNICO DE LA CAJA';
+COMMENT ON COLUMN tecabix_sce.caja_registradora.id_licencia IS 'IDENTIFICADOR UNICO DE LA LICENCIA';
+COMMENT ON COLUMN tecabix_sce.caja_registradora.nombre IS 'NOMBRE DE LA CAJA';
+COMMENT ON COLUMN tecabix_sce.caja_registradora.descripcion IS 'DESCRIPCION DE LA CAJA';
+COMMENT ON COLUMN tecabix_sce.caja_registradora.marca IS 'MARCA DE LA CAJA';
+COMMENT ON COLUMN tecabix_sce.caja_registradora.modelo IS 'MODELO DE LA CAJA';
+COMMENT ON COLUMN tecabix_sce.caja_registradora.id_plantel IS 'ID DEL PLANTEL QUE PERTENECE LA CAJA';
+COMMENT ON COLUMN tecabix_sce.caja_registradora.id_usuario_modificado IS 'ULTIMO USUARIO QUE MODIFICO EL REGISTRO';
+COMMENT ON COLUMN tecabix_sce.caja_registradora.fecha_modificado IS 'ULTIMA FECHA QUE SE MODIFICO EL REGISTRO';
+COMMENT ON COLUMN tecabix_sce.caja_registradora.id_estatus IS 'STATUS DEL REGISTRO, CATALOGO_TIPO = ESTATUS';
+
+
+ALTER TABLE tecabix_sce.caja_registradora ADD CONSTRAINT fk_caja_registradora_id_estatus FOREIGN KEY (id_estatus)
+REFERENCES tecabix_sce.catalogo(id_catalogo) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+ALTER TABLE tecabix_sce.caja_registradora ADD CONSTRAINT fk_caja_registradora_id_usuario_modificado FOREIGN KEY (id_usuario_modificado)
+REFERENCES tecabix_sce.usuario(id_usuario) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+ALTER TABLE tecabix_sce.caja_registradora ADD CONSTRAINT fk_caja_registradora_id_plantel FOREIGN KEY (id_plantel)
+REFERENCES tecabix_sce.plantel(id_plantel) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+
+
+CREATE SEQUENCE tecabix_sce.caja_registro_seq
+    INCREMENT 1
+    START 69327257600
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;
+    ALTER SEQUENCE tecabix_sce.caja_registro_seq
+    OWNER TO postgres;
+
+CREATE TABLE tecabix_sce.caja_registro(
+    id_caja_registro bigint NOT NULL DEFAULT nextval('tecabix_sce.caja_registro_seq'::regclass),
+    id_caja_registradora bigint NOT NULL,
+    saldo_inicial integer NOT NULL DEFAULT 0,
+    saldo integer NOT NULL DEFAULT 0,
+    saldo_final integer DEFAULT 0,
+    id_usuario_corte bigint,
+    fecha_corte timestamp without time zone,
+    id_usuario_modificado bigint NOT NULL,
+    fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
+    id_estatus integer NOT NULL,
+    clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
+CONSTRAINT pk_caja_registro_id_caja_registro PRIMARY KEY (id_caja_registro),
+CONSTRAINT uq_caja_registro_clave UNIQUE (clave)
+);
+COMMENT ON TABLE tecabix_sce.caja_registro IS 'REGISTRO DE CAJA';
+COMMENT ON COLUMN tecabix_sce.caja_registro.id_caja_registro IS 'IDENTIFICADOR UNICO DEL REGISTRO DE LA CAJA';
+COMMENT ON COLUMN tecabix_sce.caja_registro.id_caja_registradora IS 'IDENTIFICADOR UNICO DE LA CAJA';
+COMMENT ON COLUMN tecabix_sce.caja_registro.saldo_inicial IS 'SALDO INICIAL';
+COMMENT ON COLUMN tecabix_sce.caja_registro.saldo IS 'SALDO ACTUAL';
+COMMENT ON COLUMN tecabix_sce.caja_registro.saldo_final IS 'SALDO FINAL';
+COMMENT ON COLUMN tecabix_sce.caja_registro.id_usuario_corte IS 'USUARIO QUE REALIZO EL CORTE';
+COMMENT ON COLUMN tecabix_sce.caja_registro.fecha_corte IS 'FECHA EN QUE SE REALIZO EL CORTE';
+COMMENT ON COLUMN tecabix_sce.caja_registro.id_usuario_modificado IS 'ULTIMO USUARIO QUE MODIFICO EL REGISTRO';
+COMMENT ON COLUMN tecabix_sce.caja_registro.fecha_modificado IS 'ULTIMA FECHA QUE SE MODIFICO EL REGISTRO';
+COMMENT ON COLUMN tecabix_sce.caja_registro.id_estatus IS 'STATUS DEL REGISTRO, CATALOGO_TIPO = ESTATUS';
+
+
+ALTER TABLE tecabix_sce.caja_registro ADD CONSTRAINT fk_caja_registro_id_estatus FOREIGN KEY (id_estatus)
+REFERENCES tecabix_sce.catalogo(id_catalogo) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+ALTER TABLE tecabix_sce.caja_registro ADD CONSTRAINT fk_caja_registro_id_usuario_modificado FOREIGN KEY (id_usuario_modificado)
+REFERENCES tecabix_sce.usuario(id_usuario) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+ALTER TABLE tecabix_sce.caja_registro ADD CONSTRAINT fk_caja_registro_id_usuario_corte FOREIGN KEY (id_usuario_corte)
+REFERENCES tecabix_sce.usuario(id_usuario) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+
+
+CREATE SEQUENCE tecabix_sce.caja_registro_transaccion_seq
+    INCREMENT 1
+    START 69327257600
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;
+    ALTER SEQUENCE tecabix_sce.caja_registro_transaccion_seq
+    OWNER TO postgres;
+
+CREATE TABLE tecabix_sce.caja_registro_transaccion(
+    id_caja_registro_transaccion bigint NOT NULL DEFAULT nextval('tecabix_sce.caja_registro_transaccion_seq'::regclass),
+    id_caja_registro bigint NOT NULL,
+    id_tipo integer NOT NULL,
+    saldo_anterior integer NOT NULL DEFAULT 0,
+    transaccion integer NOT NULL DEFAULT 0,
+    saldo integer NOT NULL DEFAULT 0,
+    id_usuario_modificado bigint NOT NULL,
+    fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
+    id_estatus integer NOT NULL,
+    clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
+CONSTRAINT pk_caja_registro_transaccion_id_caja_registro_transaccion PRIMARY KEY (id_caja_registro_transaccion),
+CONSTRAINT uq_caja_registro_transaccion_clave UNIQUE (clave)
+);
+COMMENT ON TABLE tecabix_sce.caja_registro_transaccion IS 'REGISTRO DE TRANSACCION DE LA CAJA';
+COMMENT ON COLUMN tecabix_sce.caja_registro_transaccion.id_caja_registro_transaccion IS 'IDENTIFICADOR UNICO DEL REGISTRO DE TRANSACCION DE LA CAJA';
+COMMENT ON COLUMN tecabix_sce.caja_registro_transaccion.id_caja_registro IS 'IDENTIFICADOR UNICO DEL REGISTRO DE LA CAJA';
+COMMENT ON COLUMN tecabix_sce.caja_registro_transaccion.id_tipo IS 'STATUS DEL REGISTRO, CATALOGO_TIPO = TIPO_CAJA_REGISTRO';
+COMMENT ON COLUMN tecabix_sce.caja_registro_transaccion.saldo_anterior IS 'SALDO ANTERIOR';
+COMMENT ON COLUMN tecabix_sce.caja_registro_transaccion.transaccion IS 'TRANSACCION';
+COMMENT ON COLUMN tecabix_sce.caja_registro_transaccion.saldo IS 'SALDO DESPUES DE LA TRANSACCION';
+COMMENT ON COLUMN tecabix_sce.caja_registro_transaccion.id_usuario_modificado IS 'ULTIMO USUARIO QUE MODIFICO EL REGISTRO';
+COMMENT ON COLUMN tecabix_sce.caja_registro_transaccion.fecha_modificado IS 'ULTIMA FECHA QUE SE MODIFICO EL REGISTRO';
+COMMENT ON COLUMN tecabix_sce.caja_registro_transaccion.id_estatus IS 'STATUS DEL REGISTRO, CATALOGO_TIPO = ESTATUS';
+
+
+ALTER TABLE tecabix_sce.caja_registro_transaccion ADD CONSTRAINT fk_caja_registro_transaccion_id_estatus FOREIGN KEY (id_estatus)
+REFERENCES tecabix_sce.catalogo(id_catalogo) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+ALTER TABLE tecabix_sce.caja_registro_transaccion ADD CONSTRAINT fk_caja_registro_transaccion_id_usuario_modificado FOREIGN KEY (id_usuario_modificado)
+REFERENCES tecabix_sce.usuario(id_usuario) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
 
 
@@ -1487,6 +1637,10 @@ ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
 ALTER TABLE tecabix_sce.licencia ADD CONSTRAINT fk_licencia_id_servicio FOREIGN KEY (id_servicio)
 REFERENCES tecabix_sce.servicio(id_servicio) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+ALTER TABLE tecabix_sce.caja_registradora ADD CONSTRAINT fk_caja_registradora_id_licencia FOREIGN KEY (id_licencia)
+REFERENCES tecabix_sce.licencia(id_licencia) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
 CREATE INDEX indx_licencia_nombre

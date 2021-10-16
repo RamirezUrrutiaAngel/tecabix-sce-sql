@@ -258,6 +258,12 @@ BEGIN
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('Resolucion','Resolución de pantalla', 'Resolución de pantalla', 1, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('Teclado','Tipo de teclado', 'Tipo de teclado', 1, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 	
+	INSERT INTO tecabix_sce.catalogo_tipo (nombre, descripcion, id_usuario_modificado, id_estatus) VALUES ('TIPO_CAJA_REGISTRO', 'REGISTRO DE CAJA', VAR_USR_CREA, VAR_ACTIVO) RETURNING id_catalogo_tipo INTO id_aux_1;
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('VENTA','VENTRA', 'VENTA', 1, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('DEPOSITO','DEPOSITO', 'DEPOSITO', 1, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('RETIRO','RETIRO', 'RETIRO', 1, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('DEVOLUCION','DEVOLUCION', 'DEVOLUCION', 1, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+
 	/**************************** AUTORIZACION ****************************/
 
 	INSERT INTO tecabix_sce.autorizacion(nombre, descripcion, id_pre_autorizacion, id_usuario_modificado, id_estatus) VALUES ('ADMINISTRADOR_ROOT', 'SUPER USUARIOS', NULL, VAR_USR_CREA, VAR_ACTIVO) RETURNING id_autorizacion INTO ADMINISTRADOR_ROOT;
@@ -347,6 +353,17 @@ BEGIN
 			INSERT INTO tecabix_sce.autorizacion(nombre, descripcion, id_pre_autorizacion, id_usuario_modificado, id_estatus) VALUES ('TURNO_CREAR', 'CREAR TURNO', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 			INSERT INTO tecabix_sce.autorizacion(nombre, descripcion, id_pre_autorizacion, id_usuario_modificado, id_estatus) VALUES ('TURNO_EDITAR', 'EDITAR TURNO', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 			INSERT INTO tecabix_sce.autorizacion(nombre, descripcion, id_pre_autorizacion, id_usuario_modificado, id_estatus) VALUES ('TURNO_ELIMINAR', 'ELIMINAR TURNO', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+
+		INSERT INTO tecabix_sce.autorizacion(nombre, descripcion, id_pre_autorizacion, id_usuario_modificado, id_estatus) VALUES ('CAJA_REGISTRADORA', 'CAJA REGISTRADORA', AUTENTIFICADOS, VAR_USR_CREA, VAR_ACTIVO) RETURNING id_autorizacion INTO id_aux_1;
+			INSERT INTO tecabix_sce.autorizacion(nombre, descripcion, id_pre_autorizacion, id_usuario_modificado, id_estatus) VALUES ('CAJA_REGISTRADORA_CREAR', 'CREAR CAJA', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+			INSERT INTO tecabix_sce.autorizacion(nombre, descripcion, id_pre_autorizacion, id_usuario_modificado, id_estatus) VALUES ('CAJA_REGISTRADORA_EDITAR', 'EDITAR CAJA', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+			INSERT INTO tecabix_sce.autorizacion(nombre, descripcion, id_pre_autorizacion, id_usuario_modificado, id_estatus) VALUES ('CAJA_REGISTRADORA_ABRIR', 'ABRIR CAJA', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+			INSERT INTO tecabix_sce.autorizacion(nombre, descripcion, id_pre_autorizacion, id_usuario_modificado, id_estatus) VALUES ('CAJA_REGISTRADORA_ELIMINAR', 'CREAR CAJA', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+			INSERT INTO tecabix_sce.autorizacion(nombre, descripcion, id_pre_autorizacion, id_usuario_modificado, id_estatus) VALUES ('CAJA_REGISTRADORA_VENTA', 'VENTA', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+			INSERT INTO tecabix_sce.autorizacion(nombre, descripcion, id_pre_autorizacion, id_usuario_modificado, id_estatus) VALUES ('CAJA_REGISTRADORA_DEPOSITO', 'DEPOSITO', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+			INSERT INTO tecabix_sce.autorizacion(nombre, descripcion, id_pre_autorizacion, id_usuario_modificado, id_estatus) VALUES ('CAJA_REGISTRADORA_RETIRO', 'RETIRO', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+			INSERT INTO tecabix_sce.autorizacion(nombre, descripcion, id_pre_autorizacion, id_usuario_modificado, id_estatus) VALUES ('CAJA_REGISTRADORA_DEVOLUCION', 'DEVOLUCION', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+
 
 	/**************************** BANCO ****************************/
 
