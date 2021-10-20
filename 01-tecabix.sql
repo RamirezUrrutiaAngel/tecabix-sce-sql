@@ -2099,6 +2099,48 @@ REFERENCES tecabix_sce.correo_msj(id_correo_msj) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
 
+CREATE SEQUENCE tecabix_sce.cuenta_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 1000123456784321
+    CACHE 1;
+    ALTER SEQUENCE tecabix_sce.cuenta_seq
+    OWNER TO postgres;
+
+CREATE TABLE tecabix_sce.cuenta(
+	id_cuenta bigint NOT NULL DEFAULT nextval('tecabix_sce.cuenta_seq'::regclass),
+    id_persona bigint NOT NULL,
+    saldo integer NOT NULL DEFAULT 0,
+	fecha_expiracion date,
+	id_usuario_modificado bigint NOT NULL,
+	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
+	id_estatus integer NOT NULL,
+    clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
+CONSTRAINT pk_cuenta_id_cuenta PRIMARY KEY (id_cuenta),
+CONSTRAINT uq_cuenta_id_persona UNIQUE (id_persona),
+CONSTRAINT uq_cuenta_clave UNIQUE (clave)
+);
+COMMENT ON TABLE tecabix_sce.cuenta IS 'CUENTA';
+COMMENT ON COLUMN tecabix_sce.cuenta.id_cuenta IS 'IDENTIFICADOR UNICO DE LA CUENTA';
+COMMENT ON COLUMN tecabix_sce.cuenta.id_persona IS 'LLAVE FORANEA DE LA PERSONA';
+COMMENT ON COLUMN tecabix_sce.cuenta.saldo IS 'SALDO DE LA CUENTA';
+COMMENT ON COLUMN tecabix_sce.cuenta.fecha_expiracion IS 'FECHA DE EXPIRACION DE LA CUENTA';
+COMMENT ON COLUMN tecabix_sce.cuenta.id_usuario_modificado IS 'ULTIMO USUARIO QUE MODIFICO EL REGISTRO';
+COMMENT ON COLUMN tecabix_sce.cuenta.fecha_modificado IS 'ULTIMA FECHA QUE SE MODIFICO EL REGISTRO';
+COMMENT ON COLUMN tecabix_sce.cuenta.id_estatus IS 'STATUS DEL REGISTRO, CATALOGO_TIPO = ESTATUS';
+
+ALTER TABLE tecabix_sce.cuenta ADD CONSTRAINT fk_cuenta_id_estatus FOREIGN KEY (id_estatus)
+REFERENCES tecabix_sce.catalogo(id_catalogo) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+ALTER TABLE tecabix_sce.cuenta ADD CONSTRAINT fk_cuenta_id_usuario_modificado FOREIGN KEY (id_usuario_modificado)
+REFERENCES tecabix_sce.usuario(id_usuario) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+ALTER TABLE tecabix_sce.cuenta ADD CONSTRAINT fk_cuenta_id_persona FOREIGN KEY (id_persona)
+REFERENCES tecabix_sce.persona(id_persona) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
 
 
