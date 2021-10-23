@@ -2112,7 +2112,7 @@ CREATE TABLE tecabix_sce.cuenta(
 	id_cuenta bigint NOT NULL DEFAULT nextval('tecabix_sce.cuenta_seq'::regclass),
     id_persona bigint NOT NULL,
     saldo integer NOT NULL DEFAULT 0,
-	fecha_expiracion date,
+	fecha_expiracion timestamp without time zone NOT NULL DEFAULT now (),
 	id_usuario_modificado bigint NOT NULL,
 	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
 	id_estatus integer NOT NULL,
