@@ -1386,6 +1386,13 @@ ALTER TABLE tecabix_sce.caja_registro_transaccion_item ADD CONSTRAINT fk_caja_re
 REFERENCES tecabix_sce.usuario(id_usuario) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
+ALTER TABLE tecabix_sce.caja_registro_transaccion_item ADD CONSTRAINT fk_caja_registro_transaccion_item_id_unidad FOREIGN KEY (id_unidad)
+REFERENCES tecabix_sce.catalogo(id_catalogo) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+ALTER TABLE tecabix_sce.caja_registro_transaccion_item ADD CONSTRAINT fk_caja_registro_transaccion_item_id_tabla FOREIGN KEY (id_tabla)
+REFERENCES tecabix_sce.catalogo(id_catalogo) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
 
 CREATE SEQUENCE tecabix_sce.configuracion_seq
