@@ -1368,7 +1368,7 @@ COMMENT ON TABLE tecabix_sce.caja_registro_transaccion_item IS 'ITEM DE REGISTRO
 COMMENT ON COLUMN tecabix_sce.caja_registro_transaccion_item.id_caja_registro_transaccion_item IS 'IDENTIFICADOR UNICO DEL ITEM DEL REGISTRO DE TRANSACCION DE LA CAJA';
 COMMENT ON COLUMN tecabix_sce.caja_registro_transaccion_item.id_caja_registro_transaccion IS 'IDENTIFICADOR UNICO DEL REGISTRO DE TRANSACCION DE LA CAJA';
 COMMENT ON COLUMN tecabix_sce.caja_registro_transaccion_item.descripcion IS 'DESCRIPCION DEL ITEM';
-COMMENT ON COLUMN tecabix_sce.caja_registro_transaccion_item.id_unidad IS 'TIPO DE UNIDAD DEL REGISTRO, CATALOGO_TIPO = ESTATUS';
+COMMENT ON COLUMN tecabix_sce.caja_registro_transaccion_item.id_unidad IS 'TIPO DE UNIDAD DEL REGISTRO, CATALOGO_TIPO = UNIDAD_DE_MEDIDA';
 COMMENT ON COLUMN tecabix_sce.caja_registro_transaccion_item.precio_unitario IS 'PRECIO UNITARIO DEL ITEM';
 COMMENT ON COLUMN tecabix_sce.caja_registro_transaccion_item.precio_grupal IS 'PRECIO GRUPAL DEL ITEM';
 COMMENT ON COLUMN tecabix_sce.caja_registro_transaccion_item.id_tabla IS 'NOMBRE DE LA TABLA QUE HACE REFERENCIA EL IDENTIFICADOR, CATALOGO_TIPO = ID_TABLA_TRANSACCION_CAJA';

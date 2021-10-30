@@ -260,9 +260,14 @@ BEGIN
 	
 	INSERT INTO tecabix_sce.catalogo_tipo (nombre, descripcion, id_usuario_modificado, id_estatus) VALUES ('TIPO_CAJA_REGISTRO', 'REGISTRO DE CAJA', VAR_USR_CREA, VAR_ACTIVO) RETURNING id_catalogo_tipo INTO id_aux_1;
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('VENTA','VENTRA', 'VENTA', 1, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
-	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('DEPOSITO','DEPOSITO', 'DEPOSITO', 1, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
-	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('RETIRO','RETIRO', 'RETIRO', 1, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
-	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('DEVOLUCION','DEVOLUCION', 'DEVOLUCION', 1, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('DEPOSITO','DEPOSITO', 'DEPOSITO', 2, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('RETIRO','RETIRO', 'RETIRO', 3, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('DEVOLUCION','DEVOLUCION', 'DEVOLUCION', 4, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+
+	INSERT INTO tecabix_sce.catalogo_tipo (nombre, descripcion, id_usuario_modificado, id_estatus) VALUES ('ID_TABLA_TRANSACCION_CAJA', 'TABLAS PARA TRANSACCION', VAR_USR_CREA, VAR_ACTIVO) RETURNING id_catalogo_tipo INTO id_aux_1;
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('PRODUCTO','TABLA PRODUCTO', 'PRODUCTO', 1, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('CUENTA','TABLA CUENTA', 'CUENTA', 2, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+
 
 	/**************************** AUTORIZACION ****************************/
 
