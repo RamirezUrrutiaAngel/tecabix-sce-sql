@@ -1338,6 +1338,56 @@ ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
 
 
+CREATE SEQUENCE tecabix_sce.caja_registro_transaccion_item_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;
+    ALTER SEQUENCE tecabix_sce.caja_registro_transaccion_item_seq
+    OWNER TO postgres;
+
+CREATE TABLE tecabix_sce.caja_registro_transaccion_item(
+    id_caja_registro_transaccion_item bigint NOT NULL DEFAULT nextval('tecabix_sce.caja_registro_transaccion_item_seq'::regclass),
+    id_caja_registro_transaccion bigint NOT NULL,
+    descripcion character varying(20) NOT NULL,
+    cantidad integer NOT NULL DEFAULT 1,
+    id_unidad integer NOT NULL,
+    precio_unitario integer NOT NULL DEFAULT 0,
+    precio_grupal integer NOT NULL DEFAULT 0,
+    id_tabla integer NOT NULL,
+    identificador bigint NOT NULL,
+    id_usuario_modificado bigint NOT NULL,
+    fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
+    id_estatus integer NOT NULL,
+    clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
+CONSTRAINT pk_caja_registro_transaccion_item_id_caja_registro_transaccion_item PRIMARY KEY (id_caja_registro_transaccion_item),
+CONSTRAINT uq_caja_registro_transaccion_item_clave UNIQUE (clave)
+);
+COMMENT ON TABLE tecabix_sce.caja_registro_transaccion_item IS 'ITEM DE REGISTRO DE TRANSACCION DE LA CAJA';
+COMMENT ON COLUMN tecabix_sce.caja_registro_transaccion_item.id_caja_registro_transaccion_item IS 'IDENTIFICADOR UNICO DEL ITEM DEL REGISTRO DE TRANSACCION DE LA CAJA';
+COMMENT ON COLUMN tecabix_sce.caja_registro_transaccion_item.id_caja_registro_transaccion IS 'IDENTIFICADOR UNICO DEL REGISTRO DE TRANSACCION DE LA CAJA';
+COMMENT ON COLUMN tecabix_sce.caja_registro_transaccion_item.descripcion IS 'DESCRIPCION DEL ITEM';
+COMMENT ON COLUMN tecabix_sce.caja_registro_transaccion_item.id_unidad IS 'TIPO DE UNIDAD DEL REGISTRO, CATALOGO_TIPO = ESTATUS';
+COMMENT ON COLUMN tecabix_sce.caja_registro_transaccion_item.precio_unitario IS 'PRECIO UNITARIO DEL ITEM';
+COMMENT ON COLUMN tecabix_sce.caja_registro_transaccion_item.precio_grupal IS 'PRECIO GRUPAL DEL ITEM';
+COMMENT ON COLUMN tecabix_sce.caja_registro_transaccion_item.id_tabla IS 'NOMBRE DE LA TABLA QUE HACE REFERENCIA EL IDENTIFICADOR, CATALOGO_TIPO = ID_TABLA_TRANSACCION_CAJA';
+COMMENT ON COLUMN tecabix_sce.caja_registro_transaccion_item.identificador IS 'ID DE LA TABLA DEL ITEM';
+COMMENT ON COLUMN tecabix_sce.caja_registro_transaccion_item.id_usuario_modificado IS 'ULTIMO USUARIO QUE MODIFICO EL REGISTRO';
+COMMENT ON COLUMN tecabix_sce.caja_registro_transaccion_item.fecha_modificado IS 'ULTIMA FECHA QUE SE MODIFICO EL REGISTRO';
+COMMENT ON COLUMN tecabix_sce.caja_registro_transaccion_item.id_estatus IS 'STATUS DEL REGISTRO, CATALOGO_TIPO = ESTATUS';
+
+
+ALTER TABLE tecabix_sce.caja_registro_transaccion_item ADD CONSTRAINT fk_caja_registro_transaccion_item_id_estatus FOREIGN KEY (id_estatus)
+REFERENCES tecabix_sce.catalogo(id_catalogo) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+ALTER TABLE tecabix_sce.caja_registro_transaccion_item ADD CONSTRAINT fk_caja_registro_transaccion_item_id_usuario_modificado FOREIGN KEY (id_usuario_modificado)
+REFERENCES tecabix_sce.usuario(id_usuario) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+
+
 CREATE SEQUENCE tecabix_sce.configuracion_seq
     INCREMENT 1
     START 1
