@@ -1355,8 +1355,8 @@ CREATE TABLE tecabix_sce.caja_registro_transaccion_item(
     id_unidad integer NOT NULL,
     precio_unitario integer NOT NULL DEFAULT 0,
     precio_grupal integer NOT NULL DEFAULT 0,
-    id_tabla integer NOT NULL,
-    identificador bigint NOT NULL,
+    id_entidad integer NOT NULL,
+    identificador uuid NOT NULL DEFAULT uuid_generate_v4 (),
     id_usuario_modificado bigint NOT NULL,
     fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
     id_estatus integer NOT NULL,
@@ -1371,7 +1371,7 @@ COMMENT ON COLUMN tecabix_sce.caja_registro_transaccion_item.descripcion IS 'DES
 COMMENT ON COLUMN tecabix_sce.caja_registro_transaccion_item.id_unidad IS 'TIPO DE UNIDAD DEL REGISTRO, CATALOGO_TIPO = UNIDAD_DE_MEDIDA';
 COMMENT ON COLUMN tecabix_sce.caja_registro_transaccion_item.precio_unitario IS 'PRECIO UNITARIO DEL ITEM';
 COMMENT ON COLUMN tecabix_sce.caja_registro_transaccion_item.precio_grupal IS 'PRECIO GRUPAL DEL ITEM';
-COMMENT ON COLUMN tecabix_sce.caja_registro_transaccion_item.id_tabla IS 'NOMBRE DE LA TABLA QUE HACE REFERENCIA EL IDENTIFICADOR, CATALOGO_TIPO = ID_TABLA_TRANSACCION_CAJA';
+COMMENT ON COLUMN tecabix_sce.caja_registro_transaccion_item.id_entidad IS 'NOMBRE DE LA TABLA QUE HACE REFERENCIA EL IDENTIFICADOR, CATALOGO_TIPO = ID_TABLA_TRANSACCION_CAJA';
 COMMENT ON COLUMN tecabix_sce.caja_registro_transaccion_item.identificador IS 'ID DE LA TABLA DEL ITEM';
 COMMENT ON COLUMN tecabix_sce.caja_registro_transaccion_item.id_usuario_modificado IS 'ULTIMO USUARIO QUE MODIFICO EL REGISTRO';
 COMMENT ON COLUMN tecabix_sce.caja_registro_transaccion_item.fecha_modificado IS 'ULTIMA FECHA QUE SE MODIFICO EL REGISTRO';
@@ -1390,7 +1390,7 @@ ALTER TABLE tecabix_sce.caja_registro_transaccion_item ADD CONSTRAINT fk_caja_re
 REFERENCES tecabix_sce.catalogo(id_catalogo) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
-ALTER TABLE tecabix_sce.caja_registro_transaccion_item ADD CONSTRAINT fk_caja_registro_transaccion_item_id_tabla FOREIGN KEY (id_tabla)
+ALTER TABLE tecabix_sce.caja_registro_transaccion_item ADD CONSTRAINT fk_caja_registro_transaccion_item_id_entidad FOREIGN KEY (id_entidad)
 REFERENCES tecabix_sce.catalogo(id_catalogo) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
@@ -1841,6 +1841,111 @@ REFERENCES tecabix_sce.catalogo(id_catalogo) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
 ALTER TABLE tecabix_sce.producto ADD CONSTRAINT fk_producto_id_usuario_modificado FOREIGN KEY (id_usuario_modificado)
+REFERENCES tecabix_sce.usuario(id_usuario) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+
+
+CREATE SEQUENCE tecabix_sce.producto_lote_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;
+    ALTER SEQUENCE tecabix_sce.producto_lote_seq
+    OWNER TO postgres;
+
+CREATE TABLE tecabix_sce.producto_lote(
+	id_producto_lote bigint NOT NULL DEFAULT nextval('tecabix_sce.producto_lote_seq'::regclass),
+    id_plantel bigint NOT NULL,
+    id_producto bigint NOT NULL,
+    cantidad_inicial integer NOT NULL,
+    cantidad integer NOT NULL,
+    ubicacion character varying(45) NOT NULL,
+    vencimiento date NOT NULL DEFAULT now (),
+	id_usuario_modificado bigint NOT NULL,
+	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
+	id_estatus integer NOT NULL,
+    clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
+CONSTRAINT pk_producto_lote_id_producto_lote PRIMARY KEY (id_producto_lote),
+CONSTRAINT uq_producto_lote_clave UNIQUE (clave)
+);
+COMMENT ON TABLE tecabix_sce.producto_lote IS 'LOTE DEL PRODUCTO';
+COMMENT ON COLUMN tecabix_sce.producto_lote.id_producto_lote IS 'IDENTIFICADOR UNICO DEL LOTE DEL PRODUCTO';
+COMMENT ON COLUMN tecabix_sce.producto_lote.id_plantel IS 'ID DEL PLANTEL QUE PERTENECE EL LOTE DEL PRODUCTO';
+COMMENT ON COLUMN tecabix_sce.producto_lote.id_producto IS 'IDENTIFICADOR UNICO DEL PRODUCTO';
+COMMENT ON COLUMN tecabix_sce.producto_lote.cantidad_inicial IS 'CANTIDAD INICIAL DEL PRODUCTO';
+COMMENT ON COLUMN tecabix_sce.producto_lote.cantidad IS 'CANTIDAD DEL PRODUCTO';
+COMMENT ON COLUMN tecabix_sce.producto_lote.ubicacion IS 'DONDE SE ENCUENTRA FISICAMENTE EL PRODUCTO';
+COMMENT ON COLUMN tecabix_sce.producto_lote.vencimiento IS 'CADUCIDAD DEL PRODUCTO';
+COMMENT ON COLUMN tecabix_sce.producto_lote.id_usuario_modificado IS 'ULTIMO USUARIO QUE MODIFICO EL REGISTRO';
+COMMENT ON COLUMN tecabix_sce.producto_lote.fecha_modificado IS 'ULTIMA FECHA QUE SE MODIFICO EL REGISTRO';
+COMMENT ON COLUMN tecabix_sce.producto_lote.id_estatus IS 'STATUS DEL REGISTRO, CATALOGO_TIPO = ESTATUS';
+
+ALTER TABLE tecabix_sce.producto_lote ADD CONSTRAINT fk_producto_lote_id_plantel FOREIGN KEY (id_plantel)
+REFERENCES tecabix_sce.plantel(id_plantel) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+ALTER TABLE tecabix_sce.producto_lote ADD CONSTRAINT fk_producto_lote_id_producto FOREIGN KEY (id_producto)
+REFERENCES tecabix_sce.producto(id_producto) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+ALTER TABLE tecabix_sce.producto_lote ADD CONSTRAINT fk_producto_lote_id_estatus FOREIGN KEY (id_estatus)
+REFERENCES tecabix_sce.catalogo(id_catalogo) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+ALTER TABLE tecabix_sce.producto_lote ADD CONSTRAINT fk_producto_lote_id_usuario_modificado FOREIGN KEY (id_usuario_modificado)
+REFERENCES tecabix_sce.usuario(id_usuario) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+
+
+CREATE SEQUENCE tecabix_sce.producto_venta_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;
+    ALTER SEQUENCE tecabix_sce.producto_venta_seq
+    OWNER TO postgres;
+
+CREATE TABLE tecabix_sce.producto_venta(
+	id_producto_venta bigint NOT NULL DEFAULT nextval('tecabix_sce.producto_venta_seq'::regclass),
+    id_producto bigint NOT NULL,
+    precio integer NOT NULL,
+    costo integer NOT NULL,
+    id_unidad integer NOT NULL,
+	id_usuario_modificado bigint NOT NULL,
+	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
+	id_estatus integer NOT NULL,
+    clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
+CONSTRAINT pk_producto_venta_id_producto_venta PRIMARY KEY (id_producto_venta),
+CONSTRAINT uq_producto_venta_id_producto UNIQUE (id_producto),
+CONSTRAINT uq_producto_venta_clave UNIQUE (clave)
+);
+COMMENT ON TABLE tecabix_sce.producto_venta IS 'PRODUCTO VENTA';
+COMMENT ON COLUMN tecabix_sce.producto_venta.id_producto_venta IS 'PRODUCTO DE VENTA';
+COMMENT ON COLUMN tecabix_sce.producto_venta.id_producto IS 'PRODUCTO';
+COMMENT ON COLUMN tecabix_sce.producto_venta.precio IS 'PRECIO DEL PRODUCTO POR UNIDAD';
+COMMENT ON COLUMN tecabix_sce.producto_venta.costo IS 'COSTO DEL PRODUCTO POR UNIDAD';
+COMMENT ON COLUMN tecabix_sce.producto_venta.id_unidad IS 'TIPO DE UNIDAD DEL REGISTRO, CATALOGO_TIPO = UNIDAD_DE_MEDIDA';
+COMMENT ON COLUMN tecabix_sce.producto_venta.id_usuario_modificado IS 'ULTIMO USUARIO QUE MODIFICO EL REGISTRO';
+COMMENT ON COLUMN tecabix_sce.producto_venta.fecha_modificado IS 'ULTIMA FECHA QUE SE MODIFICO EL REGISTRO';
+COMMENT ON COLUMN tecabix_sce.producto_venta.id_estatus IS 'STATUS DEL REGISTRO, CATALOGO_TIPO = ESTATUS';
+
+ALTER TABLE tecabix_sce.producto_venta ADD CONSTRAINT fk_producto_venta_id_unidad FOREIGN KEY (id_unidad)
+REFERENCES tecabix_sce.catalogo(id_catalogo) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+ALTER TABLE tecabix_sce.producto_venta ADD CONSTRAINT fk_producto_venta_id_producto FOREIGN KEY (id_producto)
+REFERENCES tecabix_sce.producto(id_producto) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+ALTER TABLE tecabix_sce.producto_venta ADD CONSTRAINT fk_producto_venta_id_estatus FOREIGN KEY (id_estatus)
+REFERENCES tecabix_sce.catalogo(id_catalogo) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+ALTER TABLE tecabix_sce.producto_venta ADD CONSTRAINT fk_producto_venta_id_usuario_modificado FOREIGN KEY (id_usuario_modificado)
 REFERENCES tecabix_sce.usuario(id_usuario) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
