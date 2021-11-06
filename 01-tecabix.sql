@@ -195,8 +195,8 @@ CREATE SEQUENCE tecabix_sce.perfil_seq
 
 CREATE TABLE tecabix_sce.perfil(
 	id_perfil bigint NOT NULL DEFAULT nextval('tecabix_sce.perfil_seq'::regclass),
-	nombre character varying(45) NOT NULL,
-	descripcion character varying(500) NOT NULL,
+	nombre character varying(30) NOT NULL,
+	descripcion character varying(250) NOT NULL,
 	id_empresa bigint NOT NULL,
     id_usuario_modificado bigint NOT NULL,
 	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
