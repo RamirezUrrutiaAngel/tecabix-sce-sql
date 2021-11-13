@@ -736,8 +736,8 @@ CREATE SEQUENCE tecabix_sce.departamento_seq
 
 CREATE TABLE tecabix_sce.departamento(
 	id_departamento bigint NOT NULL DEFAULT nextval('tecabix_sce.departamento_seq'::regclass),
-	nombre character varying(35) NOT NULL,
-	descripcion character varying(300) NOT NULL,
+	nombre character varying(30) NOT NULL,
+	descripcion character varying(250) NOT NULL,
 	id_empresa bigint NOT NULL,
 	id_usuario_modificado bigint NOT NULL,
 	fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
