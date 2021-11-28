@@ -586,7 +586,7 @@ CREATE SEQUENCE tecabix_sce.persona_fisica_seq
 CREATE TABLE tecabix_sce.persona_fisica(
 	id_persona_fisica bigint NOT NULL DEFAULT nextval('tecabix_sce.persona_fisica_seq'::regclass),
 	id_persona bigint NOT NULL,
-	nombre character varying(45) NOT NULL,
+	nombre character varying(20) NOT NULL,
 	apellido_paterno character varying(15) NOT NULL,
 	apellido_materno character varying(15) NOT NULL,
     id_sexo integer,
@@ -1137,7 +1137,7 @@ CREATE SEQUENCE tecabix_sce.plantel_seq
 
 CREATE TABLE tecabix_sce.plantel(
 	id_plantel bigint NOT NULL DEFAULT nextval('tecabix_sce.plantel_seq'::regclass),
-	nombre character varying(200) ,
+	nombre character varying(50) ,
 	id_gerente bigint NOT NULL,
 	id_direccion bigint NOT NULL,
 	id_empresa bigint NOT NULL,
