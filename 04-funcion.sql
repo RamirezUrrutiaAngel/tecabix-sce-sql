@@ -16,6 +16,29 @@
  *
  */
 
+CREATE FUNCTION tecabix_sce.divisa_media_refresh() RETURNS boolean AS $$ 
+DECLARE
+BEGIN
+    DELETE FROM tecabix_sce.divisa_media;
+    INSERT INTO tecabix_sce.divisa_media(
+        SELECT 
+            avg(valor)::INTEGER AS valor, 
+            min(valor) AS valor_min, 
+            max(valor) AS valor_max, 
+            id_tipo, 
+            DATE(fecha - '6 hr'::INTERVAL) AS fecha, 
+            now() AS fecha_modificado
+        FROM tecabix_sce.divisa 
+        WHERE 
+            DATE(fecha - '6 hr'::INTERVAL) < DATE(now() - '6 hr'::INTERVAL) AND 
+            DATE(fecha - '6 hr'::INTERVAL) >= DATE(now())::TIMESTAMP - '365 days'::INTERVAL GROUP BY DATE(fecha - '6 hr'::INTERVAL), id_tipo 
+        ORDER BY DATE(fecha - '6 hr'::INTERVAL) DESC);
+    RETURN true;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
 CREATE FUNCTION tecabix_sce.sesion_find_by_token(arg_token uuid) RETURNS SETOF tecabix_sce.sesion AS $$ 
 DECLARE
     var_activo      bigint;

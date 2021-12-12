@@ -1313,7 +1313,7 @@ CREATE TABLE tecabix_sce.caja_registro_transaccion(
     fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
     id_estatus integer NOT NULL,
     clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
-CONSTRAINT pk_caja_registro_transaccion_id_caja_registro_transaccion PRIMARY KEY (id_caja_registro_transaccion),
+CONSTRAINT pk_caja_registro_transaccion PRIMARY KEY (id_caja_registro_transaccion),
 CONSTRAINT uq_caja_registro_transaccion_clave UNIQUE (clave)
 );
 COMMENT ON TABLE tecabix_sce.caja_registro_transaccion IS 'REGISTRO DE TRANSACCION DE LA CAJA';
@@ -1361,7 +1361,7 @@ CREATE TABLE tecabix_sce.caja_registro_transaccion_item(
     fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
     id_estatus integer NOT NULL,
     clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
-CONSTRAINT pk_caja_registro_transaccion_item_id_caja_registro_transaccion_item PRIMARY KEY (id_caja_registro_transaccion_item),
+CONSTRAINT pk_caja_registro_transaccion_item PRIMARY KEY (id_caja_registro_transaccion_item),
 CONSTRAINT uq_caja_registro_transaccion_item_clave UNIQUE (clave)
 );
 COMMENT ON TABLE tecabix_sce.caja_registro_transaccion_item IS 'ITEM DE REGISTRO DE TRANSACCION DE LA CAJA';
@@ -3027,6 +3027,185 @@ ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 
 
 
+/* INICIO DE VENTA DE METALES PRECIOSOS */
+
+CREATE SEQUENCE tecabix_sce.divisa_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;
+    ALTER SEQUENCE tecabix_sce.divisa_seq
+    OWNER TO postgres;
+
+CREATE TABLE tecabix_sce.divisa(
+	id_divisa bigint NOT NULL DEFAULT nextval('tecabix_sce.divisa_seq'::regclass),
+	valor integer NOT NULL,
+	compra integer NOT NULL,
+	venta integer NOT NULL,
+    id_tipo integer NOT NULL,
+	fecha timestamp without time zone NOT NULL DEFAULT now (),
+	id_estatus integer NOT NULL,
+    clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
+CONSTRAINT pk_divisa_id_divisa PRIMARY KEY (id_divisa),
+CONSTRAINT uq_divisa_clave UNIQUE (clave)
+);
+COMMENT ON TABLE tecabix_sce.divisa IS 'DIVISA O METALES PRECIOSOS';
+COMMENT ON COLUMN tecabix_sce.divisa.id_divisa IS 'IDENTIFICADOR UNICO DEL VALOR DE LA DIVISA';
+COMMENT ON COLUMN tecabix_sce.divisa.valor IS 'VALOR DE LA DIVISA EN CENTIMOS';
+COMMENT ON COLUMN tecabix_sce.divisa.compra IS 'VALOR DE COMPRA EN CENTIMOS';
+COMMENT ON COLUMN tecabix_sce.divisa.venta IS 'VALOR DE VENTA EN CENTIMOS';
+COMMENT ON COLUMN tecabix_sce.divisa.id_tipo IS 'TIPO DE DIVISA O METAL PRECIOSO, CATALOGO_TIPO = TIPO_DIVISA';
+COMMENT ON COLUMN tecabix_sce.divisa.fecha IS 'ULTIMA FECHA QUE SE MODIFICO EL REGISTRO';
+COMMENT ON COLUMN tecabix_sce.divisa.id_estatus IS 'STATUS DEL REGISTRO, CATALOGO_TIPO = ESTATUS';
+
+ALTER TABLE tecabix_sce.divisa ADD CONSTRAINT fk_divisa_id_estatus FOREIGN KEY (id_estatus)
+REFERENCES tecabix_sce.catalogo(id_catalogo) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+ALTER TABLE tecabix_sce.divisa ADD CONSTRAINT fk_divisa_id_tipo FOREIGN KEY (id_tipo)
+REFERENCES tecabix_sce.catalogo(id_catalogo) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+
+CREATE SEQUENCE tecabix_sce.divisa_media_seq
+    CYCLE
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;
+    ALTER SEQUENCE tecabix_sce.divisa_media_seq
+    OWNER TO postgres;
+
+CREATE TABLE tecabix_sce.divisa_media(
+	valor integer NOT NULL,
+	valor_min integer NOT NULL,
+	valor_max integer NOT NULL,
+    id_tipo integer NOT NULL,
+	fecha date NOT NULL DEFAULT now (),
+    fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
+    id_divisa_media integer NOT NULL DEFAULT nextval('tecabix_sce.divisa_media_seq'::regclass),
+
+CONSTRAINT pk_divisa_media PRIMARY KEY (id_divisa_media)
+);
+COMMENT ON TABLE tecabix_sce.divisa_media IS 'VALOR PROMEDIO DE LA DIVISA O METALES PRECIOSOS';
+COMMENT ON COLUMN tecabix_sce.divisa_media.valor IS 'VALOR EN GRAMOS';
+COMMENT ON COLUMN tecabix_sce.divisa_media.valor_min IS 'VALOR MINIMO EN GRAMOS';
+COMMENT ON COLUMN tecabix_sce.divisa_media.valor_max IS 'VALOR MAXIMO EN GRAMOS';
+COMMENT ON COLUMN tecabix_sce.divisa_media.id_tipo IS 'TIPO DE DE LA DIVISA O METAL PRECIOSO, CATALOGO_TIPO = TIPO_DIVISA';
+COMMENT ON COLUMN tecabix_sce.divisa_media.fecha IS 'FECHA DEL REGISTRO DE LA DIVISA';
+COMMENT ON COLUMN tecabix_sce.divisa_media.fecha_modificado IS 'ULTIMA FECHA QUE SE MODIFICO EL REGISTRO';
+COMMENT ON COLUMN tecabix_sce.divisa_media.id_divisa_media IS 'IDENTIFICADOR UNICO DEL VALOR DE LA divisa_media';
+
+ALTER TABLE tecabix_sce.divisa_media ADD CONSTRAINT fk_divisa_media_id_tipo FOREIGN KEY (id_tipo)
+REFERENCES tecabix_sce.catalogo(id_catalogo) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+
+CREATE SEQUENCE tecabix_sce.divisa_usuario_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;
+    ALTER SEQUENCE tecabix_sce.divisa_usuario_seq
+    OWNER TO postgres;
+
+CREATE TABLE tecabix_sce.divisa_usuario(
+    id_divisa_usuario bigint NOT NULL DEFAULT nextval('tecabix_sce.divisa_usuario_seq'::regclass),
+    id_usuario bigint NOT NULL,
+    id_tipo integer NOT NULL,
+    cantidad integer NOT NULL,
+    id_usuario_modificado bigint NOT NULL,
+    fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
+    id_estatus integer NOT NULL,
+    clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
+CONSTRAINT pk_divisa_usuario_id_divisa_usuario PRIMARY KEY (id_divisa_usuario),
+CONSTRAINT uq_divisa_usuario_clave UNIQUE (clave),
+CONSTRAINT uq_divisa_id_usuario_id_tipo UNIQUE (id_usuario,id_tipo)
+);
+COMMENT ON TABLE tecabix_sce.divisa_usuario IS 'RECERVA DE DIVISA O METALES PRECIOSOS';
+COMMENT ON COLUMN tecabix_sce.usuario_persona.id_usuario IS 'IDENTIFICADOR UNICO DEL USUARIO';
+COMMENT ON COLUMN tecabix_sce.divisa_usuario.id_divisa_usuario IS 'IDENTIFICADOR UNICO DEL VALOR DE LA DIVISA';
+COMMENT ON COLUMN tecabix_sce.divisa_usuario.id_tipo IS 'TIPO DE DIVISA O METAL PRECIOSO, CATALOGO_TIPO = TIPO_DIVISA';
+COMMENT ON COLUMN tecabix_sce.divisa_usuario.cantidad IS 'CANTIDAD DE DIVISA';
+COMMENT ON COLUMN tecabix_sce.divisa_usuario.id_usuario_modificado IS 'ULTIMO USUARIO QUE MODIFICO EL REGISTRO';
+COMMENT ON COLUMN tecabix_sce.divisa_usuario.fecha_modificado IS 'ULTIMA FECHA QUE SE MODIFICO EL REGISTRO';
+COMMENT ON COLUMN tecabix_sce.divisa_usuario.id_estatus IS 'STATUS DEL REGISTRO, CATALOGO_TIPO = ESTATUS';
+
+ALTER TABLE tecabix_sce.divisa_usuario ADD CONSTRAINT fk_divisa_usuario_id_estatus FOREIGN KEY (id_estatus)
+REFERENCES tecabix_sce.catalogo(id_catalogo) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+ALTER TABLE tecabix_sce.divisa_usuario ADD CONSTRAINT fk_divisa_usuario_id_tipo FOREIGN KEY (id_tipo)
+REFERENCES tecabix_sce.catalogo(id_catalogo) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+ALTER TABLE tecabix_sce.divisa_usuario ADD CONSTRAINT fk_divisa_usuario_id_usuario_modificado FOREIGN KEY (id_usuario_modificado)
+REFERENCES tecabix_sce.usuario(id_usuario) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+ALTER TABLE tecabix_sce.divisa_usuario ADD CONSTRAINT fk_divisa_usuario_id_usuario FOREIGN KEY (id_usuario)
+REFERENCES tecabix_sce.usuario(id_usuario) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+
+CREATE SEQUENCE tecabix_sce.divisa_transaccion_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;
+    ALTER SEQUENCE tecabix_sce.divisa_transaccion_seq
+    OWNER TO postgres;
+
+CREATE TABLE tecabix_sce.divisa_transaccion(
+    id_divisa_transaccion bigint NOT NULL DEFAULT nextval('tecabix_sce.divisa_transaccion_seq'::regclass),
+    id_divisa bigint NOT NULL,
+    id_origen bigint NOT NULL,
+    id_destino bigint NOT NULL,
+    cantidad integer NOT NULL,
+    id_usuario_modificado bigint NOT NULL,
+    fecha_modificado timestamp without time zone NOT NULL DEFAULT now (),
+    id_estatus integer NOT NULL,
+    clave uuid NOT NULL DEFAULT uuid_generate_v4 (),
+CONSTRAINT pk_divisa_transaccion_id_divisa_transaccion PRIMARY KEY (id_divisa_transaccion),
+CONSTRAINT uq_divisa_transaccion_clave UNIQUE (clave)
+);
+COMMENT ON TABLE tecabix_sce.divisa_transaccion IS 'RECERVA DE DIVISA O METALES PRECIOSOS';
+COMMENT ON COLUMN tecabix_sce.divisa_transaccion.id_divisa_transaccion IS 'IDENTIFICADOR UNICO DEL VALOR DE LA DIVISA';
+COMMENT ON COLUMN tecabix_sce.divisa_transaccion.id_divisa IS 'TIPO Y VALOR POR UNIDAD DE LA DIVISA O METAL PRECIOSO';
+COMMENT ON COLUMN tecabix_sce.divisa_transaccion.id_origen IS 'CUENTA QUE ESTA HACIENDO LA TRANSACCION';
+COMMENT ON COLUMN tecabix_sce.divisa_transaccion.id_destino IS 'CUENTA DESTINO QUE ESTA RECIVIENDO LA TRANSACCION';
+COMMENT ON COLUMN tecabix_sce.divisa_transaccion.cantidad IS 'CANTIDAD UNITARIA DE LA DIVISA QUE SE ESTA ENVIANDO';
+COMMENT ON COLUMN tecabix_sce.divisa_transaccion.id_usuario_modificado IS 'ULTIMO USUARIO QUE MODIFICO EL REGISTRO';
+COMMENT ON COLUMN tecabix_sce.divisa_transaccion.fecha_modificado IS 'ULTIMA FECHA QUE SE MODIFICO EL REGISTRO';
+COMMENT ON COLUMN tecabix_sce.divisa_transaccion.id_estatus IS 'STATUS DEL REGISTRO, CATALOGO_TIPO = ESTATUS';
+
+ALTER TABLE tecabix_sce.divisa_transaccion ADD CONSTRAINT fk_divisa_transaccion_id_estatus FOREIGN KEY (id_estatus)
+REFERENCES tecabix_sce.catalogo(id_catalogo) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+ALTER TABLE tecabix_sce.divisa_transaccion ADD CONSTRAINT fk_divisa_transaccion_id_divisa FOREIGN KEY (id_divisa)
+REFERENCES tecabix_sce.divisa(id_divisa) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+ALTER TABLE tecabix_sce.divisa_transaccion ADD CONSTRAINT fk_divisa_transaccion_id_origen FOREIGN KEY (id_origen)
+REFERENCES tecabix_sce.divisa_usuario(id_divisa_usuario) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+ALTER TABLE tecabix_sce.divisa_transaccion ADD CONSTRAINT fk_divisa_transaccion_id_destino FOREIGN KEY (id_destino)
+REFERENCES tecabix_sce.divisa_usuario(id_divisa_usuario) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+ALTER TABLE tecabix_sce.divisa_transaccion ADD CONSTRAINT fk_divisa_transaccion_id_usuario_modificado FOREIGN KEY (id_usuario_modificado)
+REFERENCES tecabix_sce.usuario(id_usuario) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+
+
+/* FIN DE VENTA DE METALES PRECIOSOS */
+
 
 CREATE MATERIALIZED VIEW tecabix_sce.numero_maximo_registro AS 
 	SELECT s.id_empresa, a.nombre, CAST (o.valor AS INTEGER)
@@ -3036,4 +3215,3 @@ CREATE MATERIALIZED VIEW tecabix_sce.numero_maximo_registro AS
 		JOIN tecabix_sce.configuracion o ON (c.id_configuracion = o.id_configuracion)
 		JOIN tecabix_sce.catalogo a ON (o.id_tipo = a.id_catalogo)
 		WHERE a.nombre LIKE 'MAX_REG_%';
-

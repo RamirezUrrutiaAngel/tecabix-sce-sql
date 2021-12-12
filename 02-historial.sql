@@ -784,7 +784,7 @@ DECLARE
     item_aux        RECORD;
     var_insert      bigint;
 BEGIN
-    SELECT id_catalogo INTO var_insert FROM tecabix_sce.catalogo WHERE nombre = 'CREAR' AND id_catalogo IN (SELECT id_catalogo_tipo FROM tecabix_sce.catalogo_tipo WHERE nombre = 'CRUD');
+    SELECT id_catalogo INTO var_insert FROM tecabix_sce.catalogo WHERE nombre = 'CREAR' AND id_catalogo_tipo IN (SELECT id_catalogo_tipo FROM tecabix_sce.catalogo_tipo WHERE nombre = 'CRUD');
     
     INSERT INTO tecabix_sce_historial.catalogo_historial (id_catalogo, id_accion, id_usuario_modificado, descripcion) 
         VALUES(NEW.id_catalogo,var_insert, NEW.id_usuario_modificado, 'Se creo un nuevo registro '|| NEW.nombre);
@@ -801,7 +801,7 @@ DECLARE
     id_aux_1        character varying(45);
     id_aux_2        character varying(45);
 BEGIN
-    SELECT id_catalogo INTO var_update FROM tecabix_sce.catalogo WHERE nombre = 'ACTUALIZAR' AND id_catalogo IN (SELECT id_catalogo_tipo FROM tecabix_sce.catalogo_tipo WHERE nombre = 'CRUD');
+    SELECT id_catalogo INTO var_update FROM tecabix_sce.catalogo WHERE nombre = 'ACTUALIZAR' AND id_catalogo_tipo IN (SELECT id_catalogo_tipo FROM tecabix_sce.catalogo_tipo WHERE nombre = 'CRUD');
     
     IF OLD.nombre != NEW.nombre THEN
         INSERT INTO tecabix_sce_historial.catalogo_historial (id_catalogo, id_accion, id_usuario_modificado, descripcion) 
@@ -834,7 +834,7 @@ DECLARE
     id_aux_1        bigint;
     id_aux_2        bigint;
 BEGIN
-    SELECT id_catalogo INTO var_delete FROM tecabix_sce.catalogo WHERE nombre = 'ELIMINAR' AND id_catalogo IN (SELECT id_catalogo_tipo FROM tecabix_sce.catalogo_tipo WHERE nombre = 'CRUD');
+    SELECT id_catalogo INTO var_delete FROM tecabix_sce.catalogo WHERE nombre = 'ELIMINAR' AND id_catalogo_tipo IN (SELECT id_catalogo_tipo FROM tecabix_sce.catalogo_tipo WHERE nombre = 'CRUD');
     
     INSERT INTO tecabix_sce_historial.catalogo_historial (id_catalogo, id_accion, id_usuario_modificado, descripcion) 
         VALUES(OLD.id_catalogo,var_delete, OLD.id_usuario_modificado, 'Se elimino el registro '|| OLD.nombre);

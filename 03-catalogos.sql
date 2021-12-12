@@ -134,8 +134,10 @@ BEGIN
 	INSERT INTO tecabix_sce.catalogo_tipo (nombre, descripcion, id_usuario_modificado, id_estatus) VALUES ('UNIDAD_DE_MEDIDA', 'UNIDADES DE MEDIDAS', VAR_USR_CREA, VAR_ACTIVO) RETURNING id_catalogo_tipo INTO id_aux_1;
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('PZA', 'PIEZA', 'PIEZA', 1, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('KG', 'KILOGRAMO', 'KILOGRAMO', 2, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
-	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('S/U', 'SIN UNIDAD', 'NO UTILIZA INVENTARIO', 3, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
-	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('LT', 'LITRO', 'LITRO', 0, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('G', 'GRAMO', 'GRAMO', 3, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('MG', 'MILIGRAMO', 'MILIGRAMO', 4, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('S/U', 'SIN UNIDAD', 'NO UTILIZA INVENTARIO', 5, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('LT', 'LITRO', 'LITRO', 6, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 
 	INSERT INTO tecabix_sce.catalogo_tipo (nombre, descripcion, id_usuario_modificado, id_estatus) VALUES ('PRODUCTO_O_SERVICIO', 'PRODUCTO O SERVICIO', VAR_USR_CREA, VAR_ACTIVO) RETURNING id_catalogo_tipo INTO id_aux_1;
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('PRODUCTO', 'PRODUCTO', 'PRODUCTO', 1, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
@@ -267,6 +269,56 @@ BEGIN
 	INSERT INTO tecabix_sce.catalogo_tipo (nombre, descripcion, id_usuario_modificado, id_estatus) VALUES ('ID_TABLA_TRANSACCION_CAJA', 'TABLAS PARA TRANSACCION', VAR_USR_CREA, VAR_ACTIVO) RETURNING id_catalogo_tipo INTO id_aux_1;
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('PRODUCTO','TABLA PRODUCTO', 'PRODUCTO', 1, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('CUENTA','TABLA CUENTA', 'CUENTA', 2, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('DIVISA_TRANSACCION','TABLA DIVISA TRANSACCION', 'DIVISA TRANSACCION', 3, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+
+	INSERT INTO tecabix_sce.catalogo_tipo (nombre, descripcion, id_usuario_modificado, id_estatus) VALUES ('TIPO_DIVISA', 'TIPO DE DIVISA', VAR_USR_CREA, VAR_ACTIVO) RETURNING id_catalogo_tipo INTO id_aux_1;
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('ORO','ORO', 'ORO', 1, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('PLATA','PLATA', 'PLATA', 2, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo, id_usuario_modificado, id_estatus) VALUES ('USD','USD', 'DÓLAR ESTADOUNIDENSE', 3, id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+
+	INSERT INTO tecabix_sce.catalogo_tipo (nombre, descripcion, id_usuario_modificado, id_estatus) VALUES ('PLATA', 'PUREZA_PLATA', VAR_USR_CREA, VAR_ACTIVO) RETURNING id_catalogo_tipo INTO id_aux_1;
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo , id_usuario_modificado, id_estatus) VALUES ('0.999', '0.999', '999', 1, id_aux_1, VAR_USR_CREA, VAR_ACTIVO) ;
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo , id_usuario_modificado, id_estatus) VALUES ('0.980', '0.980', '980', 2, id_aux_1, VAR_USR_CREA, VAR_ACTIVO) ;
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo , id_usuario_modificado, id_estatus) VALUES ('0.970', '0.970', '970', 3, id_aux_1, VAR_USR_CREA, VAR_ACTIVO) ;
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo , id_usuario_modificado, id_estatus) VALUES ('0.958', '0.958', '958', 4, id_aux_1, VAR_USR_CREA, VAR_ACTIVO) ;
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo , id_usuario_modificado, id_estatus) VALUES ('0.950', '0.950', '950', 5, id_aux_1, VAR_USR_CREA, VAR_ACTIVO) ;
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo , id_usuario_modificado, id_estatus) VALUES ('0.940', '0.940', '940', 6, id_aux_1, VAR_USR_CREA, VAR_ACTIVO) ;
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo , id_usuario_modificado, id_estatus) VALUES ('0.935', '0.935', '935', 7, id_aux_1, VAR_USR_CREA, VAR_ACTIVO) ;
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo , id_usuario_modificado, id_estatus) VALUES ('0.930', '0.930', '930', 8, id_aux_1, VAR_USR_CREA, VAR_ACTIVO) ;
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo , id_usuario_modificado, id_estatus) VALUES ('0.925', '0.925', '925', 9, id_aux_1, VAR_USR_CREA, VAR_ACTIVO) ;
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo , id_usuario_modificado, id_estatus) VALUES ('0.916', '0.916', '916', 10, id_aux_1, VAR_USR_CREA, VAR_ACTIVO) ;
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo , id_usuario_modificado, id_estatus) VALUES ('0.915', '0.915', '915', 11, id_aux_1, VAR_USR_CREA, VAR_ACTIVO) ;
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo , id_usuario_modificado, id_estatus) VALUES ('0.900', '0.900', '900', 12, id_aux_1, VAR_USR_CREA, VAR_ACTIVO) ;
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo , id_usuario_modificado, id_estatus) VALUES ('0.875', '0.875', '875', 13, id_aux_1, VAR_USR_CREA, VAR_ACTIVO) ;
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo , id_usuario_modificado, id_estatus) VALUES ('0.844', '0.844', '844', 14, id_aux_1, VAR_USR_CREA, VAR_ACTIVO) ;
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo , id_usuario_modificado, id_estatus) VALUES ('0.840', '0.840', '840', 15, id_aux_1, VAR_USR_CREA, VAR_ACTIVO) ;
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo , id_usuario_modificado, id_estatus) VALUES ('0.835', '0.835', '835', 16, id_aux_1, VAR_USR_CREA, VAR_ACTIVO) ;
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo , id_usuario_modificado, id_estatus) VALUES ('0.833', '0.833', '833', 17, id_aux_1, VAR_USR_CREA, VAR_ACTIVO) ;
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo , id_usuario_modificado, id_estatus) VALUES ('0.830', '0.830', '830', 18, id_aux_1, VAR_USR_CREA, VAR_ACTIVO) ;
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo , id_usuario_modificado, id_estatus) VALUES ('0.813', '0.813', '813', 19, id_aux_1, VAR_USR_CREA, VAR_ACTIVO) ;
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo , id_usuario_modificado, id_estatus) VALUES ('0.800', '0.800', '800', 20, id_aux_1, VAR_USR_CREA, VAR_ACTIVO) ;
+
+	INSERT INTO tecabix_sce.catalogo_tipo (nombre, descripcion, id_usuario_modificado, id_estatus) VALUES ('ORO', 'PUREZA_ORO', VAR_USR_CREA, VAR_ACTIVO) RETURNING id_catalogo_tipo INTO id_aux_1;
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo , id_usuario_modificado, id_estatus) VALUES ('24K', '0.999', '999', 1, id_aux_1, VAR_USR_CREA, VAR_ACTIVO) ;
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo , id_usuario_modificado, id_estatus) VALUES ('23K', '0.958', '958', 2, id_aux_1, VAR_USR_CREA, VAR_ACTIVO) ;
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo , id_usuario_modificado, id_estatus) VALUES ('22K', '0.916', '916', 3, id_aux_1, VAR_USR_CREA, VAR_ACTIVO) ;
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo , id_usuario_modificado, id_estatus) VALUES ('21K', '0.875', '875', 4, id_aux_1, VAR_USR_CREA, VAR_ACTIVO) ;
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo , id_usuario_modificado, id_estatus) VALUES ('20K', '0.833', '833', 5, id_aux_1, VAR_USR_CREA, VAR_ACTIVO) ;
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo , id_usuario_modificado, id_estatus) VALUES ('19.2K', '0.800', '800', 6, id_aux_1, VAR_USR_CREA, VAR_ACTIVO) ;
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo , id_usuario_modificado, id_estatus) VALUES ('19K', '0.792', '792', 7, id_aux_1, VAR_USR_CREA, VAR_ACTIVO) ;
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo , id_usuario_modificado, id_estatus) VALUES ('18K', '0.750', '750', 8, id_aux_1, VAR_USR_CREA, VAR_ACTIVO) ;
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo , id_usuario_modificado, id_estatus) VALUES ('17K', '0.708', '708', 9, id_aux_1, VAR_USR_CREA, VAR_ACTIVO) ;
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo , id_usuario_modificado, id_estatus) VALUES ('16K', '0.667', '667', 10, id_aux_1, VAR_USR_CREA, VAR_ACTIVO) ;
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo , id_usuario_modificado, id_estatus) VALUES ('15K', '0.625', '625', 11, id_aux_1, VAR_USR_CREA, VAR_ACTIVO) ;
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo , id_usuario_modificado, id_estatus) VALUES ('14K', '0.585', '585', 12, id_aux_1, VAR_USR_CREA, VAR_ACTIVO) ;
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo , id_usuario_modificado, id_estatus) VALUES ('13K', '0.542', '542', 13, id_aux_1, VAR_USR_CREA, VAR_ACTIVO) ;
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo , id_usuario_modificado, id_estatus) VALUES ('12K', '0.500', '500', 14, id_aux_1, VAR_USR_CREA, VAR_ACTIVO) ;
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo , id_usuario_modificado, id_estatus) VALUES ('11K', '0.458', '458', 15, id_aux_1, VAR_USR_CREA, VAR_ACTIVO) ;
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo , id_usuario_modificado, id_estatus) VALUES ('10K', '0.417', '417', 16, id_aux_1, VAR_USR_CREA, VAR_ACTIVO) ;
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo , id_usuario_modificado, id_estatus) VALUES ('9K', '0.375', '375', 17, id_aux_1, VAR_USR_CREA, VAR_ACTIVO) ;
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo , id_usuario_modificado, id_estatus) VALUES ('8K', '0.333', '333', 18, id_aux_1, VAR_USR_CREA, VAR_ACTIVO) ;
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo , id_usuario_modificado, id_estatus) VALUES ('7K', '0.292', '292', 19, id_aux_1, VAR_USR_CREA, VAR_ACTIVO) ;
+	INSERT INTO tecabix_sce.catalogo (nombre, nombre_completo, descripcion, orden, id_catalogo_tipo , id_usuario_modificado, id_estatus) VALUES ('6K', '0.250', '250', 20, id_aux_1, VAR_USR_CREA, VAR_ACTIVO) ;
 
 
 	/**************************** AUTORIZACION ****************************/
@@ -337,6 +389,18 @@ BEGIN
 			INSERT INTO tecabix_sce.autorizacion(nombre, descripcion, id_pre_autorizacion, id_usuario_modificado, id_estatus) VALUES ('PLAN_CREAR', 'PERMISOS DE CREAR PLAN', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 			INSERT INTO tecabix_sce.autorizacion(nombre, descripcion, id_pre_autorizacion, id_usuario_modificado, id_estatus) VALUES ('PLAN_EDITAR', 'PERMISOS DE EDITAR PLAN', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
 			INSERT INTO tecabix_sce.autorizacion(nombre, descripcion, id_pre_autorizacion, id_usuario_modificado, id_estatus) VALUES ('PLAN_ELIMINAR', 'PERMISOS DE ELIMINAR PLAN', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+
+		INSERT INTO tecabix_sce.autorizacion(nombre, descripcion, id_pre_autorizacion, id_usuario_modificado, id_estatus) VALUES ('ROOT_DIVISA_TRANSACCION', 'PERMISOS ROOT DE DIVISA', ADMINISTRADOR_ROOT, VAR_USR_CREA, VAR_ACTIVO) RETURNING id_autorizacion INTO id_aux_1;
+			INSERT INTO tecabix_sce.autorizacion(nombre, descripcion, id_pre_autorizacion, id_usuario_modificado, id_estatus) VALUES ('ROOT_DIVISA_TRANSACCION_COMPRA', 'PERMISOS ROOT DE COMPRAR A OTROS USUARIOS PARA SU RESERVA', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+			INSERT INTO tecabix_sce.autorizacion(nombre, descripcion, id_pre_autorizacion, id_usuario_modificado, id_estatus) VALUES ('ROOT_DIVISA_TRANSACCION_VENDER', 'PERMISOS ROOT DE VENDER SUS RESERVAS', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+			INSERT INTO tecabix_sce.autorizacion(nombre, descripcion, id_pre_autorizacion, id_usuario_modificado, id_estatus) VALUES ('ROOT_DIVISA_TRANSACCION_RECARGAR', 'PERMISOS ROOT DE RECARGAR O ELIMINAR RECURSOS DE LA RESERVAS', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+
+
+		INSERT INTO tecabix_sce.autorizacion(nombre, descripcion, id_pre_autorizacion, id_usuario_modificado, id_estatus) VALUES ('DIVISA_CAJA', 'PERMISOS PARA COMPRA Y VENTA DE DIVISA PARA TERCEROS', AUTENTIFICADOS, VAR_USR_CREA, VAR_ACTIVO) RETURNING id_autorizacion INTO id_aux_1;
+			INSERT INTO tecabix_sce.autorizacion(nombre, descripcion, id_pre_autorizacion, id_usuario_modificado, id_estatus) VALUES ('DIVISA_CAJA_COMPRA', 'PERMISOS PARA COMPRAR DIVISAS PARA LA RESERVA', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+			INSERT INTO tecabix_sce.autorizacion(nombre, descripcion, id_pre_autorizacion, id_usuario_modificado, id_estatus) VALUES ('DIVISA_CAJA_VENTA', 'PERMISOS PARA VENDER DIVISAS DE LA RESERVA', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
+
+
 			
 		INSERT INTO tecabix_sce.autorizacion(nombre, descripcion, id_pre_autorizacion, id_usuario_modificado, id_estatus) VALUES ('PLANTEL', 'PLANTEL', AUTENTIFICADOS, VAR_USR_CREA, VAR_ACTIVO) RETURNING id_autorizacion INTO id_aux_1;
 			INSERT INTO tecabix_sce.autorizacion(nombre, descripcion, id_pre_autorizacion, id_usuario_modificado, id_estatus) VALUES ('PLANTEL_CREAR', 'CREAR PLANTEL', id_aux_1, VAR_USR_CREA, VAR_ACTIVO);
